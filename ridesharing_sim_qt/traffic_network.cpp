@@ -224,7 +224,7 @@ std::deque< std::pair<ULL, double> > traffic_network::find_shortest_path(ULL fro
 			}
 		}
 		//advance time along the route
-		current_time += get_network_distance(current_node, potential_route_nodes[0]);  // / velocity???
+		current_time += get_network_distance(current_node, potential_route_nodes[0]) / velocity;
 
 																					   //choose randomly from all possible next nodes ( NOTE: this is NOT EXATCLY THE SAME(!) as choosing randomly from all possible routes, but good enough to randomize routes in regular topologies, e.g. a torus)
 		current_node = potential_route_nodes[(ULL)(potential_route_nodes.size() * uniform01(random_generator))];

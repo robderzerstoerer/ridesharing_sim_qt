@@ -32,13 +32,13 @@ typedef std::priority_queue< std::pair<double, ULL>, std::vector<std::pair<doubl
 class ridesharing_sim
 {
 public:
-	ridesharing_sim(ULL param_N, ULL param_B, ULL seed);
+	ridesharing_sim(ULL param_N, ULL param_B, ULL param_bus_type, ULL seed);
 	virtual ~ridesharing_sim();
 
 	void set_normalized_request_rate(double param_normalized_request_rate);
 	void set_request_rate(double param_request_rate);
 
-	void reset_number_of_buses(ULL param_number_of_buses);
+	void reset_number_of_buses(ULL param_number_of_buses, ULL param_bus_type = 0);
 
 	void reset_measurements();
 	void print_measurements(std::ofstream& out);
@@ -49,6 +49,7 @@ public:
 		ULL param_number_of_nodes,
 		std::string param_topology,
 		double param_normalized_request_rate,
+		ULL param_bus_type = 0,
 		LL param_num_init_requests = -1);
 	void run_sim_request_list(std::list< std::pair< double, std::pair<ULL, ULL> > > request_list);
 	void run_sim_requests(ULL max_requests);

@@ -557,7 +557,7 @@ void transporter::init_by_type()
 	}
 	else {
 		velocity = 1;
-		capacity = -1;
+		capacity = 5;
 	}
 }
 

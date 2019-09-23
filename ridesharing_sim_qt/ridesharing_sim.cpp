@@ -2,13 +2,13 @@
 
 //constructor
 //initialize all necessary variables
-ridesharing_sim::ridesharing_sim(ULL param_N, ULL param_B, ULL seed) : network(param_N, random_generator), measurements(network), out(std::ofstream("default_output.dat"))
+ridesharing_sim::ridesharing_sim(ULL param_N, ULL param_B, ULL param_bus_type, ULL seed) : network(param_N, random_generator), measurements(network), out(std::ofstream("default_output.dat"))
 {
 	//see random generator
 	random_generator.seed(seed);
 
 	//setup list of transporters
-	transporter_list = std::vector<transporter>(param_B, transporter(-1, 0, 0, random_generator));
+	transporter_list = std::vector<transporter>(param_B, transporter(-1, 0, param_bus_type, random_generator));
 
 	//reset all important variables
 	time = 0;
@@ -129,10 +129,10 @@ void ridesharing_sim::set_request_rate(double param_request_rate)
 }
 
 //reset number of buses and all other parameters like starting a new simulation
-void ridesharing_sim::reset_number_of_buses(ULL param_number_of_buses)
+void ridesharing_sim::reset_number_of_buses(ULL param_number_of_buses, ULL param_bus_type)
 {
 	transporter_list.clear();
-	transporter_list = std::vector<transporter>(param_number_of_buses, transporter(-1, 0, 0, random_generator));
+	transporter_list = std::vector<transporter>(param_number_of_buses, transporter(-1, 0, param_bus_type, random_generator));
 
 	time = 0;
 	total_requests = 0;
@@ -319,17 +319,18 @@ void ridesharing_sim::init_new_sim(ULL param_number_of_buses,
 	ULL param_number_of_nodes,
 	std::string param_topology,
 	double param_normalized_request_rate,
+	ULL param_bus_type,
 	LL param_num_init_requests)
 {
 	assert(network.get_number_of_nodes() == param_number_of_nodes);
 
-	reset_number_of_buses(param_number_of_buses);
+	reset_number_of_buses(param_number_of_buses, param_bus_type);
 	//	std::cout << sim.network.get_mean_pickup_distance() << '\t' << sim.network.get_mean_dropoff_distance() << std::endl;
 
 	//set up (reset) all buses in the network
 	for (ULL b = 0; b < param_number_of_buses; ++b)
 	{
-		transporter_list[b].reset(b, network.generate_request().second, 0);
+		transporter_list[b].reset(b, network.generate_request().second, param_bus_type);
 	}
 
 

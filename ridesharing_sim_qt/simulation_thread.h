@@ -19,6 +19,10 @@ public:
 	ULL number_of_bus_calculations;
 	ULL number_of_nodes;
 	double normalized_request_rate;
+	ULL number_of_request_rates;
+	double normalized_request_rate_from;
+	double normalized_request_rate_to;
+	ULL bus_type;
 	bool save;
 	std::string filename;
 

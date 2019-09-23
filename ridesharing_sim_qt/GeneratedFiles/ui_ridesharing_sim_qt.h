@@ -12,6 +12,7 @@
 #include <QtCore/QVariant>
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QCheckBox>
+#include <QtWidgets/QFrame>
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QListWidget>
 #include <QtWidgets/QMainWindow>
@@ -48,6 +49,19 @@ public:
     QTextEdit *textEdit_6;
     QPushButton *pushButton_2;
     QTextEdit *textEdit_7;
+    QFrame *line;
+    QLabel *label_7;
+    QLabel *label_8;
+    QLabel *label_9;
+    QListWidget *listWidget_2;
+    QListWidget *listWidget_3;
+    QTextEdit *textEdit_8;
+    QPushButton *pushButton_3;
+    QPushButton *pushButton_4;
+    QPushButton *pushButton_5;
+    QTextEdit *textEdit_9;
+    QPushButton *pushButton_6;
+    QPushButton *pushButton_7;
     QMenuBar *menuBar;
     QToolBar *mainToolBar;
     QStatusBar *statusBar;
@@ -56,7 +70,7 @@ public:
     {
         if (ridesharing_sim_qtClass->objectName().isEmpty())
             ridesharing_sim_qtClass->setObjectName(QString::fromUtf8("ridesharing_sim_qtClass"));
-        ridesharing_sim_qtClass->resize(1186, 758);
+        ridesharing_sim_qtClass->resize(1770, 903);
         centralWidget = new QWidget(ridesharing_sim_qtClass);
         centralWidget->setObjectName(QString::fromUtf8("centralWidget"));
         pushButton = new QPushButton(centralWidget);
@@ -116,10 +130,51 @@ public:
         textEdit_7 = new QTextEdit(centralWidget);
         textEdit_7->setObjectName(QString::fromUtf8("textEdit_7"));
         textEdit_7->setGeometry(QRect(1020, 330, 111, 31));
+        line = new QFrame(centralWidget);
+        line->setObjectName(QString::fromUtf8("line"));
+        line->setGeometry(QRect(1160, 20, 20, 821));
+        line->setFrameShape(QFrame::VLine);
+        line->setFrameShadow(QFrame::Sunken);
+        label_7 = new QLabel(centralWidget);
+        label_7->setObjectName(QString::fromUtf8("label_7"));
+        label_7->setGeometry(QRect(1410, 10, 111, 21));
+        label_8 = new QLabel(centralWidget);
+        label_8->setObjectName(QString::fromUtf8("label_8"));
+        label_8->setGeometry(QRect(1340, 40, 31, 21));
+        label_9 = new QLabel(centralWidget);
+        label_9->setObjectName(QString::fromUtf8("label_9"));
+        label_9->setGeometry(QRect(1570, 40, 41, 21));
+        listWidget_2 = new QListWidget(centralWidget);
+        listWidget_2->setObjectName(QString::fromUtf8("listWidget_2"));
+        listWidget_2->setGeometry(QRect(1190, 80, 256, 301));
+        listWidget_3 = new QListWidget(centralWidget);
+        listWidget_3->setObjectName(QString::fromUtf8("listWidget_3"));
+        listWidget_3->setGeometry(QRect(1480, 80, 256, 301));
+        textEdit_8 = new QTextEdit(centralWidget);
+        textEdit_8->setObjectName(QString::fromUtf8("textEdit_8"));
+        textEdit_8->setGeometry(QRect(1190, 440, 251, 81));
+        pushButton_3 = new QPushButton(centralWidget);
+        pushButton_3->setObjectName(QString::fromUtf8("pushButton_3"));
+        pushButton_3->setGeometry(QRect(1260, 400, 121, 31));
+        pushButton_4 = new QPushButton(centralWidget);
+        pushButton_4->setObjectName(QString::fromUtf8("pushButton_4"));
+        pushButton_4->setGeometry(QRect(1550, 400, 121, 31));
+        pushButton_5 = new QPushButton(centralWidget);
+        pushButton_5->setObjectName(QString::fromUtf8("pushButton_5"));
+        pushButton_5->setGeometry(QRect(1400, 40, 121, 31));
+        textEdit_9 = new QTextEdit(centralWidget);
+        textEdit_9->setObjectName(QString::fromUtf8("textEdit_9"));
+        textEdit_9->setGeometry(QRect(1480, 440, 251, 81));
+        pushButton_6 = new QPushButton(centralWidget);
+        pushButton_6->setObjectName(QString::fromUtf8("pushButton_6"));
+        pushButton_6->setGeometry(QRect(1380, 550, 171, 51));
+        pushButton_7 = new QPushButton(centralWidget);
+        pushButton_7->setObjectName(QString::fromUtf8("pushButton_7"));
+        pushButton_7->setGeometry(QRect(1380, 610, 171, 51));
         ridesharing_sim_qtClass->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(ridesharing_sim_qtClass);
         menuBar->setObjectName(QString::fromUtf8("menuBar"));
-        menuBar->setGeometry(QRect(0, 0, 1186, 18));
+        menuBar->setGeometry(QRect(0, 0, 1770, 18));
         ridesharing_sim_qtClass->setMenuBar(menuBar);
         mainToolBar = new QToolBar(ridesharing_sim_qtClass);
         mainToolBar->setObjectName(QString::fromUtf8("mainToolBar"));
@@ -146,6 +201,14 @@ public:
         label_6->setText(QCoreApplication::translate("ridesharing_sim_qtClass", "Filename", nullptr));
         checkBox_2->setText(QCoreApplication::translate("ridesharing_sim_qtClass", "Save", nullptr));
         pushButton_2->setText(QCoreApplication::translate("ridesharing_sim_qtClass", "Stop Simulation", nullptr));
+        label_7->setText(QCoreApplication::translate("ridesharing_sim_qtClass", "Compare + Plot", nullptr));
+        label_8->setText(QCoreApplication::translate("ridesharing_sim_qtClass", "x", nullptr));
+        label_9->setText(QCoreApplication::translate("ridesharing_sim_qtClass", "y", nullptr));
+        pushButton_3->setText(QCoreApplication::translate("ridesharing_sim_qtClass", "Choose File 1", nullptr));
+        pushButton_4->setText(QCoreApplication::translate("ridesharing_sim_qtClass", "Choose File 2", nullptr));
+        pushButton_5->setText(QCoreApplication::translate("ridesharing_sim_qtClass", "<---->", nullptr));
+        pushButton_6->setText(QCoreApplication::translate("ridesharing_sim_qtClass", "Plot!", nullptr));
+        pushButton_7->setText(QCoreApplication::translate("ridesharing_sim_qtClass", "Save Plot", nullptr));
     } // retranslateUi
 
 };

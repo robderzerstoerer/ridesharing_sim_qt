@@ -16,9 +16,22 @@ public:
 private:
 	Ui::ridesharing_sim_qtClass ui;
 
+	void read_file(std::string filename, int iFile);
+
+	std::map<std::string, std::vector<double>> averages[2];
+	std::map<std::string, std::vector<double>> stddevs[2];
+	std::map<std::string, std::vector<double>> counts[2];
+
+
 private slots:
-	void ifkl();
-	void ifklstopped();
+	void onButtonSimulateClicked();
+	void onButtonStopClicked();
+	void onButtonSwapXYClicked();
+	void onButtonChooseFile1Clicked();
+	void onButtonChooseFile2Clicked();
+	void onButtonCompareClicked();
+	void onButtonSavePlotClicked();
+
 	void B_to_checkBoxChanged(int arg1);
 	void SaveCheckBoxChanged(int arg1);
 
