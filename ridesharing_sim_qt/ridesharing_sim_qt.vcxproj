@@ -35,7 +35,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
-    <IncludePath>C:\Users\ms119322\Anaconda3\Lib\site-packages\numpy\core\include;C:\Users\ms119322\Anaconda3\include;C:\Users\ms119322\Anaconda3\Library\include;$(IncludePath)</IncludePath>
+    <IncludePath>C:\Users\ms119322\Documents\Cpp libs\boost_1_64_0\boost\math\special_functions;C:\Users\ms119322\Documents\Cpp libs\boost_1_64_0;C:\Users\ms119322\Anaconda3\Lib\site-packages\numpy\core\include;C:\Users\ms119322\Anaconda3\include;C:\Users\ms119322\Anaconda3\Library\include;$(IncludePath)</IncludePath>
     <LibraryPath>C:\Users\ms119322\Anaconda3\Lib\site-packages\numpy\core\lib;C:\Users\ms119322\Anaconda3\libs;C:\Users\ms119322\Anaconda3\Library\lib;C:\Users\ms119322\Anaconda3\Lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <Target Name="QtMsBuildNotFound" BeforeTargets="CustomBuild;ClCompile" Condition="!Exists('$(QtMsBuild)\qt.targets') or !Exists('$(QtMsBuild)\qt.props')">
@@ -118,6 +118,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="customer.cpp" />
+    <ClCompile Include="CUtility.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="measurement_collector.cpp" />
     <ClCompile Include="simulation_thread.cpp" />
@@ -144,6 +145,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="customer.h" />
+    <ClInclude Include="CUtility.h" />
     <ClInclude Include="matplotlib.h" />
     <ClInclude Include="measurement_collector.h" />
     <QtMoc Include="simulation_thread.h">

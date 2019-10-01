@@ -1,21 +1,21 @@
 PARAMS
 
 time - start_of_measured_time
-1067.83
+1300.99
 total_requests - start_of_measured_total_requests
-600000
+300000
 total_serviced_requests - start_of_measured_serviced_requests
-599944
+299953
 transporter_list.size()
 300
 request_rate
-562.5
+230.769
 normalized_request_rate
-4.5
+4.8
 network.get_mean_pickup_distance()
-2.4
+6.24
 network.get_mean_dropoff_distance()
-2.4
+6.24
 network.get_request_asymmetry()
 0
 total_velocity
@@ -24,48 +24,48 @@ total_velocity
 MEASUREMENTS
 
 wait_time
-599944	0.738357	0.488292	
+299953	0.104481	0.0838661	
 drive_time
-599944	2.42836	1.08466	
+299953	6.24748	3.61518	
 delay_time
-599944	0.029036	0.170146	
+299953	1.59187e-17	1.12553e-14	
 fraction_of_delayed_trips
-599944	0.0286577	0.166842	
+299953	0	0	
 drive_time_between_stops
-1199898	0.266969	0.466161	
+599963	0.649628	0.925212	
 drive_distance_between_stops
-1199898	0.266969	0.466161	
+599963	0.649628	0.925212	
 occupancy
-600600	4.54812	0.851002	
+300000	4.80179	3.15291	
 scheduled_customers
-600600	5.93811	1.44379	
+300000	4.88142	3.22565	
 number_of_planned_stops
-600600	7.3281	2.62634	
+300000	4.96106	3.33738	
 planned_time_horizon
-600600	3.38163	0.769414	
+300000	7.22352	2.85546	
 number_of_idle_transporters
-2002	0	0	
+1000	0.405	0.656487	
 
 
 
 PARAMS
 
 time - start_of_measured_time
-1064.81
+1300.44
 total_requests - start_of_measured_total_requests
-600000
+300000
 total_serviced_requests - start_of_measured_serviced_requests
-600008
+300114
 transporter_list.size()
 300
 request_rate
-564.022
+231.011
 normalized_request_rate
-4.51217
+4.80503
 network.get_mean_pickup_distance()
-2.4
+6.24
 network.get_mean_dropoff_distance()
-2.4
+6.24
 network.get_request_asymmetry()
 0
 total_velocity
@@ -74,48 +74,48 @@ total_velocity
 MEASUREMENTS
 
 wait_time
-600008	0.7527	0.492296	
+300114	0.104644	0.0839084	
 drive_time
-600008	2.42943	1.08589	
+300114	6.2373	3.6191	
 delay_time
-600008	0.0294346	0.170904	
+300114	5.4549e-17	1.0727e-14	
 fraction_of_delayed_trips
-600008	0.0291146	0.168128	
+300114	0	0	
 drive_time_between_stops
-1200004	0.266208	0.465786	
+600108	0.649155	0.928749	
 drive_distance_between_stops
-1200004	0.266208	0.465786	
+600108	0.649155	0.928749	
 occupancy
-600300	4.56313	0.838139	
+300300	4.79595	3.15886	
 scheduled_customers
-600300	5.97708	1.44022	
+300300	4.87625	3.23232	
 number_of_planned_stops
-600300	7.39103	2.63136	
+300300	4.95655	3.34511	
 planned_time_horizon
-600300	3.40245	0.768135	
+300300	7.20673	2.86909	
 number_of_idle_transporters
-2001	0	0	
+1001	0.40959	0.644711	
 
 
 
 PARAMS
 
 time - start_of_measured_time
-1059.89
+1300.55
 total_requests - start_of_measured_total_requests
-600000
+300000
 total_serviced_requests - start_of_measured_serviced_requests
-599885
+299930
 transporter_list.size()
 300
 request_rate
-565.547
+231.253
 normalized_request_rate
-4.52438
+4.81006
 network.get_mean_pickup_distance()
-2.4
+6.24
 network.get_mean_dropoff_distance()
-2.4
+6.24
 network.get_request_asymmetry()
 0
 total_velocity
@@ -124,48 +124,48 @@ total_velocity
 MEASUREMENTS
 
 wait_time
-599885	0.768882	0.49938	
+299930	0.104223	0.0835693	
 drive_time
-599885	2.42844	1.08641	
+299930	6.23433	3.61621	
 delay_time
-599885	0.0291189	0.170532	
+299930	-1.97103e-17	1.13244e-14	
 fraction_of_delayed_trips
-599885	0.0287138	0.167001	
+299930	0	0	
 drive_time_between_stops
-1199820	0.265033	0.465022	
+599929	0.649415	0.923677	
 drive_distance_between_stops
-1199820	0.265033	0.465022	
+599929	0.649415	0.923677	
 occupancy
-599400	4.58159	0.821148	
+300600	4.79208	3.1325	
 scheduled_customers
-599400	6.0328	1.44224	
+300600	4.87304	3.2083	
 number_of_planned_stops
-599400	7.48401	2.65129	
+300600	4.954	3.3248	
 planned_time_horizon
-599400	3.4246	0.768069	
+300600	7.22085	2.85201	
 number_of_idle_transporters
-1998	0	0	
+1002	0.406188	0.640984	
 
 
 
 PARAMS
 
 time - start_of_measured_time
-1058.4
+1297.21
 total_requests - start_of_measured_total_requests
-600000
+300000
 total_serviced_requests - start_of_measured_serviced_requests
-599975
+299993
 transporter_list.size()
 300
 request_rate
-567.077
+231.495
 normalized_request_rate
-4.53662
+4.8151
 network.get_mean_pickup_distance()
-2.4
+6.24
 network.get_mean_dropoff_distance()
-2.4
+6.24
 network.get_request_asymmetry()
 0
 total_velocity
@@ -174,48 +174,48 @@ total_velocity
 MEASUREMENTS
 
 wait_time
-599975	0.782936	0.506197	
+299993	0.104822	0.0847736	
 drive_time
-599975	2.43261	1.08884	
+299993	6.24101	3.61285	
 delay_time
-599975	0.0316297	0.177696	
+299993	5.91185e-17	1.07452e-14	
 fraction_of_delayed_trips
-599975	0.0311563	0.17374	
+299993	0	0	
 drive_time_between_stops
-1199947	0.264583	0.464815	
+599982	0.647784	0.924982	
 drive_distance_between_stops
-1199947	0.264583	0.464815	
+599982	0.647784	0.924982	
 occupancy
-600000	4.59676	0.809633	
+300000	4.80935	3.17567	
 scheduled_customers
-600000	6.07679	1.44334	
+300000	4.89026	3.25195	
 number_of_planned_stops
-600000	7.55683	2.66311	
+300000	4.97116	3.36792	
 planned_time_horizon
-600000	3.44557	0.768577	
+300000	7.21718	2.85501	
 number_of_idle_transporters
-2000	0	0	
+1000	0.402	0.615139	
 
 
 
 PARAMS
 
 time - start_of_measured_time
-1056.5
+1296.81
 total_requests - start_of_measured_total_requests
-600000
+300000
 total_serviced_requests - start_of_measured_serviced_requests
-599911
+299971
 transporter_list.size()
 300
 request_rate
-568.611
+231.737
 normalized_request_rate
-4.54889
+4.82014
 network.get_mean_pickup_distance()
-2.4
+6.24
 network.get_mean_dropoff_distance()
-2.4
+6.24
 network.get_request_asymmetry()
 0
 total_velocity
@@ -224,48 +224,48 @@ total_velocity
 MEASUREMENTS
 
 wait_time
-599911	0.800389	0.512158	
+299971	0.104383	0.0832235	
 drive_time
-599911	2.43371	1.0877	
+299971	6.24792	3.614	
 delay_time
-599911	0.0310713	0.17635	
+299971	-3.25934e-17	1.13919e-14	
 fraction_of_delayed_trips
-599911	0.0305745	0.172162	
+299971	0	0	
 drive_time_between_stops
-1199845	0.264168	0.465275	
+599972	0.6476	0.922457	
 drive_distance_between_stops
-1199845	0.264168	0.465275	
+599972	0.6476	0.922457	
 occupancy
-600600	4.60653	0.802967	
+300300	4.81857	3.14569	
 scheduled_customers
-600600	6.12169	1.45407	
+300300	4.89894	3.21921	
 number_of_planned_stops
-600600	7.63686	2.69104	
+300300	4.97931	3.33232	
 planned_time_horizon
-600600	3.46585	0.772464	
+300300	7.23025	2.85537	
 number_of_idle_transporters
-2002	0	0	
+1001	0.384615	0.665192	
 
 
 
 PARAMS
 
 time - start_of_measured_time
-1051.14
+1294.36
 total_requests - start_of_measured_total_requests
-600000
+300000
 total_serviced_requests - start_of_measured_serviced_requests
-600102
+300054
 transporter_list.size()
 300
 request_rate
-570.15
+231.98
 normalized_request_rate
-4.5612
+4.82519
 network.get_mean_pickup_distance()
-2.4
+6.24
 network.get_mean_dropoff_distance()
-2.4
+6.24
 network.get_request_asymmetry()
 0
 total_velocity
@@ -274,48 +274,48 @@ total_velocity
 MEASUREMENTS
 
 wait_time
-600102	0.818807	0.520095	
+300054	0.104014	0.0824884	
 drive_time
-600102	2.43272	1.09083	
+300054	6.2466	3.61523	
 delay_time
-600102	0.0326661	0.180662	
+300054	-3.25844e-17	1.15853e-14	
 fraction_of_delayed_trips
-600102	0.0321462	0.176388	
+300054	0	0	
 drive_time_between_stops
-1200196	0.262738	0.464614	
+600054	0.646284	0.920199	
 drive_distance_between_stops
-1200196	0.262738	0.464614	
+600054	0.646284	0.920199	
 occupancy
-599100	4.62929	0.778914	
+300000	4.82659	3.13848	
 scheduled_customers
-599100	6.18669	1.44676	
+300000	4.90768	3.21112	
 number_of_planned_stops
-599100	7.74408	2.69661	
+300000	4.98877	3.324	
 planned_time_horizon
-599100	3.49229	0.769532	
+300000	7.23549	2.85224	
 number_of_idle_transporters
-1997	0	0	
+1000	0.384	0.629717	
 
 
 
 PARAMS
 
 time - start_of_measured_time
-1050.09
+1294.58
 total_requests - start_of_measured_total_requests
-600000
+300000
 total_serviced_requests - start_of_measured_serviced_requests
-600023
+300073
 transporter_list.size()
 300
 request_rate
-571.692
+232.223
 normalized_request_rate
-4.57354
+4.83024
 network.get_mean_pickup_distance()
-2.4
+6.24
 network.get_mean_dropoff_distance()
-2.4
+6.24
 network.get_request_asymmetry()
 0
 total_velocity
@@ -324,48 +324,48 @@ total_velocity
 MEASUREMENTS
 
 wait_time
-600023	0.822819	0.520609	
+300073	0.103636	0.0827059	
 drive_time
-600023	2.43321	1.09058	
+300073	6.23392	3.61047	
 delay_time
-600023	0.0332404	0.181867	
+300073	7.34996e-17	1.12222e-14	
 fraction_of_delayed_trips
-600023	0.0327704	0.178035	
+300073	0	0	
 drive_time_between_stops
-1200003	0.26251	0.463927	
+600088	0.64628	0.918335	
 drive_distance_between_stops
-1200003	0.26251	0.463927	
+600088	0.64628	0.918335	
 occupancy
-600300	4.63459	0.772551	
+300600	4.81557	3.14748	
 scheduled_customers
-600300	6.2018	1.44014	
+300600	4.89559	3.21975	
 number_of_planned_stops
-600300	7.76901	2.69205	
+300600	4.97561	3.33092	
 planned_time_horizon
-600300	3.50028	0.76827	
+300600	7.22222	2.85179	
 number_of_idle_transporters
-2001	0	0	
+1002	0.396208	0.63317	
 
 
 
 PARAMS
 
 time - start_of_measured_time
-1046.42
+1290.88
 total_requests - start_of_measured_total_requests
-600000
+300000
 total_serviced_requests - start_of_measured_serviced_requests
-599956
+300025
 transporter_list.size()
 300
 request_rate
-573.239
+232.466
 normalized_request_rate
-4.58591
+4.8353
 network.get_mean_pickup_distance()
-2.4
+6.24
 network.get_mean_dropoff_distance()
-2.4
+6.24
 network.get_request_asymmetry()
 0
 total_velocity
@@ -374,48 +374,48 @@ total_velocity
 MEASUREMENTS
 
 wait_time
-599956	0.854976	0.532931	
+300025	0.104235	0.0830924	
 drive_time
-599956	2.43479	1.09086	
+300025	6.23783	3.61597	
 delay_time
-599956	0.0334608	0.182961	
+300025	2.87983e-17	1.12769e-14	
 fraction_of_delayed_trips
-599956	0.0328941	0.178359	
+300025	0	0	
 drive_time_between_stops
-1199907	0.261629	0.463858	
+600024	0.644474	0.918174	
 drive_distance_between_stops
-1199907	0.261629	0.463858	
+600024	0.644474	0.918174	
 occupancy
-599700	4.65387	0.756087	
+300000	4.83154	3.16147	
 scheduled_customers
-599700	6.28828	1.4546	
+300000	4.91293	3.23596	
 number_of_planned_stops
-599700	7.92269	2.73246	
+300000	4.99433	3.35027	
 planned_time_horizon
-599700	3.5383	0.772652	
+300000	7.22698	2.85537	
 number_of_idle_transporters
-1999	0	0	
+1000	0.392	0.632721	
 
 
 
 PARAMS
 
 time - start_of_measured_time
-1044.88
+1287.66
 total_requests - start_of_measured_total_requests
-600000
+300000
 total_serviced_requests - start_of_measured_serviced_requests
-600097
+299955
 transporter_list.size()
 300
 request_rate
-574.789
+232.71
 normalized_request_rate
-4.59831
+4.84036
 network.get_mean_pickup_distance()
-2.4
+6.24
 network.get_mean_dropoff_distance()
-2.4
+6.24
 network.get_request_asymmetry()
 0
 total_velocity
@@ -424,48 +424,48 @@ total_velocity
 MEASUREMENTS
 
 wait_time
-600097	0.865006	0.537636	
+299955	0.103841	0.0829295	
 drive_time
-600097	2.43492	1.09219	
+299955	6.23879	3.61204	
 delay_time
-600097	0.0339762	0.18454	
+299955	-7.20125e-17	1.13009e-14	
 fraction_of_delayed_trips
-600097	0.0333596	0.179574	
+299955	0	0	
 drive_time_between_stops
-1200160	0.261199	0.463648	
+599953	0.643074	0.913992	
 drive_distance_between_stops
-1200160	0.261199	0.463648	
+599953	0.643074	0.913992	
 occupancy
-600300	4.66082	0.748548	
+299400	4.84696	3.14994	
 scheduled_customers
-600300	6.31714	1.45743	
+299400	4.9271	3.22288	
 number_of_planned_stops
-600300	7.97346	2.74584	
+299400	5.00723	3.33492	
 planned_time_horizon
-600300	3.55174	0.773279	
+299400	7.24383	2.84451	
 number_of_idle_transporters
-2001	0	0	
+998	0.374749	0.616932	
 
 
 
 PARAMS
 
 time - start_of_measured_time
-1043.68
+1285.94
 total_requests - start_of_measured_total_requests
-600000
+300000
 total_serviced_requests - start_of_measured_serviced_requests
-600226
+299991
 transporter_list.size()
 300
 request_rate
-576.344
+232.953
 normalized_request_rate
-4.61075
+4.84543
 network.get_mean_pickup_distance()
-2.4
+6.24
 network.get_mean_dropoff_distance()
-2.4
+6.24
 network.get_request_asymmetry()
 0
 total_velocity
@@ -474,48 +474,48 @@ total_velocity
 MEASUREMENTS
 
 wait_time
-600226	0.878818	0.542712	
+299991	0.104852	0.0840514	
 drive_time
-600226	2.43576	1.09384	
+299991	6.24011	3.6157	
 delay_time
-600226	0.0350701	0.187403	
+299991	-3.25912e-17	1.16902e-14	
 fraction_of_delayed_trips
-600226	0.0344304	0.182332	
+299991	0	0	
 drive_time_between_stops
-1200407	0.260853	0.463433	
+599999	0.642178	0.918181	
 drive_distance_between_stops
-1200407	0.260853	0.463433	
+599999	0.642178	0.918181	
 occupancy
-601500	4.66894	0.739908	
+299400	4.85323	3.18778	
 scheduled_customers
-601500	6.35143	1.45989	
+299400	4.9345	3.264	
 number_of_planned_stops
-601500	8.03392	2.75558	
+299400	5.01577	3.38002	
 planned_time_horizon
-601500	3.57104	0.77382	
+299400	7.23474	2.85243	
 number_of_idle_transporters
-2005	0	0	
+998	0.403808	0.662679	
 
 
 
 PARAMS
 
 time - start_of_measured_time
-1038.52
+1286.19
 total_requests - start_of_measured_total_requests
-600000
+300000
 total_serviced_requests - start_of_measured_serviced_requests
-599886
+300078
 transporter_list.size()
 300
 request_rate
-577.903
+233.197
 normalized_request_rate
-4.62323
+4.85051
 network.get_mean_pickup_distance()
-2.4
+6.24
 network.get_mean_dropoff_distance()
-2.4
+6.24
 network.get_request_asymmetry()
 0
 total_velocity
@@ -524,48 +524,48 @@ total_velocity
 MEASUREMENTS
 
 wait_time
-599886	0.909453	0.550861	
+300078	0.104572	0.0843607	
 drive_time
-599886	2.43563	1.09256	
+300078	6.24311	3.61635	
 delay_time
-599886	0.0350433	0.187516	
+300078	1.03049e-16	1.11371e-14	
 fraction_of_delayed_trips
-599886	0.0343699	0.182177	
+300078	0	0	
 drive_time_between_stops
-1199821	0.25966	0.462791	
+600085	0.642169	0.913697	
 drive_distance_between_stops
-1199821	0.25966	0.462791	
+600085	0.642169	0.913697	
 occupancy
-600000	4.68963	0.718913	
+299700	4.85522	3.17493	
 scheduled_customers
-600000	6.44108	1.45932	
+299700	4.93581	3.25	
 number_of_planned_stops
-600000	8.19253	2.77539	
+299700	5.01639	3.36466	
 planned_time_horizon
-600000	3.60713	0.773579	
+299700	7.25289	2.84362	
 number_of_idle_transporters
-2000	0	0	
+999	0.393393	0.63624	
 
 
 
 PARAMS
 
 time - start_of_measured_time
-1034.09
+1282.5
 total_requests - start_of_measured_total_requests
-600000
+300000
 total_serviced_requests - start_of_measured_serviced_requests
-600018
+299926
 transporter_list.size()
 300
 request_rate
-579.467
+233.442
 normalized_request_rate
-4.63573
+4.85559
 network.get_mean_pickup_distance()
-2.4
+6.24
 network.get_mean_dropoff_distance()
-2.4
+6.24
 network.get_request_asymmetry()
 0
 total_velocity
@@ -574,48 +574,48 @@ total_velocity
 MEASUREMENTS
 
 wait_time
-600018	0.938503	0.560568	
+299926	0.103831	0.0830374	
 drive_time
-600018	2.43636	1.09541	
+299926	6.25138	3.61196	
 delay_time
-600018	0.0364439	0.191518	
+299926	-9.32462e-17	1.0834e-14	
 fraction_of_delayed_trips
-600018	0.0356639	0.185451	
+299926	0	0	
 drive_time_between_stops
-1200060	0.258553	0.462634	
+599919	0.640498	0.909955	
 drive_distance_between_stops
-1200060	0.258553	0.462634	
+599919	0.640498	0.909955	
 occupancy
-599100	4.71183	0.6916	
+299100	4.8732	3.17657	
 scheduled_customers
-599100	6.52729	1.46422	
+299100	4.95414	3.25201	
 number_of_planned_stops
-599100	8.34275	2.80192	
+299100	5.03507	3.36706	
 planned_time_horizon
-599100	3.6463	0.774395	
+299100	7.25777	2.84127	
 number_of_idle_transporters
-1997	0	0	
+997	0.401204	0.675936	
 
 
 
 PARAMS
 
 time - start_of_measured_time
-1032.34
+1284.38
 total_requests - start_of_measured_total_requests
-600000
+300000
 total_serviced_requests - start_of_measured_serviced_requests
-600042
+300033
 transporter_list.size()
 300
 request_rate
-581.034
+233.686
 normalized_request_rate
-4.64827
+4.86067
 network.get_mean_pickup_distance()
-2.4
+6.24
 network.get_mean_dropoff_distance()
-2.4
+6.24
 network.get_request_asymmetry()
 0
 total_velocity
@@ -624,48 +624,48 @@ total_velocity
 MEASUREMENTS
 
 wait_time
-600042	0.951362	0.567644	
+300033	0.104329	0.083304	
 drive_time
-600042	2.43339	1.09465	
+300033	6.2503	3.61396	
 delay_time
-600042	0.0365091	0.191371	
+300033	1.74301e-17	1.10685e-14	
 fraction_of_delayed_trips
-600042	0.0357858	0.185756	
+300033	0	0	
 drive_time_between_stops
-1200075	0.258076	0.461866	
+600033	0.641253	0.915211	
 drive_distance_between_stops
-1200075	0.258076	0.461866	
+600033	0.641253	0.915211	
 occupancy
-599700	4.71435	0.691038	
+300000	4.86641	3.20248	
 scheduled_customers
-599700	6.55853	1.47311	
+300000	4.94801	3.27836	
 number_of_planned_stops
-599700	8.40271	2.82367	
+300000	5.02961	3.39401	
 planned_time_horizon
-599700	3.65973	0.778736	
+300000	7.2506	2.84925	
 number_of_idle_transporters
-1999	0	0	
+1000	0.416	0.657985	
 
 
 
 PARAMS
 
 time - start_of_measured_time
-1030.28
+1280.64
 total_requests - start_of_measured_total_requests
-600000
+300000
 total_serviced_requests - start_of_measured_serviced_requests
-599975
+299969
 transporter_list.size()
 300
 request_rate
-582.606
+233.931
 normalized_request_rate
-4.66085
+4.86576
 network.get_mean_pickup_distance()
-2.4
+6.24
 network.get_mean_dropoff_distance()
-2.4
+6.24
 network.get_request_asymmetry()
 0
 total_velocity
@@ -674,48 +674,48 @@ total_velocity
 MEASUREMENTS
 
 wait_time
-599975	0.972562	0.569598	
+299969	0.104696	0.0843242	
 drive_time
-599975	2.43736	1.0973	
+299969	6.24017	3.6178	
 delay_time
-599975	0.0383416	0.196116	
+299969	-4.85114e-17	1.08733e-14	
 fraction_of_delayed_trips
-599975	0.0375466	0.190097	
+299969	0	0	
 drive_time_between_stops
-1199916	0.257596	0.461718	
+599981	0.639455	0.912892	
 drive_distance_between_stops
-1199916	0.257596	0.461718	
+599981	0.639455	0.912892	
 occupancy
-600000	4.73134	0.668952	
+299400	4.87334	3.20472	
 scheduled_customers
-600000	6.6199	1.46188	
+299400	4.95553	3.28276	
 number_of_planned_stops
-600000	8.50847	2.8166	
+299400	5.03771	3.40096	
 planned_time_horizon
-600000	3.69061	0.773531	
+299400	7.24941	2.85386	
 number_of_idle_transporters
-2000	0	0	
+998	0.375752	0.62999	
 
 
 
 PARAMS
 
 time - start_of_measured_time
-1025.36
+1278.85
 total_requests - start_of_measured_total_requests
-600000
+300000
 total_serviced_requests - start_of_measured_serviced_requests
-599870
+300046
 transporter_list.size()
 300
 request_rate
-584.182
+234.176
 normalized_request_rate
-4.67346
+4.87086
 network.get_mean_pickup_distance()
-2.4
+6.24
 network.get_mean_dropoff_distance()
-2.4
+6.24
 network.get_request_asymmetry()
 0
 total_velocity
@@ -724,48 +724,48 @@ total_velocity
 MEASUREMENTS
 
 wait_time
-599870	1.05171	0.604589	
+300046	0.103722	0.0823155	
 drive_time
-599870	2.43781	1.10081	
+300046	6.24127	3.61494	
 delay_time
-599870	0.0394252	0.199001	
+300046	1.15943e-16	1.10988e-14	
 fraction_of_delayed_trips
-599870	0.03856	0.192544	
+300046	0	0	
 drive_time_between_stops
-1199775	0.256345	0.461531	
+600056	0.638544	0.90983	
 drive_distance_between_stops
-1199775	0.256345	0.461531	
+600056	0.638544	0.90983	
 occupancy
-598800	4.7552	0.643377	
+299400	4.88095	3.17209	
 scheduled_customers
-598800	6.8066	1.50157	
+299400	4.96153	3.24548	
 number_of_planned_stops
-598800	8.858	2.91251	
+299400	5.04211	3.35846	
 planned_time_horizon
-598800	3.78462	0.789501	
+299400	7.26335	2.83859	
 number_of_idle_transporters
-1996	0	0	
+998	0.38978	0.651325	
 
 
 
 PARAMS
 
 time - start_of_measured_time
-1024.49
+1282.21
 total_requests - start_of_measured_total_requests
-600000
+300000
 total_serviced_requests - start_of_measured_serviced_requests
-599974
+299984
 transporter_list.size()
 300
 request_rate
-585.762
+234.421
 normalized_request_rate
-4.6861
+4.87596
 network.get_mean_pickup_distance()
-2.4
+6.24
 network.get_mean_dropoff_distance()
-2.4
+6.24
 network.get_request_asymmetry()
 0
 total_velocity
@@ -774,48 +774,48 @@ total_velocity
 MEASUREMENTS
 
 wait_time
-599974	1.05578	0.594344	
+299984	0.104182	0.082904	
 drive_time
-599974	2.44127	1.10024	
+299984	6.23709	3.6164	
 delay_time
-599974	0.0394834	0.199544	
+299984	4.01715e-17	1.07855e-14	
 fraction_of_delayed_trips
-599974	0.0385367	0.192488	
+299984	0	0	
 drive_time_between_stops
-1199954	0.256088	0.461331	
+599994	0.64029	0.913388	
 drive_distance_between_stops
-1199954	0.256088	0.461331	
+599994	0.64029	0.913388	
 occupancy
-600000	4.76622	0.628226	
+300300	4.86357	3.15758	
 scheduled_customers
-600000	6.82655	1.47587	
+300300	4.9447	3.23126	
 number_of_planned_stops
-600000	8.88688	2.87017	
+300300	5.02583	3.34493	
 planned_time_horizon
-600000	3.7934	0.776823	
+300300	7.24895	2.84581	
 number_of_idle_transporters
-2000	0	0	
+1001	0.420579	0.664451	
 
 
 
 PARAMS
 
 time - start_of_measured_time
-1019.58
+1279.06
 total_requests - start_of_measured_total_requests
-600000
+300000
 total_serviced_requests - start_of_measured_serviced_requests
-599834
+300063
 transporter_list.size()
 300
 request_rate
-587.347
+234.667
 normalized_request_rate
-4.69878
+4.88106
 network.get_mean_pickup_distance()
-2.4
+6.24
 network.get_mean_dropoff_distance()
-2.4
+6.24
 network.get_request_asymmetry()
 0
 total_velocity
@@ -824,48 +824,48 @@ total_velocity
 MEASUREMENTS
 
 wait_time
-599834	1.14415	0.625633	
+300063	0.104139	0.0830657	
 drive_time
-599834	2.44305	1.10125	
+300063	6.24331	3.61108	
 delay_time
-599834	0.0413931	0.204255	
+300063	-2.27326e-18	1.09899e-14	
 fraction_of_delayed_trips
-599834	0.0403728	0.196832	
+300063	0	0	
 drive_time_between_stops
-1199697	0.254995	0.460887	
+600056	0.638695	0.911618	
 drive_distance_between_stops
-1199697	0.254995	0.460887	
+600056	0.638695	0.911618	
 occupancy
-598800	4.79067	0.597188	
+300000	4.88138	3.18156	
 scheduled_customers
-598800	7.03682	1.50997	
+300000	4.96278	3.25579	
 number_of_planned_stops
-598800	9.28297	2.95727	
+300000	5.04419	3.37006	
 planned_time_horizon
-598800	3.89678	0.788133	
+300000	7.26224	2.84004	
 number_of_idle_transporters
-1996	0	0	
+1000	0.363	0.62067	
 
 
 
 PARAMS
 
 time - start_of_measured_time
-1019.26
+1276.15
 total_requests - start_of_measured_total_requests
-600000
+300000
 total_serviced_requests - start_of_measured_serviced_requests
-600228
+299988
 transporter_list.size()
 300
 request_rate
-588.936
+234.912
 normalized_request_rate
-4.71149
+4.88618
 network.get_mean_pickup_distance()
-2.4
+6.24
 network.get_mean_dropoff_distance()
-2.4
+6.24
 network.get_request_asymmetry()
 0
 total_velocity
@@ -874,48 +874,48 @@ total_velocity
 MEASUREMENTS
 
 wait_time
-600228	1.14153	0.622987	
+299988	0.104489	0.0837854	
 drive_time
-600228	2.43816	1.09964	
+299988	6.23178	3.6142	
 delay_time
-600228	0.03945	0.199206	
+299988	1.66747e-17	1.11237e-14	
 fraction_of_delayed_trips
-600228	0.0385553	0.192533	
+299988	0	0	
 drive_time_between_stops
-1200453	0.254741	0.460735	
+599991	0.63726	0.910776	
 drive_distance_between_stops
-1200453	0.254741	0.460735	
+599991	0.63726	0.910776	
 occupancy
-600000	4.7855	0.602513	
+299700	4.88214	3.1908	
 scheduled_customers
-600000	7.02562	1.51041	
+299700	4.96397	3.26564	
 number_of_planned_stops
-600000	9.26574	2.95539	
+299700	5.0458	3.38051	
 planned_time_horizon
-600000	3.88803	0.786395	
+299700	7.25598	2.84121	
 number_of_idle_transporters
-2000	0	0	
+999	0.407407	0.66455	
 
 
 
 PARAMS
 
 time - start_of_measured_time
-1014.85
+1271.91
 total_requests - start_of_measured_total_requests
-600000
+300000
 total_serviced_requests - start_of_measured_serviced_requests
-600080
+299987
 transporter_list.size()
 300
 request_rate
-590.529
+235.158
 normalized_request_rate
-4.72423
+4.89129
 network.get_mean_pickup_distance()
-2.4
+6.24
 network.get_mean_dropoff_distance()
-2.4
+6.24
 network.get_request_asymmetry()
 0
 total_velocity
@@ -924,48 +924,48 @@ total_velocity
 MEASUREMENTS
 
 wait_time
-600080	1.25754	0.654403	
+299987	0.103817	0.0827843	
 drive_time
-600080	2.44412	1.1037	
+299987	6.23953	3.61419	
 delay_time
-600080	0.0432726	0.209021	
+299987	3.63814e-17	1.1594e-14	
 fraction_of_delayed_trips
-600080	0.0421294	0.200884	
+299987	0	0	
 drive_time_between_stops
-1200149	0.253701	0.460531	
+599982	0.635299	0.906373	
 drive_distance_between_stops
-1200149	0.253701	0.460531	
+599982	0.635299	0.906373	
 occupancy
-599100	4.81709	0.556914	
+299100	4.90471	3.18138	
 scheduled_customers
-599100	7.29502	1.53095	
+299100	4.98587	3.2556	
 number_of_planned_stops
-599100	9.77295	3.01716	
+299100	5.06702	3.36974	
 planned_time_horizon
-599100	4.02708	0.79243	
+299100	7.27013	2.83453	
 number_of_idle_transporters
-1997	0	0	
+997	0.36008	0.620392	
 
 
 
 PARAMS
 
 time - start_of_measured_time
-1012.44
+1272.86
 total_requests - start_of_measured_total_requests
-600000
+300000
 total_serviced_requests - start_of_measured_serviced_requests
-599946
+299980
 transporter_list.size()
 300
 request_rate
-592.127
+235.405
 normalized_request_rate
-4.73701
+4.89642
 network.get_mean_pickup_distance()
-2.4
+6.24
 network.get_mean_dropoff_distance()
-2.4
+6.24
 network.get_request_asymmetry()
 0
 total_velocity
@@ -974,48 +974,48 @@ total_velocity
 MEASUREMENTS
 
 wait_time
-599946	1.30442	0.663556	
+299980	0.104038	0.0829337	
 drive_time
-599946	2.44262	1.10347	
+299980	6.2375	3.61068	
 delay_time
-599946	0.0425555	0.207593	
+299980	1.81911e-17	1.11393e-14	
 fraction_of_delayed_trips
-599946	0.0413804	0.199168	
+299980	0	0	
 drive_time_between_stops
-1199884	0.253117	0.459894	
+599968	0.635644	0.903808	
 drive_distance_between_stops
-1199884	0.253117	0.459894	
+599968	0.635644	0.903808	
 occupancy
-599400	4.82506	0.546483	
+299400	4.9004	3.18177	
 scheduled_customers
-599400	7.40227	1.5454	
+299400	4.98207	3.25731	
 number_of_planned_stops
-599400	9.97949	3.04985	
+299400	5.06374	3.37281	
 planned_time_horizon
-599400	4.07927	0.79359	
+299400	7.25788	2.84734	
 number_of_idle_transporters
-1998	0	0	
+998	0.446894	0.679418	
 
 
 
 PARAMS
 
 time - start_of_measured_time
-1010.31
+1275.29
 total_requests - start_of_measured_total_requests
-600000
+300000
 total_serviced_requests - start_of_measured_serviced_requests
-599733
+299996
 transporter_list.size()
 300
 request_rate
-593.729
+235.651
 normalized_request_rate
-4.74983
+4.90154
 network.get_mean_pickup_distance()
-2.4
+6.24
 network.get_mean_dropoff_distance()
-2.4
+6.24
 network.get_request_asymmetry()
 0
 total_velocity
@@ -1024,48 +1024,48 @@ total_velocity
 MEASUREMENTS
 
 wait_time
-599733	1.38384	0.684723	
+299996	0.103453	0.0823304	
 drive_time
-599733	2.44435	1.1038	
+299996	6.2404	3.61136	
 delay_time
-599733	0.0430475	0.208851	
+299996	-2.12218e-17	1.11545e-14	
 fraction_of_delayed_trips
-599733	0.0418353	0.200213	
+299996	0	0	
 drive_time_between_stops
-1199473	0.252729	0.460222	
+600010	0.636873	0.907722	
 drive_distance_between_stops
-1199473	0.252729	0.460222	
+600010	0.636873	0.907722	
 occupancy
-599700	4.83616	0.52968	
+300300	4.89396	3.17238	
 scheduled_customers
-599700	7.57875	1.56539	
+300300	4.97521	3.24566	
 number_of_planned_stops
-599700	10.3213	3.09547	
+300300	5.05647	3.35829	
 planned_time_horizon
-599700	4.17065	0.799508	
+300300	7.26815	2.83441	
 number_of_idle_transporters
-1999	0	0	
+1001	0.375624	0.629578	
 
 
 
 PARAMS
 
 time - start_of_measured_time
-1007.21
+1271.81
 total_requests - start_of_measured_total_requests
-600000
+300000
 total_serviced_requests - start_of_measured_serviced_requests
-600222
+300032
 transporter_list.size()
 300
 request_rate
-595.335
+235.898
 normalized_request_rate
-4.76268
+4.90668
 network.get_mean_pickup_distance()
-2.4
+6.24
 network.get_mean_dropoff_distance()
-2.4
+6.24
 network.get_request_asymmetry()
 0
 total_velocity
@@ -1074,48 +1074,48 @@ total_velocity
 MEASUREMENTS
 
 wait_time
-600222	1.54192	0.731833	
+300032	0.103712	0.0822563	
 drive_time
-600222	2.44602	1.1075	
+300032	6.24945	3.61518	
 delay_time
-600222	0.0462546	0.216996	
+300032	-8.94241e-17	1.12305e-14	
 fraction_of_delayed_trips
-600222	0.0447734	0.206806	
+300032	0	0	
 drive_time_between_stops
-1200414	0.251682	0.45991	
+600015	0.635057	0.905456	
 drive_distance_between_stops
-1200414	0.251682	0.45991	
+600015	0.635057	0.905456	
 occupancy
-599400	4.85948	0.488584	
+300000	4.91396	3.16502	
 scheduled_customers
-599400	7.91634	1.61409	
+300000	4.99543	3.23734	
 number_of_planned_stops
-599400	10.9732	3.19978	
+300000	5.0769	3.34954	
 planned_time_horizon
-599400	4.34894	0.81667	
+300000	7.29534	2.8286	
 number_of_idle_transporters
-1998	0	0	
+1000	0.38	0.630555	
 
 
 
 PARAMS
 
 time - start_of_measured_time
-1004.76
+1270.92
 total_requests - start_of_measured_total_requests
-600000
+300000
 total_serviced_requests - start_of_measured_serviced_requests
-599963
+300044
 transporter_list.size()
 300
 request_rate
-596.945
+236.145
 normalized_request_rate
-4.77556
+4.91182
 network.get_mean_pickup_distance()
-2.4
+6.24
 network.get_mean_dropoff_distance()
-2.4
+6.24
 network.get_request_asymmetry()
 0
 total_velocity
@@ -1124,48 +1124,48 @@ total_velocity
 MEASUREMENTS
 
 wait_time
-599963	1.72707	0.770263	
+300044	0.104363	0.0831327	
 drive_time
-599963	2.44574	1.10975	
+300044	6.2349	3.61635	
 delay_time
-599963	0.0463495	0.21768	
+300044	2.50074e-17	1.12689e-14	
 fraction_of_delayed_trips
-599963	0.0447644	0.206786	
+300044	0	0	
 drive_time_between_stops
-1199957	0.251202	0.459772	
+600040	0.634601	0.908155	
 drive_distance_between_stops
-1199957	0.251202	0.459772	
+600040	0.634601	0.908155	
 occupancy
-599700	4.86779	0.477702	
+300000	4.90625	3.19781	
 scheduled_customers
-599700	8.30452	1.64588	
+300000	4.98865	3.2737	
 number_of_planned_stops
-599700	11.7413	3.26583	
+300000	5.07105	3.39005	
 planned_time_horizon
-599700	4.56002	0.82131	
+300000	7.26827	2.84245	
 number_of_idle_transporters
-1999	0	0	
+1000	0.393	0.634469	
 
 
 
 PARAMS
 
 time - start_of_measured_time
-1003.19
+1266.8
 total_requests - start_of_measured_total_requests
-600000
+300000
 total_serviced_requests - start_of_measured_serviced_requests
-600247
+300038
 transporter_list.size()
 300
 request_rate
-598.56
+236.392
 normalized_request_rate
-4.78848
+4.91696
 network.get_mean_pickup_distance()
-2.4
+6.24
 network.get_mean_dropoff_distance()
-2.4
+6.24
 network.get_request_asymmetry()
 0
 total_velocity
@@ -1174,48 +1174,48 @@ total_velocity
 MEASUREMENTS
 
 wait_time
-600247	1.83477	0.804242	
+300038	0.10345	0.082131	
 drive_time
-600247	2.44474	1.10849	
+300038	6.2504	3.61666	
 delay_time
-600247	0.0460094	0.217281	
+300038	-3.7133e-17	1.1115e-14	
 fraction_of_delayed_trips
-600247	0.0443617	0.205897	
+300038	0	0	
 drive_time_between_stops
-1200473	0.250711	0.459503	
+600058	0.632566	0.90134	
 drive_distance_between_stops
-1200473	0.250711	0.459503	
+600058	0.632566	0.90134	
 occupancy
-600300	4.87523	0.463967	
+299400	4.93275	3.19985	
 scheduled_customers
-600300	8.53378	1.68068	
+299400	5.01505	3.27482	
 number_of_planned_stops
-600300	12.1923	3.33915	
+299400	5.09736	3.38993	
 planned_time_horizon
-600300	4.67594	0.839928	
+299400	7.29553	2.82856	
 number_of_idle_transporters
-2001	0	0	
+998	0.361723	0.634999	
 
 
 
 PARAMS
 
 time - start_of_measured_time
-998.548
+1270.31
 total_requests - start_of_measured_total_requests
-600000
+300000
 total_serviced_requests - start_of_measured_serviced_requests
-599766
+300000
 transporter_list.size()
 300
 request_rate
-600.179
+236.64
 normalized_request_rate
-4.80143
+4.92211
 network.get_mean_pickup_distance()
-2.4
+6.24
 network.get_mean_dropoff_distance()
-2.4
+6.24
 network.get_request_asymmetry()
 0
 total_velocity
@@ -1224,48 +1224,48 @@ total_velocity
 MEASUREMENTS
 
 wait_time
-599766	2.4008	0.927817	
+300000	0.103425	0.0823159	
 drive_time
-599766	2.44588	1.1117	
+300000	6.24831	3.61069	
 delay_time
-599766	0.0475469	0.221414	
+300000	-3.03165e-17	1.25913e-14	
 fraction_of_delayed_trips
-599766	0.0457012	0.208836	
+300000	0	0	
 drive_time_between_stops
-1199531	0.249738	0.459939	
+599996	0.634401	0.904231	
 drive_distance_between_stops
-1199531	0.249738	0.459939	
+599996	0.634401	0.904231	
 occupancy
-599100	4.897	0.423798	
+300600	4.91858	3.19683	
 scheduled_customers
-599100	9.71908	1.75042	
+300600	4.99955	3.2705	
 number_of_planned_stops
-599100	14.5412	3.47987	
+300600	5.08053	3.38316	
 planned_time_horizon
-599100	5.31042	0.861063	
+300600	7.2753	2.83307	
 number_of_idle_transporters
-1997	0	0	
+1002	0.37525	0.618176	
 
 
 
 PARAMS
 
 time - start_of_measured_time
-998.213
+1264.64
 total_requests - start_of_measured_total_requests
-600000
+300000
 total_serviced_requests - start_of_measured_serviced_requests
-599593
+299974
 transporter_list.size()
 300
 request_rate
-601.803
+236.888
 normalized_request_rate
-4.81442
+4.92726
 network.get_mean_pickup_distance()
-2.4
+6.24
 network.get_mean_dropoff_distance()
-2.4
+6.24
 network.get_request_asymmetry()
 0
 total_velocity
@@ -1274,48 +1274,48 @@ total_velocity
 MEASUREMENTS
 
 wait_time
-599593	2.5324	0.951575	
+299974	0.103804	0.0823251	
 drive_time
-599593	2.44671	1.11071	
+299974	6.23987	3.61266	
 delay_time
-599593	0.0475106	0.22144	
+299974	-3.5625e-17	1.12549e-14	
 fraction_of_delayed_trips
-599593	0.045631	0.208683	
+299974	0	0	
 drive_time_between_stops
-1199216	0.249677	0.459979	
+599982	0.631549	0.903745	
 drive_distance_between_stops
-1199216	0.249677	0.459979	
+599982	0.631549	0.903745	
 occupancy
-600600	4.89966	0.41988	
+299400	4.93393	3.20419	
 scheduled_customers
-600600	9.97795	1.77648	
+299400	5.01641	3.27972	
 number_of_planned_stops
-600600	15.0562	3.53213	
+299400	5.09888	3.39544	
 planned_time_horizon
-600600	5.45541	0.858425	
+299400	7.27611	2.84241	
 number_of_idle_transporters
-2002	0	0	
+998	0.38477	0.634866	
 
 
 
 PARAMS
 
 time - start_of_measured_time
-993.905
+1268.43
 total_requests - start_of_measured_total_requests
-600000
+300000
 total_serviced_requests - start_of_measured_serviced_requests
-600485
+300010
 transporter_list.size()
 300
 request_rate
-603.431
+237.136
 normalized_request_rate
-4.82745
+4.93242
 network.get_mean_pickup_distance()
-2.4
+6.24
 network.get_mean_dropoff_distance()
-2.4
+6.24
 network.get_request_asymmetry()
 0
 total_velocity
@@ -1324,48 +1324,48 @@ total_velocity
 MEASUREMENTS
 
 wait_time
-600485	3.974	1.32717	
+300010	0.104328	0.0830202	
 drive_time
-600485	2.44656	1.11012	
+300010	6.22957	3.61398	
 delay_time
-600485	0.0472252	0.220829	
+300010	-1.74314e-17	1.09437e-14	
 fraction_of_delayed_trips
-600485	0.04536	0.208092	
+300010	0	0	
 drive_time_between_stops
-1200971	0.24828	0.45954	
+600008	0.633348	0.908051	
 drive_distance_between_stops
-1200971	0.24828	0.45954	
+600008	0.633348	0.908051	
 occupancy
-599700	4.92723	0.35985	
+300600	4.91129	3.2126	
 scheduled_customers
-599700	12.9169	2.04959	
+300600	4.99424	3.28861	
 number_of_planned_stops
-599700	20.9065	4.08579	
+300600	5.07719	3.40516	
 planned_time_horizon
-599700	7.0303	0.950939	
+300600	7.26093	2.84788	
 number_of_idle_transporters
-1999	0	0	
+1002	0.392216	0.645002	
 
 
 
 PARAMS
 
 time - start_of_measured_time
-991.061
+1260.27
 total_requests - start_of_measured_total_requests
-600000
+300000
 total_serviced_requests - start_of_measured_serviced_requests
-599890
+300074
 transporter_list.size()
 300
 request_rate
-605.063
+237.384
 normalized_request_rate
-4.84051
+4.93759
 network.get_mean_pickup_distance()
-2.4
+6.24
 network.get_mean_dropoff_distance()
-2.4
+6.24
 network.get_request_asymmetry()
 0
 total_velocity
@@ -1374,48 +1374,48 @@ total_velocity
 MEASUREMENTS
 
 wait_time
-599890	4.88424	1.46791	
+300074	0.103714	0.0823456	
 drive_time
-599890	2.44666	1.1099	
+300074	6.24229	3.61112	
 delay_time
-599890	0.0475954	0.221843	
+300074	3.0309e-18	1.11839e-14	
 fraction_of_delayed_trips
-599890	0.0456734	0.208776	
+300074	0	0	
 drive_time_between_stops
-1199778	0.247821	0.459879	
+600060	0.62925	0.902945	
 drive_distance_between_stops
-1199778	0.247821	0.459879	
+600060	0.62925	0.902945	
 occupancy
-599400	4.9363	0.338264	
+299100	4.95423	3.22319	
 scheduled_customers
-599400	14.7935	1.95826	
+299100	5.0359	3.29882	
 number_of_planned_stops
-599400	24.6506	3.90385	
+299100	5.11758	3.41431	
 planned_time_horizon
-599400	8.0377	0.831682	
+299100	7.28575	2.83556	
 number_of_idle_transporters
-1998	0	0	
+997	0.401204	0.626655	
 
 
 
 PARAMS
 
 time - start_of_measured_time
-989.258
+1266.03
 total_requests - start_of_measured_total_requests
-600000
+300000
 total_serviced_requests - start_of_measured_serviced_requests
-598464
+299956
 transporter_list.size()
 300
 request_rate
-606.7
+237.633
 normalized_request_rate
-4.8536
+4.94276
 network.get_mean_pickup_distance()
-2.4
+6.24
 network.get_mean_dropoff_distance()
-2.4
+6.24
 network.get_request_asymmetry()
 0
 total_velocity
@@ -1424,48 +1424,48 @@ total_velocity
 MEASUREMENTS
 
 wait_time
-598464	5.22773	1.6844	
+299956	0.104161	0.0830706	
 drive_time
-598464	2.44901	1.10968	
+299956	6.23731	3.61552	
 delay_time
-598464	0.0470956	0.220841	
+299956	8.71727e-17	1.11317e-14	
 fraction_of_delayed_trips
-598464	0.045164	0.207664	
+299956	0	0	
 drive_time_between_stops
-1196942	0.247929	0.460061	
+599956	0.632336	0.901704	
 drive_distance_between_stops
-1196942	0.247929	0.460061	
+599956	0.632336	0.901704	
 occupancy
-600000	4.93886	0.331026	
+300600	4.92565	3.2097	
 scheduled_customers
-600000	15.5249	2.36665	
+300600	5.00844	3.28576	
 number_of_planned_stops
-600000	26.111	4.72088	
+300600	5.09124	3.40216	
 planned_time_horizon
-600000	8.44212	1.08553	
+300600	7.27866	2.8331	
 number_of_idle_transporters
-2000	0	0	
+1002	0.338323	0.602977	
 
 
 
 PARAMS
 
 time - start_of_measured_time
-984.549
+1263.06
 total_requests - start_of_measured_total_requests
-600000
+300000
 total_serviced_requests - start_of_measured_serviced_requests
-598371
+299975
 transporter_list.size()
 300
 request_rate
-608.341
+237.882
 normalized_request_rate
-4.86673
+4.94794
 network.get_mean_pickup_distance()
-2.4
+6.24
 network.get_mean_dropoff_distance()
-2.4
+6.24
 network.get_request_asymmetry()
 0
 total_velocity
@@ -1474,48 +1474,48 @@ total_velocity
 MEASUREMENTS
 
 wait_time
-598371	7.70128	2.37161	
+299975	0.104198	0.0829398	
 drive_time
-598371	2.44522	1.11134	
+299975	6.23497	3.61406	
 delay_time
-598371	0.0471263	0.220618	
+299975	1.21276e-17	1.20891e-14	
 fraction_of_delayed_trips
-598371	0.0452595	0.207873	
+299975	0	0	
 drive_time_between_stops
-1196731	0.246833	0.459689	
+599980	0.630733	0.902678	
 drive_distance_between_stops
-1196731	0.246833	0.459689	
+599980	0.630733	0.902678	
 occupancy
-598800	4.95298	0.29456	
+300300	4.93667	3.21185	
 scheduled_customers
-598800	20.6133	2.84204	
+300300	5.01867	3.28647	
 number_of_planned_stops
-598800	36.2737	5.67672	
+300300	5.10068	3.40087	
 planned_time_horizon
-598800	11.1598	1.26601	
+300300	7.28314	2.83649	
 number_of_idle_transporters
-1996	0	0	
+1001	0.398601	0.63996	
 
 
 
 PARAMS
 
 time - start_of_measured_time
-983.706
+1260.23
 total_requests - start_of_measured_total_requests
-600000
+300000
 total_serviced_requests - start_of_measured_serviced_requests
-598481
+299976
 transporter_list.size()
 300
 request_rate
-609.987
+238.131
 normalized_request_rate
-4.8799
+4.95312
 network.get_mean_pickup_distance()
-2.4
+6.24
 network.get_mean_dropoff_distance()
-2.4
+6.24
 network.get_request_asymmetry()
 0
 total_velocity
@@ -1524,48 +1524,48 @@ total_velocity
 MEASUREMENTS
 
 wait_time
-598481	8.5463	2.52779	
+299976	0.104147	0.0835914	
 drive_time
-598481	2.44483	1.11018	
+299976	6.23127	3.61584	
 delay_time
-598481	0.0466681	0.219681	
+299976	-5.76059e-17	1.10148e-14	
 fraction_of_delayed_trips
-598481	0.0447917	0.206846	
+299976	0	0	
 drive_time_between_stops
-1196950	0.246537	0.460106	
+599977	0.629336	0.897568	
 drive_distance_between_stops
-1196950	0.246537	0.460106	
+599977	0.629336	0.897568	
 occupancy
-600000	4.95841	0.276548	
+300000	4.9437	3.21872	
 scheduled_customers
-600000	22.347	2.75448	
+300000	5.02614	3.29597	
 number_of_planned_stops
-600000	39.7355	5.50019	
+300000	5.10857	3.41328	
 planned_time_horizon
-600000	12.0776	1.16768	
+300000	7.28066	2.83846	
 number_of_idle_transporters
-2000	0	0	
+1000	0.361	0.600566	
 
 
 
 PARAMS
 
 time - start_of_measured_time
-979.809
+1259.86
 total_requests - start_of_measured_total_requests
-600000
+300000
 total_serviced_requests - start_of_measured_serviced_requests
-596544
+300003
 transporter_list.size()
 300
 request_rate
-611.637
+238.38
 normalized_request_rate
-4.8931
+4.95831
 network.get_mean_pickup_distance()
-2.4
+6.24
 network.get_mean_dropoff_distance()
-2.4
+6.24
 network.get_request_asymmetry()
 0
 total_velocity
@@ -1574,48 +1574,48 @@ total_velocity
 MEASUREMENTS
 
 wait_time
-596544	12.5433	3.86181	
+300003	0.103118	0.0818086	
 drive_time
-596544	2.44762	1.11136	
+300003	6.23892	3.61683	
 delay_time
-596544	0.0470359	0.220785	
+300003	1.48549e-16	1.1413e-14	
 fraction_of_delayed_trips
-596544	0.0450914	0.207505	
+300003	0	0	
 drive_time_between_stops
-1193083	0.246377	0.459743	
+599996	0.629146	0.897096	
 drive_distance_between_stops
-1193083	0.246377	0.459743	
+599996	0.629146	0.897096	
 occupancy
-599100	4.96756	0.246124	
+300300	4.9519	3.19465	
 scheduled_customers
-599100	30.607	4.38846	
+300300	5.03381	3.26982	
 number_of_planned_stops
-599100	56.2464	8.77037	
+300300	5.11571	3.38518	
 planned_time_horizon
-599100	16.4831	2.0498	
+300300	7.29358	2.83408	
 number_of_idle_transporters
-1997	0	0	
+1001	0.363636	0.631852	
 
 
 
 PARAMS
 
 time - start_of_measured_time
-977.366
+1260.08
 total_requests - start_of_measured_total_requests
-600000
+300000
 total_serviced_requests - start_of_measured_serviced_requests
-595248
+300038
 transporter_list.size()
 300
 request_rate
-613.292
+238.63
 normalized_request_rate
-4.90633
+4.9635
 network.get_mean_pickup_distance()
-2.4
+6.24
 network.get_mean_dropoff_distance()
-2.4
+6.24
 network.get_request_asymmetry()
 0
 total_velocity
@@ -1624,48 +1624,48 @@ total_velocity
 MEASUREMENTS
 
 wait_time
-595248	14.3074	4.57838	
+300038	0.103839	0.0826846	
 drive_time
-595248	2.4473	1.11064	
+300038	6.23867	3.61097	
 delay_time
-595248	0.0462564	0.218692	
+300038	-3.03127e-17	1.10294e-14	
 fraction_of_delayed_trips
-595248	0.0444218	0.20603	
+300038	0	0	
 drive_time_between_stops
-1190490	0.246238	0.459617	
+600046	0.629202	0.899058	
 drive_distance_between_stops
-1190490	0.246238	0.459617	
+600046	0.629202	0.899058	
 occupancy
-599400	4.9695	0.236742	
+300600	4.95107	3.2132	
 scheduled_customers
-599400	34.3058	5.46364	
+300600	5.03407	3.28911	
 number_of_planned_stops
-599400	63.6421	10.9207	
+300600	5.11706	3.40535	
 planned_time_horizon
-599400	18.4804	2.64551	
+300600	7.28887	2.83028	
 number_of_idle_transporters
-1998	0	0	
+1002	0.411178	0.682395	
 
 
 
 PARAMS
 
 time - start_of_measured_time
-975.235
+1257.36
 total_requests - start_of_measured_total_requests
-600000
+300000
 total_serviced_requests - start_of_measured_serviced_requests
-594799
+300054
 transporter_list.size()
 300
 request_rate
-614.951
+238.88
 normalized_request_rate
-4.91961
+4.9687
 network.get_mean_pickup_distance()
-2.4
+6.24
 network.get_mean_dropoff_distance()
-2.4
+6.24
 network.get_request_asymmetry()
 0
 total_velocity
@@ -1674,48 +1674,48 @@ total_velocity
 MEASUREMENTS
 
 wait_time
-594799	15.158	4.96998	
+300054	0.103927	0.0820645	
 drive_time
-594799	2.44459	1.10978	
+300054	6.23497	3.6184	
 delay_time
-594799	0.0453884	0.216454	
+300054	2.87955e-17	1.06638e-14	
 fraction_of_delayed_trips
-594799	0.043645	0.204304	
+300054	0	0	
 drive_time_between_stops
-1189600	0.245927	0.459849	
+600051	0.627828	0.899056	
 drive_distance_between_stops
-1189600	0.245927	0.459849	
+600051	0.627828	0.899056	
 occupancy
-599700	4.9698	0.235254	
+300300	4.95896	3.22411	
 scheduled_customers
-599700	36.1363	6.14022	
+300300	5.04208	3.29942	
 number_of_planned_stops
-599700	67.3028	12.2768	
+300300	5.1252	3.41524	
 planned_time_horizon
-599700	19.4529	3.06444	
+300300	7.28525	2.83626	
 number_of_idle_transporters
-1999	0	0	
+1001	0.378621	0.60095	
 
 
 
 PARAMS
 
 time - start_of_measured_time
-972.135
+1256.89
 total_requests - start_of_measured_total_requests
-600000
+300000
 total_serviced_requests - start_of_measured_serviced_requests
-593275
+300007
 transporter_list.size()
 300
 request_rate
-616.614
+239.13
 normalized_request_rate
-4.93292
+4.9739
 network.get_mean_pickup_distance()
-2.4
+6.24
 network.get_mean_dropoff_distance()
-2.4
+6.24
 network.get_request_asymmetry()
 0
 total_velocity
@@ -1724,48 +1724,48 @@ total_velocity
 MEASUREMENTS
 
 wait_time
-593275	18.6832	6.24574	
+300007	0.103716	0.082083	
 drive_time
-593275	2.44648	1.11268	
+300007	6.24991	3.61002	
 delay_time
-593275	0.0470001	0.220226	
+300007	5.30526e-17	1.1444e-14	
 fraction_of_delayed_trips
-593275	0.0451578	0.20765	
+300007	0	0	
 drive_time_between_stops
-1186550	0.245797	0.460236	
+600004	0.627704	0.896161	
 drive_distance_between_stops
-1186550	0.245797	0.460236	
+600004	0.627704	0.896161	
 occupancy
-599400	4.97642	0.209567	
+300300	4.97293	3.20906	
 scheduled_customers
-599400	43.5022	8.0003	
+300300	5.05561	3.28518	
 number_of_planned_stops
-599400	82.028	15.9953	
+300300	5.13829	3.40182	
 planned_time_horizon
-599400	23.3531	3.98716	
+300300	7.30473	2.82567	
 number_of_idle_transporters
-1998	0	0	
+1001	0.370629	0.656556	
 
 
 
 PARAMS
 
 time - start_of_measured_time
-970.607
+1249.49
 total_requests - start_of_measured_total_requests
-600000
+300000
 total_serviced_requests - start_of_measured_serviced_requests
-593502
+299979
 transporter_list.size()
 300
 request_rate
-618.282
+239.38
 normalized_request_rate
-4.94626
+4.97911
 network.get_mean_pickup_distance()
-2.4
+6.24
 network.get_mean_dropoff_distance()
-2.4
+6.24
 network.get_request_asymmetry()
 0
 total_velocity
@@ -1774,48 +1774,48 @@ total_velocity
 MEASUREMENTS
 
 wait_time
-593502	22.9183	6.83074	
+299979	0.104111	0.0829624	
 drive_time
-593502	2.44298	1.10918	
+299979	6.2424	3.61824	
 delay_time
-593502	0.0466283	0.219794	
+299979	3.41084e-17	1.07696e-14	
 fraction_of_delayed_trips
-593502	0.0447277	0.206706	
+299979	0	0	
 drive_time_between_stops
-1187014	0.245332	0.459572	
+599981	0.624108	0.896663	
 drive_distance_between_stops
-1187014	0.245332	0.459572	
+599981	0.624108	0.896663	
 occupancy
-600000	4.97897	0.199673	
+299100	4.99556	3.24694	
 scheduled_customers
-600000	52.2748	6.82128	
+299100	5.07861	3.32464	
 number_of_planned_stops
-600000	99.5706	13.6397	
+299100	5.16166	3.44287	
 planned_time_horizon
-600000	27.9587	3.2919	
+299100	7.31374	2.83257	
 number_of_idle_transporters
-2000	0	0	
+997	0.35005	0.619665	
 
 
 
 PARAMS
 
 time - start_of_measured_time
-968.805
+1252.22
 total_requests - start_of_measured_total_requests
-600000
+300000
 total_serviced_requests - start_of_measured_serviced_requests
-592002
+299897
 transporter_list.size()
 300
 request_rate
-619.955
+239.631
 normalized_request_rate
-4.95964
+4.98432
 network.get_mean_pickup_distance()
-2.4
+6.24
 network.get_mean_dropoff_distance()
-2.4
+6.24
 network.get_request_asymmetry()
 0
 total_velocity
@@ -1824,48 +1824,48 @@ total_velocity
 MEASUREMENTS
 
 wait_time
-592002	24.3595	7.40026	
+299897	0.10363	0.0822432	
 drive_time
-592002	2.4452	1.111	
+299897	6.24364	3.61365	
 delay_time
-592002	0.0465725	0.219347	
+299897	-6.74774e-17	1.12255e-14	
 fraction_of_delayed_trips
-592002	0.0447346	0.206721	
+299897	0	0	
 drive_time_between_stops
-1183997	0.245446	0.459944	
+599884	0.625516	0.894009	
 drive_distance_between_stops
-1183997	0.245446	0.459944	
+599884	0.625516	0.894009	
 occupancy
-600600	4.98124	0.185777	
+300000	4.98523	3.22168	
 scheduled_customers
-600600	55.3918	8.15512	
+300000	5.06738	3.29729	
 number_of_planned_stops
-600600	105.802	16.307	
+300000	5.14954	3.41274	
 planned_time_horizon
-600600	29.6023	3.9898	
+300000	7.31534	2.82663	
 number_of_idle_transporters
-2002	0	0	
+1000	0.372	0.635308	
 
 
 
 PARAMS
 
 time - start_of_measured_time
-965.194
+1250.17
 total_requests - start_of_measured_total_requests
-600000
+300000
 total_serviced_requests - start_of_measured_serviced_requests
-590724
+299876
 transporter_list.size()
 300
 request_rate
-621.632
+239.882
 normalized_request_rate
-4.97306
+4.98954
 network.get_mean_pickup_distance()
-2.4
+6.24
 network.get_mean_dropoff_distance()
-2.4
+6.24
 network.get_request_asymmetry()
 0
 total_velocity
@@ -1874,48 +1874,48 @@ total_velocity
 MEASUREMENTS
 
 wait_time
-590724	25.9166	8.16722	
+299876	0.103781	0.0825349	
 drive_time
-590724	2.44085	1.11138	
+299876	6.24968	3.61005	
 delay_time
-590724	0.0462246	0.218745	
+299876	-4.39771e-17	1.13709e-14	
 fraction_of_delayed_trips
-590724	0.0443574	0.205888	
+299876	0	0	
 drive_time_between_stops
-1181452	0.245086	0.459421	
+599870	0.624464	0.892454	
 drive_distance_between_stops
-1181452	0.245086	0.459421	
+599870	0.624464	0.892454	
 occupancy
-599700	4.97967	0.194214	
+299700	4.99831	3.22817	
 scheduled_customers
-599700	58.8186	9.17842	
+299700	5.08178	3.30635	
 number_of_planned_stops
-599700	112.657	18.3527	
+299700	5.16525	3.42508	
 planned_time_horizon
-599700	31.4786	4.57224	
+299700	7.32019	2.82368	
 number_of_idle_transporters
-1999	0	0	
+999	0.343343	0.559952	
 
 
 
 PARAMS
 
 time - start_of_measured_time
-963.119
+1249.46
 total_requests - start_of_measured_total_requests
-600000
+300000
 total_serviced_requests - start_of_measured_serviced_requests
-588653
+300086
 transporter_list.size()
 300
 request_rate
-623.314
+240.133
 normalized_request_rate
-4.98651
+4.99477
 network.get_mean_pickup_distance()
-2.4
+6.24
 network.get_mean_dropoff_distance()
-2.4
+6.24
 network.get_request_asymmetry()
 0
 total_velocity
@@ -1924,48 +1924,48 @@ total_velocity
 MEASUREMENTS
 
 wait_time
-588653	31.5192	9.79245	
+300086	0.104321	0.0834839	
 drive_time
-588653	2.44763	1.11333	
+300086	6.23962	3.61117	
 delay_time
-588653	0.0483103	0.223164	
+300086	-7.12233e-17	1.15323e-14	
 fraction_of_delayed_trips
-588653	0.0464059	0.210363	
+300086	0	0	
 drive_time_between_stops
-1177306	0.245453	0.460221	
+600072	0.623865	0.892623	
 drive_distance_between_stops
-1177306	0.245453	0.460221	
+600072	0.623865	0.892623	
 occupancy
-600300	4.9862	0.160431	
+300000	4.99461	3.25625	
 scheduled_customers
-600300	70.6368	11.7248	
+300000	5.07669	3.33267	
 number_of_planned_stops
-600300	136.287	23.4451	
+300000	5.15878	3.44883	
 planned_time_horizon
-600300	37.6508	5.8072	
+300000	7.29882	2.82925	
 number_of_idle_transporters
-2001	0	0	
+1000	0.374	0.622996	
 
 
 
 PARAMS
 
 time - start_of_measured_time
-961.603
+1247.4
 total_requests - start_of_measured_total_requests
-600000
+300000
 total_serviced_requests - start_of_measured_serviced_requests
-588151
+299942
 transporter_list.size()
 300
 request_rate
-625
+240.385
 normalized_request_rate
 5
 network.get_mean_pickup_distance()
-2.4
+6.24
 network.get_mean_dropoff_distance()
-2.4
+6.24
 network.get_request_asymmetry()
 0
 total_velocity
@@ -1974,27 +1974,27 @@ total_velocity
 MEASUREMENTS
 
 wait_time
-588151	32.8594	10.1644	
+299942	0.103447	0.0818568	
 drive_time
-588151	2.44547	1.11209	
+299942	6.2383	3.61187	
 delay_time
-588151	0.0472889	0.221084	
+299942	3.33546e-17	1.19175e-14	
 fraction_of_delayed_trips
-588151	0.0453982	0.208176	
+299942	0	0	
 drive_time_between_stops
-1176303	0.245211	0.459554	
+599930	0.623058	0.8915	
 drive_distance_between_stops
-1176303	0.245211	0.459554	
+599930	0.623058	0.8915	
 occupancy
-600900	4.98645	0.159388	
+299700	5.00209	3.22141	
 scheduled_customers
-600900	73.5313	11.8027	
+299700	5.08529	3.29643	
 number_of_planned_stops
-600900	142.076	23.6031	
+299700	5.16849	3.41202	
 planned_time_horizon
-600900	39.1691	5.94667	
+299700	7.31785	2.81664	
 number_of_idle_transporters
-2003	0	0	
+999	0.326326	0.601647	
 
 
 

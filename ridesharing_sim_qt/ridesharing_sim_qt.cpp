@@ -24,6 +24,7 @@
 //namespace plt = matplotlibcpp;
 
 #include "ridesharing_sim.h"
+#include "CUtility.h"
 
 
 #ifndef _INTEGER_TYPES
@@ -93,6 +94,32 @@ ridesharing_sim_qt::ridesharing_sim_qt(QWidget *parent)
 	ui.customPlot->yAxis->setNumberFormat("eb"); // e = exponential, b = beautiful decimal powers
 	ui.customPlot->yAxis->setNumberPrecision(0); // makes sure "1*10^4" is displayed only as "10^4"
 	ui.customPlot->addGraph();
+
+	int cap = 5;
+	double x = 0.02;
+	std::vector<std::complex<double>> zeroes;
+	for (int i = 0; i < cap; i++)
+	{
+		std::complex<double> arg = std::polar<double>(1.0, pi * ((double) i) / ((double) cap)) * x / ((double) cap) * exp(-x/((double) cap));
+		if (i % 2 == 0)
+			arg = -arg;
+		zeroes.push_back(- ((double) cap) / x * CUtility::LambertW(arg, 0));
+	}
+
+	std::string message = "";
+	for (int i = 0; i < cap; i++)
+	{
+		message += std::to_string(zeroes[i].real()) + " + " + std::to_string(zeroes[i].imag()) + "i\n";
+	}
+	std::complex<double> sum{0, 0};
+	for (int i = 1; i < cap; i++)
+	{
+		sum += std::complex<double>(1.0, 0.0) / (std::complex<double>(1.0, 0.0) - zeroes[i]);
+	}
+	message += "Summe = " + std::to_string(sum.real()) + " + " + std::to_string(sum.imag()) + "i\n";
+	
+	QMessageBox Msgbox(QMessageBox::Icon::Information, "Output", message.c_str());
+	Msgbox.exec();
 }
 
 void ridesharing_sim_qt::onButtonSimulateClicked()
@@ -119,13 +146,15 @@ void ridesharing_sim_qt::onButtonSimulateClicked()
 		mThread->number_of_bus_calculations = 1;
 	}
 	mThread->number_of_nodes = std::stoi(ui.textEdit->toPlainText().toStdString());
-	//mThread->normalized_request_rate = std::stod(ui.textEdit_4->toPlainText().toStdString());
-	mThread->normalized_request_rate = -1.0;
+	mThread->normalized_request_rate = std::stod(ui.textEdit_4->toPlainText().toStdString());
+	//mThread->normalized_request_rate = -1.0;
 
+	//mThread->number_of_request_rates = 1;
 	mThread->number_of_request_rates = 40;
-	mThread->normalized_request_rate_from = 4.5;
-	mThread->normalized_request_rate_to = 5.0;
+	mThread->normalized_request_rate_from = 0.5;
+	mThread->normalized_request_rate_to = 4.9;
 
+	//mThread->bus_type = 0;    // unlimited capacity
 	mThread->bus_type = 1;  // limited capacity
 	
 	mThread->save = ui.checkBox_2->isChecked();
@@ -268,6 +297,7 @@ void ridesharing_sim_qt::read_file(std::string filename, int iFile)
 		Msgbox.exec();
 	}
 }
+
 
 void ridesharing_sim_qt::onButtonChooseFile1Clicked()
 {
