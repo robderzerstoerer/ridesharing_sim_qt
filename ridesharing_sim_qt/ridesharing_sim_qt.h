@@ -39,4 +39,5 @@ private slots:
 public slots:
 	void onProcessTextChanged(QString newText);
 	void onGraphChanged(QVector<double> vB, QVector<double> vE);
+	void onErrorMessage(QString messageText);
 };

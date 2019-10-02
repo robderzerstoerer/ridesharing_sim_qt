@@ -1,6 +1,6 @@
 #include "simulation_thread.h"
 #include <qmessagebox.h>
-#include <CUtility.h>
+#include "utility.h"
 
 simulation_thread::simulation_thread(QObject* parent)
 	: QThread(parent)
@@ -21,8 +21,7 @@ void simulation_thread::run()
 	else
 	{
 		std::string errormessage = "File " + filename + " already exists.";
-		QMessageBox Msgbox(QMessageBox::Icon::Critical, "Error!", errormessage.c_str());
-		Msgbox.exec();
+		emit ErrorMessage(errormessage.c_str());
 		return;
 	}
 
@@ -65,8 +64,9 @@ void simulation_thread::run()
 			}
 			else
 			{
-				QMessageBox Msgbox(QMessageBox::Icon::Critical, "Error!", "Could not open file.");
-				Msgbox.exec();
+				std::string errormessage = "Could not open file torus_25_Efficiency_x_7.5.dateff.dat";
+				emit ErrorMessage(errormessage.c_str());
+				return;
 			}
 		}
 
@@ -77,8 +77,7 @@ void simulation_thread::run()
 		else
 		{
 			std::string errormessage = "File " + plotfilename + " already exists.";
-			QMessageBox Msgbox(QMessageBox::Icon::Critical, "Error!", errormessage.c_str());
-			Msgbox.exec();
+			emit ErrorMessage(errormessage.c_str());
 			return;
 		}
 
@@ -206,8 +205,7 @@ void simulation_thread::run()
 		else
 		{
 			std::string errormessage = "File " + plotfilename + " already exists.";
-			QMessageBox Msgbox(QMessageBox::Icon::Critical, "Error!", errormessage.c_str());
-			Msgbox.exec();
+			emit ErrorMessage(errormessage.c_str());
 			return;
 		}
 
@@ -241,7 +239,11 @@ void simulation_thread::run()
 			vx.push_back((double)normalized_request_rate);
 			vC.push_back(sim.measurements.get_av_scheduled_customers());
 
-			outplot << vx.back() << '\t' << vC.back() << '\n';
+			outplot << vx.back() << '\t' 
+				<< vC.back() << '\t' 
+				<< sim.measurements.get_stddev_scheduled_customers() << '\t' 
+				<< CUtility::two_node_av_scheduled_customers(4, normalized_request_rate, 2) << '\t'
+				<< CUtility::two_node_stddev_scheduled_customers(4, normalized_request_rate, 2) << '\n';
 		}
 
 		//plt::loglog(vB.toStdVector(), vE.toStdVector());

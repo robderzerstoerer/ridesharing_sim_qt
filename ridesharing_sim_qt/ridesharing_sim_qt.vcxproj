@@ -118,7 +118,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="customer.cpp" />
-    <ClCompile Include="CUtility.cpp" />
+    <ClCompile Include="utility.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="measurement_collector.cpp" />
     <ClCompile Include="simulation_thread.cpp" />
@@ -145,7 +145,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="customer.h" />
-    <ClInclude Include="CUtility.h" />
+    <ClInclude Include="utility.h" />
     <ClInclude Include="matplotlib.h" />
     <ClInclude Include="measurement_collector.h" />
     <QtMoc Include="simulation_thread.h">

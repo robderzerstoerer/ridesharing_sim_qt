@@ -48,6 +48,7 @@ public:
 	void print(std::ofstream& out, bool readable = false);
 
 	double get_av_scheduled_customers() { return scheduled_customers.av; }
+	double get_stddev_scheduled_customers() { return sqrt(scheduled_customers.stddev/scheduled_customers.n); }
 
 protected:
 

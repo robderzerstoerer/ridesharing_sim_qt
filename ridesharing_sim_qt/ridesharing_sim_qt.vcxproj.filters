@@ -57,7 +57,7 @@
     <ClCompile Include="simulation_thread.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="CUtility.cpp">
+    <ClCompile Include="utility.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -101,7 +101,7 @@
     <ClInclude Include="transporter.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="CUtility.h">
+    <ClInclude Include="utility.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

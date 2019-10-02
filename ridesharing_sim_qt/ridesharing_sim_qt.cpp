@@ -24,7 +24,7 @@
 //namespace plt = matplotlibcpp;
 
 #include "ridesharing_sim.h"
-#include "CUtility.h"
+#include "utility.h"
 
 
 #ifndef _INTEGER_TYPES
@@ -38,7 +38,6 @@
 #define _EPSILON
 #endif
 
-constexpr double pi = 3.14159265358979323846;
 
 #include "ridesharing_sim_qt.h"
 #include <qmessagebox.h>
@@ -61,6 +60,7 @@ ridesharing_sim_qt::ridesharing_sim_qt(QWidget *parent)
 	qRegisterMetaType<QVector<double>>("QVector<double>");
 	connect(mThread, SIGNAL(ProcessTextChanged(QString)), this, SLOT(onProcessTextChanged(QString)));
 	connect(mThread, SIGNAL(GraphChanged(QVector<double>, QVector<double>)), this, SLOT(onGraphChanged(QVector<double>, QVector<double>)));
+	connect(mThread, SIGNAL(ErrorMessage(QString)), this, SLOT(onErrorMessage(QString)));
 	
 	ui.listWidget->addItem("torus");
 	ui.listWidget->addItem("ring");
@@ -95,31 +95,9 @@ ridesharing_sim_qt::ridesharing_sim_qt(QWidget *parent)
 	ui.customPlot->yAxis->setNumberPrecision(0); // makes sure "1*10^4" is displayed only as "10^4"
 	ui.customPlot->addGraph();
 
-	int cap = 5;
-	double x = 0.02;
-	std::vector<std::complex<double>> zeroes;
-	for (int i = 0; i < cap; i++)
-	{
-		std::complex<double> arg = std::polar<double>(1.0, pi * ((double) i) / ((double) cap)) * x / ((double) cap) * exp(-x/((double) cap));
-		if (i % 2 == 0)
-			arg = -arg;
-		zeroes.push_back(- ((double) cap) / x * CUtility::LambertW(arg, 0));
-	}
-
-	std::string message = "";
-	for (int i = 0; i < cap; i++)
-	{
-		message += std::to_string(zeroes[i].real()) + " + " + std::to_string(zeroes[i].imag()) + "i\n";
-	}
-	std::complex<double> sum{0, 0};
-	for (int i = 1; i < cap; i++)
-	{
-		sum += std::complex<double>(1.0, 0.0) / (std::complex<double>(1.0, 0.0) - zeroes[i]);
-	}
-	message += "Summe = " + std::to_string(sum.real()) + " + " + std::to_string(sum.imag()) + "i\n";
 	
-	QMessageBox Msgbox(QMessageBox::Icon::Information, "Output", message.c_str());
-	Msgbox.exec();
+	//QMessageBox Msgbox(QMessageBox::Icon::Information, "Output", message.c_str());
+	//Msgbox.exec();
 }
 
 void ridesharing_sim_qt::onButtonSimulateClicked()
@@ -199,6 +177,12 @@ void ridesharing_sim_qt::onButtonStopClicked()
 void ridesharing_sim_qt::onProcessTextChanged(QString newText)
 {
 	ui.textEdit_6->setPlainText(newText);
+}
+
+void ridesharing_sim_qt::onErrorMessage(QString errorText)
+{
+	QMessageBox Msgbox(QMessageBox::Icon::Critical, "Error!", errorText);
+	Msgbox.exec();
 }
 
 void ridesharing_sim_qt::onGraphChanged(QVector<double> vB, QVector<double> vE)

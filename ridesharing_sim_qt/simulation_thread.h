@@ -31,4 +31,5 @@ public:
 signals:
 	void ProcessTextChanged(QString);
 	void GraphChanged(QVector<double>, QVector<double>);
+	void ErrorMessage(QString);
 };
