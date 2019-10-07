@@ -274,6 +274,22 @@ void ridesharing_sim::init_network(ULL param_number_of_buses, ULL param_number_o
 
 		}
 
+		if (param_topology == "directed ring")
+		{
+			//create a path-graph (a line)
+			if (i < param_number_of_nodes - 1)
+			{
+				network.add_link(i, i + 1, 1);
+			}
+
+			//close the ring
+			if (i == param_number_of_nodes - 1)
+			{
+				network.add_link(param_number_of_nodes - 1, 0, 1);
+			}
+
+		}
+
 		if (param_topology == "torus")
 		{
 			//create a square lattice first
@@ -345,7 +361,7 @@ void ridesharing_sim::init_new_sim(ULL param_number_of_buses,
 			request_list.push_back(std::make_pair(t, std::make_pair(1, 0)));
 		}
 	}
-	if (param_topology == "ring")
+	if (param_topology == "ring" || param_topology == "directed ring")
 	{
 		//equally spaced requests from each node to the other
 		for (double t = 0; t < 1.0; t += 2.0 * param_number_of_nodes / (1.0 * param_number_of_buses))

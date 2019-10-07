@@ -26,7 +26,7 @@ public:
 	static std::complex<double> LambertW(std::complex<double> z, int k = 0);
 
 	// theoretical solution for minimal (two node) graph and 1 Bus
-	static double two_node_av_scheduled_customers(ULL cap, double x, ULL B);
+	static double two_node_av_scheduled_customers(ULL cap, double x, ULL B, double doubcap = -1.0);
 	static double two_node_stddev_scheduled_customers(ULL cap, double x, ULL B);
 
 private:

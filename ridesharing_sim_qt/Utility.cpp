@@ -62,9 +62,14 @@ std::complex<double> CUtility::LambertW(std::complex<double> z, int k)
 	return w;
 }
 
-double CUtility::two_node_av_scheduled_customers(ULL cap, double x, ULL B)
+double CUtility::two_node_av_scheduled_customers(ULL cap, double x, ULL B, double doubcap)
 {
 	double dcap = (double)cap;
+	if (doubcap < 0.0)
+		doubcap = dcap;
+	if ((doubcap - x) <= MACRO_EPSILON)
+		return 1e10;
+
 	std::vector<std::complex<double>> zeroes;
 	if (cap % 2 == 1)
 	{
@@ -99,15 +104,16 @@ double CUtility::two_node_av_scheduled_customers(ULL cap, double x, ULL B)
 		Msgbox.exec();
 	}
 
-	if ((dcap - x) <= MACRO_EPSILON)
-		return 1e10;
-
-	return 2 / B * ((dcap - (dcap - x)* (dcap - x))/ (2 * (dcap - x)) + sum.real()) + x;
+	return 2 / B * ((doubcap - (doubcap - x)* (doubcap - x))/ (2 * (doubcap - x)) + sum.real()) + x;
+	//return sum.real();
 }
 
 double CUtility::two_node_stddev_scheduled_customers(ULL cap, double x, ULL B)
 {
 	double dcap = (double)cap;
+	if ((dcap - x) <= MACRO_EPSILON)
+		return 1e10;
+
 	std::vector<std::complex<double>> zeroes;
 	if (cap % 2 == 1)
 	{
@@ -142,9 +148,6 @@ double CUtility::two_node_stddev_scheduled_customers(ULL cap, double x, ULL B)
 		QMessageBox Msgbox(QMessageBox::Icon::Critical, "Calculation error", "Calculation of two-node solution was unsuccessful.");
 		Msgbox.exec();
 	}
-
-	if ((dcap - x) <= MACRO_EPSILON)
-		return 1e10;
 
 	return sqrt(2 / B * ((dcap * (dcap + 2 * x) + 6 * x * (dcap - x) * (dcap - x) - (dcap - x) * (dcap - x) * (dcap - x) * (dcap - x)) / (12 * (dcap - x) * (dcap - x)) - sum.real()) + x);
 }

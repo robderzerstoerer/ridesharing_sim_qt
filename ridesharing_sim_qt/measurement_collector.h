@@ -48,6 +48,7 @@ public:
 	void print(std::ofstream& out, bool readable = false);
 
 	double get_av_scheduled_customers() { return scheduled_customers.av; }
+	std::vector<double> C_averages;		// list of partly averaged values for scheduled_customers
 	double get_stddev_scheduled_customers() { return sqrt(scheduled_customers.stddev/scheduled_customers.n); }
 
 protected:
@@ -71,6 +72,12 @@ private:
 	traffic_network& network;
 
 	void new_measurement(measure& m, long double val);
+
+	// Variables for measuring the number of scheduled customers in equidistant time intervals
+	// (for verifying the validity of the final result)
+	int last_iTime;
+	double cur_average;
+	int cur_n;
 };
 
 #endif // MEASUREMENTS_H

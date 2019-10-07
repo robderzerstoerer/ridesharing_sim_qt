@@ -1,6 +1,6 @@
 #include "measurement_collector.h"
 
-measurement_collector::measurement_collector(traffic_network& param_network) : network(param_network)
+measurement_collector::measurement_collector(traffic_network& param_network) : network(param_network), last_iTime(0), cur_average(0.0), cur_n(0)
 {
 
 }
@@ -36,9 +36,22 @@ void measurement_collector::measure_trip(std::pair<ULL, double> last_stop, std::
 
 void measurement_collector::measure_system_status(std::vector<transporter>& transporter_list, double time)
 {
+	int iTime = trunc(time / (100));
+	if (iTime > last_iTime)
+	{
+		C_averages.push_back(cur_average);
+		cur_n = 0;
+		cur_average = 0.0;
+		last_iTime = iTime;
+	}
+
 	ULL idle_transporters = 0;
 	for (transporter& t : transporter_list)
 	{
+		cur_n += 1;
+		double delta = t.get_number_of_scheduled_customers() - cur_average;
+		cur_average += delta / cur_n;
+
 		new_measurement(occupancy, t.get_occupancy());
 		new_measurement(scheduled_customers, t.get_number_of_scheduled_customers());
 		new_measurement(number_of_planned_stops, t.get_number_of_planned_stops());
@@ -65,6 +78,11 @@ void measurement_collector::reset()
 	planned_time_horizon.reset();
 	number_of_idle_transporters.reset();
 
+	// Variables for measuring the number of scheduled customers in equidistant time intervals
+	// (for verifying the validity of the final result)
+	last_iTime = 0;
+	double cur_average = 0.0;
+	int cur_n = 0;
 }
 
 void measurement_collector::print(std::ofstream& out, bool readable)

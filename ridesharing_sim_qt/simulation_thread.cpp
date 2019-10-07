@@ -175,10 +175,16 @@ void simulation_thread::run()
 				}
 
 				vB.push_back((double)number_of_buses);
-				double Eff = normalized_request_rate / sim.measurements.get_av_scheduled_customers();
+				double total_C_av = sim.measurements.get_av_scheduled_customers();
+				double Eff = normalized_request_rate / total_C_av;
 				vE.push_back(Eff);
 
-				outplot << vB.back() << '\t' << vE.back() << '\n';
+				outplot << vB.back() << '\t' << vE.back();
+				if (abs(sim.measurements.C_averages.back() - total_C_av) > 0.3 * total_C_av)
+				{
+					outplot << '\t' << "x" << '\t' << normalized_request_rate / sim.measurements.C_averages.back();
+				}
+				outplot << '\n';
 			}
 		}
 
@@ -221,12 +227,12 @@ void simulation_thread::run()
 			emit GraphChanged(vx, vC);
 			//ui.textEdit_6->setPlainText(newText.c_str());
 
-			sim.init_new_sim(number_of_buses, number_of_nodes, topology, normalized_request_rate, bus_type, 1000 * number_of_buses);
+			sim.init_new_sim(number_of_buses, number_of_nodes, topology, normalized_request_rate, bus_type, 3000 * number_of_buses);
 
 			//turn on measurements with a given step size, measure every (number of buses) requests for a total of ~ 100 measurements
 			sim.enable_measurements((1.0 * number_of_buses) / sim.request_rate);
 			//simulate (and measure) for 100 requests per bus (at least 10000 requests)
-			sim.run_sim_requests(std::max((ULL)30000, 1000 * number_of_buses));
+			sim.run_sim_requests(std::max((ULL)50000, 1000 * number_of_buses));
 
 			//output results
 			if (save)
@@ -242,8 +248,15 @@ void simulation_thread::run()
 			outplot << vx.back() << '\t' 
 				<< vC.back() << '\t' 
 				<< sim.measurements.get_stddev_scheduled_customers() << '\t' 
-				<< CUtility::two_node_av_scheduled_customers(4, normalized_request_rate, 2) << '\t'
-				<< CUtility::two_node_stddev_scheduled_customers(4, normalized_request_rate, 2) << '\n';
+				<< CUtility::two_node_av_scheduled_customers(5, normalized_request_rate, 2) << '\t'
+				<< CUtility::two_node_stddev_scheduled_customers(5, normalized_request_rate, 2);
+
+			if (abs(sim.measurements.C_averages.back() - vC.back()) > 0.3 * vC.back())
+			{
+				outplot << '\t' << "x" << '\t' << sim.measurements.C_averages.back();
+			}
+
+			outplot << '\n';
 		}
 
 		//plt::loglog(vB.toStdVector(), vE.toStdVector());
