@@ -128,13 +128,15 @@ void ridesharing_sim_qt::onButtonSimulateClicked()
 	mThread->normalized_request_rate = std::stod(ui.textEdit_4->toPlainText().toStdString());
 	//mThread->normalized_request_rate = -1.0;
 
-	mThread->number_of_request_rates = 1;
-	//mThread->number_of_request_rates = 20;
+	//mThread->number_of_request_rates = 1;
+	mThread->number_of_request_rates = 20;
 	mThread->normalized_request_rate_from = 1.5;
 	mThread->normalized_request_rate_to = 4.0;
 
 	//mThread->bus_type = 0;    // unlimited capacity
 	mThread->bus_type = 1;  // limited capacity
+
+	mThread->simulate_until_exact = true;
 	
 	mThread->save = ui.checkBox_2->isChecked();
 	if (mThread->save)

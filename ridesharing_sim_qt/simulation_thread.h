@@ -26,6 +26,8 @@ public:
 	bool save;
 	std::string filename;
 
+	bool simulate_until_exact;
+
 	bool stop;
 
 signals:

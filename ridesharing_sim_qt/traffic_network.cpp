@@ -163,12 +163,36 @@ void traffic_network::recalc_mean_distances()
 {
 	mean_pickup_distance = 0;
 	mean_dropoff_distance = 0;
+
+	// we need to exclude requests that want to go to the same node as where they already are.
+	// this effectively redefines the normalization of probabilities for origin-destination pairs.
+	// here we calculate these new probabilities.
+	std::vector<std::vector<double>> redef_origin_dest_probs;
+	for (ULL i = 0; i < number_of_nodes; ++i)
+	{
+		double total_redef_dest_prob = 0.0;
+		redef_origin_dest_probs.push_back(std::vector<double>());
+		for (ULL j = 0; j < number_of_nodes; ++j)
+		{
+			if (i != j)
+			{
+				total_redef_dest_prob += destination_probabilities[j];
+			}
+		}
+		for (ULL j = 0; j < number_of_nodes; ++j)
+		{
+			if (i != j)
+				redef_origin_dest_probs[i].push_back(origin_probabilities[i] * destination_probabilities[j] / total_redef_dest_prob);
+			else
+				redef_origin_dest_probs[i].push_back(0.0);
+		}
+	}
 	for (ULL i = 0; i < number_of_nodes; ++i)
 	{
 		for (ULL j = 0; j < number_of_nodes; ++j)
 		{
-			mean_dropoff_distance += origin_probabilities[i] * destination_probabilities[j] * get_network_distance(i, j);
-			mean_pickup_distance += origin_probabilities[i] * destination_probabilities[j] * get_network_distance(j, i);
+			mean_dropoff_distance += redef_origin_dest_probs[i][j] * get_network_distance(i, j);
+			mean_pickup_distance += redef_origin_dest_probs[i][j] * get_network_distance(j, i);
 		}
 	}
 }
@@ -185,7 +209,12 @@ std::pair< ULL, ULL > traffic_network::generate_request()
 	std::pair<ULL, ULL> request;
 
 	request.first = random_origin(random_generator);
-	request.second = random_destination(random_generator);
+	request.second = request.first;
+
+	while (request.second == request.first)
+	{
+		request.second = random_destination(random_generator);
+	}
 
 	return(request);
 }

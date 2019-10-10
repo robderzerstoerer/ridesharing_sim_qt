@@ -3,7 +3,7 @@
 #include "utility.h"
 
 simulation_thread::simulation_thread(QObject* parent)
-	: QThread(parent)
+	: QThread(parent), simulate_until_exact(false)
 {
 }
 
@@ -159,12 +159,34 @@ void simulation_thread::run()
 			}
 			else
 			{
-				sim.init_new_sim(number_of_buses, number_of_nodes, topology, normalized_request_rate, bus_type, 100 * number_of_buses);
+				sim.init_new_sim(number_of_buses, number_of_nodes, topology, normalized_request_rate, bus_type, std::max((ULL)50000, 100 * number_of_buses));
 
 				//turn on measurements with a given step size, measure every (number of buses) requests for a total of ~ 100 measurements
 				sim.enable_measurements((2.0 * number_of_buses) / sim.request_rate);
-				//simulate (and measure) for 100 requests per bus (at least 10000 requests)
-				sim.run_sim_requests(std::max((ULL)10000, 500 * number_of_buses));
+				
+				if (simulate_until_exact)
+				{
+					bool exact_result = false;
+					while (!exact_result)
+					{
+						//simulate (and measure) for 100 requests per bus (at least 10000 requests)
+						sim.run_sim_requests(std::max((ULL)50000, 500 * number_of_buses));
+
+						double total_C_av = sim.measurements.get_av_scheduled_customers();
+						if (abs(sim.measurements.C_averages.back() - total_C_av) < 0.1 * total_C_av)
+							exact_result = true;
+						else
+						{
+							QString newText = QString::fromStdString(std::to_string(total_C_av)) + ", " + QString::fromStdString(std::to_string(sim.measurements.C_averages.back()));
+							emit ProcessTextChanged(newText);
+						}
+					}
+				}
+				else
+				{
+					//simulate (and measure) for 100 requests per bus (at least 10000 requests)
+					sim.run_sim_requests(std::max((ULL)10000, 500 * number_of_buses));
+				}
 
 				//output results
 				if (save)
@@ -180,7 +202,7 @@ void simulation_thread::run()
 				vE.push_back(Eff);
 
 				outplot << vB.back() << '\t' << vE.back();
-				if (abs(sim.measurements.C_averages.back() - total_C_av) > 0.3 * total_C_av)
+				if (abs(sim.measurements.C_averages.back() - total_C_av) > 0.01 * total_C_av)
 				{
 					outplot << '\t' << "x" << '\t' << normalized_request_rate / sim.measurements.C_averages.back();
 				}
@@ -227,12 +249,29 @@ void simulation_thread::run()
 			emit GraphChanged(vx, vC);
 			//ui.textEdit_6->setPlainText(newText.c_str());
 
-			sim.init_new_sim(number_of_buses, number_of_nodes, topology, normalized_request_rate, bus_type, 3000 * number_of_buses);
+			sim.init_new_sim(number_of_buses, number_of_nodes, topology, normalized_request_rate, bus_type, std::max((ULL)30000, 1000 * number_of_buses));
 
 			//turn on measurements with a given step size, measure every (number of buses) requests for a total of ~ 100 measurements
 			sim.enable_measurements((1.0 * number_of_buses) / sim.request_rate);
-			//simulate (and measure) for 100 requests per bus (at least 10000 requests)
-			sim.run_sim_requests(std::max((ULL)50000, 1000 * number_of_buses));
+
+			if (simulate_until_exact)
+			{
+				bool exact_result = false;
+				while (!exact_result)
+				{
+					//simulate (and measure) for 100 requests per bus (at least 10000 requests)
+					sim.run_sim_requests(std::max((ULL)50000, 1000 * number_of_buses));
+
+					double total_C_av = sim.measurements.get_av_scheduled_customers();
+					if (abs(sim.measurements.C_averages.back() - total_C_av) < 0.1 * total_C_av)
+						exact_result = true;
+				}
+			}
+			else
+			{
+				//simulate (and measure) for 100 requests per bus (at least 10000 requests)
+				sim.run_sim_requests(std::max((ULL)50000, 1000 * number_of_buses));
+			}
 
 			//output results
 			if (save)
@@ -251,7 +290,7 @@ void simulation_thread::run()
 				<< CUtility::two_node_av_scheduled_customers(5, normalized_request_rate, 2) << '\t'
 				<< CUtility::two_node_stddev_scheduled_customers(5, normalized_request_rate, 2);
 
-			if (abs(sim.measurements.C_averages.back() - vC.back()) > 0.3 * vC.back())
+			if (abs(sim.measurements.C_averages.back() - vC.back()) > 0.01 * vC.back())
 			{
 				outplot << '\t' << "x" << '\t' << sim.measurements.C_averages.back();
 			}
