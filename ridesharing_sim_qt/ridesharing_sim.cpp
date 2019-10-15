@@ -2,38 +2,12 @@
 
 //constructor
 //initialize all necessary variables
-ridesharing_sim::ridesharing_sim(ULL param_N, ULL param_B, ULL param_bus_type, ULL seed) : network(param_N, random_generator), measurements(network), out(std::ofstream("default_output.dat"))
+ridesharing_sim::ridesharing_sim(program_parameters *par_par) : network(par_par->number_of_nodes), measurements(network)
 {
+	par = par_par;
+
 	//see random generator
-	random_generator.seed(seed);
-
-	//setup list of transporters
-	transporter_list = std::vector<transporter>(param_B, transporter(-1, 0, param_bus_type, random_generator));
-
-	//reset all important variables
-	time = 0;
-	total_requests = 0;
-	total_serviced_requests = 0;
-
-	while (!transporter_event_queue.empty())
-		transporter_event_queue.pop();
-
-	normalized_request_rate = 1;
-	request_rate = 1;
-
-	next_request_time = 0;
-
-	//default: disable and reset measurements
-	disable_measurements();
-	disable_timeseries_output();
-
-	start_of_measured_time = 0;
-	start_of_measured_total_requests = 0;
-	start_of_measured_serviced_requests = 0;
-
-	start_of_output_time = 0;
-
-	measurements.reset();
+	random_generator.seed(0);
 }
 
 ridesharing_sim::~ridesharing_sim()
@@ -239,13 +213,13 @@ void ridesharing_sim::disable_timeseries_output()
 	do_timeseries_output = false;
 }
 
-void ridesharing_sim::init_network(ULL param_number_of_buses, ULL param_number_of_nodes, std::string param_topology)
+void ridesharing_sim::init_network()
 {
 	//create topologies
 	//add links for each node in the network
-	for (unsigned int i = 0; i < param_number_of_nodes; ++i)
+	for (unsigned int i = 0; i < par->number_of_nodes; ++i)
 	{
-		if (param_topology == "two_nodes")
+		if (par->topology == "two_nodes")
 		{
 			assert(param_number_of_nodes == 2);
 
@@ -256,44 +230,44 @@ void ridesharing_sim::init_network(ULL param_number_of_buses, ULL param_number_o
 			}
 		}
 
-		if (param_topology == "ring")
+		if (par->topology == "ring")
 		{
 			//create a path-graph (a line)
-			if (i < param_number_of_nodes - 1)
+			if (i < par->number_of_nodes - 1)
 			{
 				network.add_link(i, i + 1, 1);
 				network.add_link(i + 1, i, 1);
 			}
 
 			//close the ring
-			if (i == param_number_of_nodes - 1)
+			if (i == par->number_of_nodes - 1)
 			{
-				network.add_link(0, param_number_of_nodes - 1, 1);
-				network.add_link(param_number_of_nodes - 1, 0, 1);
+				network.add_link(0, par->number_of_nodes - 1, 1);
+				network.add_link(par->number_of_nodes - 1, 0, 1);
 			}
 
 		}
 
-		if (param_topology == "directed ring")
+		if (par->topology == "directed ring")
 		{
 			//create a path-graph (a line)
-			if (i < param_number_of_nodes - 1)
+			if (i < par->number_of_nodes - 1)
 			{
 				network.add_link(i, i + 1, 1);
 			}
 
 			//close the ring
-			if (i == param_number_of_nodes - 1)
+			if (i == par->number_of_nodes - 1)
 			{
-				network.add_link(param_number_of_nodes - 1, 0, 1);
+				network.add_link(par->number_of_nodes - 1, 0, 1);
 			}
 
 		}
 
-		if (param_topology == "torus")
+		if (par->topology == "torus")
 		{
 			//create a square lattice first
-			unsigned int L = sqrt(param_number_of_nodes);
+			unsigned int L = sqrt(par->number_of_nodes);
 			if (i % L != L - 1)
 			{
 				network.add_link(i, i + 1, 1);
@@ -313,8 +287,8 @@ void ridesharing_sim::init_network(ULL param_number_of_buses, ULL param_number_o
 			}
 			if (i >= L * (L - 1))
 			{
-				network.add_link(i, (i + L) % param_number_of_nodes, 1);
-				network.add_link((i + L) % param_number_of_nodes, i, 1);
+				network.add_link(i, (i + L) % par->number_of_nodes, 1);
+				network.add_link((i + L) % par->number_of_nodes, i, 1);
 			}
 		}
 	}
@@ -332,27 +306,24 @@ void ridesharing_sim::init_network(ULL param_number_of_buses, ULL param_number_o
 }
 
 void ridesharing_sim::init_new_sim(ULL param_number_of_buses,
-	ULL param_number_of_nodes,
-	std::string param_topology,
 	double param_normalized_request_rate,
-	ULL param_bus_type,
 	LL param_num_init_requests)
 {
 	assert(network.get_number_of_nodes() == param_number_of_nodes);
 
-	reset_number_of_buses(param_number_of_buses, param_bus_type);
+	reset_number_of_buses(param_number_of_buses, par->bus_type);
 	//	std::cout << sim.network.get_mean_pickup_distance() << '\t' << sim.network.get_mean_dropoff_distance() << std::endl;
 
 	//set up (reset) all buses in the network
 	for (ULL b = 0; b < param_number_of_buses; ++b)
 	{
-		transporter_list[b].reset(b, network.generate_request().second, param_bus_type);
+		transporter_list[b].reset(b, network.generate_request().second, par->bus_type);
 	}
 
 
 	//create requests to equally distribute buses on the topology (important especially in small topologies with many buses)
 	std::list< std::pair< double, std::pair<ULL, ULL> > > request_list;
-	if (param_topology == "two_nodes")
+	if (par->topology == "two_nodes")
 	{
 		//equally spaced requests from each node to the other
 		for (double t = 0; t < 1.0; t += 2.0 / param_number_of_buses)
@@ -361,28 +332,28 @@ void ridesharing_sim::init_new_sim(ULL param_number_of_buses,
 			request_list.push_back(std::make_pair(t, std::make_pair(1, 0)));
 		}
 	}
-	if (param_topology == "ring" || param_topology == "directed ring")
+	if (par->topology == "ring" || par->topology == "directed ring")
 	{
 		//equally spaced requests from each node to the other
-		for (double t = 0; t < 1.0; t += 2.0 * param_number_of_nodes / (1.0 * param_number_of_buses))
+		for (double t = 0; t < 1.0; t += 2.0 * par->number_of_nodes / (1.0 * param_number_of_buses))
 		{
-			for (ULL i = 0; i < param_number_of_nodes; ++i)
+			for (ULL i = 0; i < par->number_of_nodes; ++i)
 			{
-				request_list.push_back(std::make_pair(t, std::make_pair(i, (i + 1) % param_number_of_nodes)));
-				request_list.push_back(std::make_pair(t, std::make_pair((i + 1) % param_number_of_nodes, i)));
+				request_list.push_back(std::make_pair(t, std::make_pair(i, (i + 1) % par->number_of_nodes)));
+				request_list.push_back(std::make_pair(t, std::make_pair((i + 1) % par->number_of_nodes, i)));
 			}
 		}
 	}
-	if (param_topology == "torus")
+	if (par->topology == "torus")
 	{
-		if (param_number_of_buses > 0.25 * param_number_of_nodes)
+		if (param_number_of_buses > 0.25 * par->number_of_nodes)
 		{
-			for (double t = 0; t < 1.0; t += (4.0 * param_number_of_nodes) / (param_number_of_buses))
+			for (double t = 0; t < 1.0; t += (4.0 * par->number_of_nodes) / (param_number_of_buses))
 			{
-				unsigned int L = sqrt(param_number_of_nodes);
+				unsigned int L = sqrt(par->number_of_nodes);
 
 				//equally spaced requests from each node to its neighbors
-				for (unsigned int i = 0; i < param_number_of_nodes; ++i)
+				for (unsigned int i = 0; i < par->number_of_nodes; ++i)
 				{
 					if (i % L == 0)
 						request_list.push_back(std::make_pair(t, std::make_pair(i, i + L - 1)));
@@ -394,20 +365,19 @@ void ridesharing_sim::init_new_sim(ULL param_number_of_buses,
 					else
 						request_list.push_back(std::make_pair(t, std::make_pair(i, i + 1)));
 
-					if (i + L >= param_number_of_nodes)
-						request_list.push_back(std::make_pair(t, std::make_pair(i, i + L - param_number_of_nodes)));
+					if (i + L >= par->number_of_nodes)
+						request_list.push_back(std::make_pair(t, std::make_pair(i, i + L - par->number_of_nodes)));
 					else
 						request_list.push_back(std::make_pair(t, std::make_pair(i, i + L)));
 
 					if (i < L)
-						request_list.push_back(std::make_pair(t, std::make_pair(i, i + param_number_of_nodes - L)));
+						request_list.push_back(std::make_pair(t, std::make_pair(i, i + par->number_of_nodes - L)));
 					else
 						request_list.push_back(std::make_pair(t, std::make_pair(i, i - L)));
 				}
 			}
 		}
 	}
-
 
 	//simulate the requests to realize equal distribution of buses
 	run_sim_request_list(request_list);

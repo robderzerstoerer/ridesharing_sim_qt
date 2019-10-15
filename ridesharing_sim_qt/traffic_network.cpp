@@ -1,18 +1,25 @@
 #include "traffic_network.h"
 #include <functional>
 
-traffic_network::traffic_network(ULL param_N, std::mt19937_64& param_random_generator) : random_generator(param_random_generator)
+traffic_network::traffic_network()
 {
-	init(param_N, param_random_generator, std::vector< std::tuple<ULL, ULL, double> >());	//call init with an empty vector of links
+	random_generator.seed(1);
 }
 
-traffic_network::traffic_network(ULL param_N, std::mt19937_64& param_random_generator, std::vector< std::tuple<ULL, ULL, double> > param_links) : random_generator(param_random_generator)
+traffic_network::traffic_network(ULL param_N)
 {
-	init(param_N, param_random_generator, param_links);
+	random_generator.seed(1);
+	init(param_N, std::vector< std::tuple<ULL, ULL, double> >());	//call init with an empty vector of links
+}
+
+traffic_network::traffic_network(ULL param_N, std::vector< std::tuple<ULL, ULL, double> > param_links)
+{
+	random_generator.seed(1);
+	init(param_N, param_links);
 }
 
 //initialize the network and the relevant data structures
-void traffic_network::init(ULL param_N, std::mt19937_64& param_random_generator, std::vector< std::tuple<ULL, ULL, double> > param_links)
+void traffic_network::init(ULL param_N, std::vector< std::tuple<ULL, ULL, double> > param_links)
 {
 	number_of_nodes = param_N;
 	uniform01 = std::uniform_real_distribution<double>(0, 1);

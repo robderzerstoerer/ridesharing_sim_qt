@@ -108,40 +108,41 @@ void ridesharing_sim_qt::onButtonSimulateClicked()
 	ui.customPlot->replot();
 	
 	// Choose topology
-	mThread->topology = ui.listWidget->selectedItems().front()->text().toStdString();
+	mThread->par.topology = ui.listWidget->selectedItems().front()->text().toStdString();
 
 	if (ui.checkBox->isChecked())
 	{
-		mThread->number_of_buses = 0;
-		mThread->number_of_buses_from = std::stoi(ui.textEdit_2->toPlainText().toStdString());
-		mThread->number_of_buses_to = std::stoi(ui.textEdit_3->toPlainText().toStdString());
-		mThread->number_of_bus_calculations = std::stoi(ui.textEdit_7->toPlainText().toStdString());
+		mThread->par.number_of_buses = 0;
+		mThread->par.number_of_buses_from = std::stoi(ui.textEdit_2->toPlainText().toStdString());
+		mThread->par.number_of_buses_to = std::stoi(ui.textEdit_3->toPlainText().toStdString());
+		mThread->par.number_of_bus_calculations = std::stoi(ui.textEdit_7->toPlainText().toStdString());
 	}
 	else
 	{
-		mThread->number_of_buses = std::stoi(ui.textEdit_2->toPlainText().toStdString());
-		mThread->number_of_buses_from = 0;
-		mThread->number_of_buses_to = 0;
-		mThread->number_of_bus_calculations = 1;
+		mThread->par.number_of_buses = std::stoi(ui.textEdit_2->toPlainText().toStdString());
+		mThread->par.number_of_buses_from = 0;
+		mThread->par.number_of_buses_to = 0;
+		mThread->par.number_of_bus_calculations = 1;
 	}
-	mThread->number_of_nodes = std::stoi(ui.textEdit->toPlainText().toStdString());
-	mThread->normalized_request_rate = std::stod(ui.textEdit_4->toPlainText().toStdString());
+	mThread->par.number_of_nodes = std::stoi(ui.textEdit->toPlainText().toStdString());
+	mThread->par.normalized_request_rate = std::stod(ui.textEdit_4->toPlainText().toStdString());
 	//mThread->normalized_request_rate = -1.0;
 
-	//mThread->number_of_request_rates = 1;
-	mThread->number_of_request_rates = 20;
-	mThread->normalized_request_rate_from = 1.5;
-	mThread->normalized_request_rate_to = 4.0;
+	mThread->par.number_of_request_rates = 1;
+	//mThread->number_of_request_rates = 20;
+	mThread->par.normalized_request_rate_from = 1.5;
+	mThread->par.normalized_request_rate_to = 4.0;
 
 	//mThread->bus_type = 0;    // unlimited capacity
-	mThread->bus_type = 1;  // limited capacity
+	mThread->par.bus_type = 1;  // limited capacity
 
-	mThread->simulate_until_exact = true;
+	mThread->par.simulate_until_exact = true;
+	mThread->par.calc_p_full = true;
 	
-	mThread->save = ui.checkBox_2->isChecked();
-	if (mThread->save)
+	mThread->par.save = ui.checkBox_2->isChecked();
+	if (mThread->par.save)
 	{
-		mThread->filename = ui.textEdit_5->toPlainText().toStdString();
+		mThread->par.filename = ui.textEdit_5->toPlainText().toStdString();
 	}
 
 	// Start Thread
@@ -174,7 +175,7 @@ void ridesharing_sim_qt::SaveCheckBoxChanged(int arg1)
 
 void ridesharing_sim_qt::onButtonStopClicked()
 {
-	mThread->stop = true;
+	mThread->par.stop = true;
 }
 
 void ridesharing_sim_qt::onProcessTextChanged(QString newText)

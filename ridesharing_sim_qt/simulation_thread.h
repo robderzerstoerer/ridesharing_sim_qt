@@ -12,23 +12,7 @@ public:
 	~simulation_thread();
 	void run();
 
-	std::string topology;
-	ULL number_of_buses = 0;
-	ULL number_of_buses_from;
-	ULL number_of_buses_to;
-	ULL number_of_bus_calculations;
-	ULL number_of_nodes;
-	double normalized_request_rate;
-	ULL number_of_request_rates;
-	double normalized_request_rate_from;
-	double normalized_request_rate_to;
-	ULL bus_type;
-	bool save;
-	std::string filename;
-
-	bool simulate_until_exact;
-
-	bool stop;
+	program_parameters par;
 
 signals:
 	void ProcessTextChanged(QString);

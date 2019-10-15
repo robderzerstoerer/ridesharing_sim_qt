@@ -27,13 +27,38 @@
 #include "customer.h"
 #include "transporter.h"
 
+struct program_parameters
+{
+	std::string topology;
+	ULL number_of_buses = 0;
+	ULL number_of_buses_from;
+	ULL number_of_buses_to;
+	ULL number_of_bus_calculations;
+	ULL number_of_nodes;
+	double normalized_request_rate;
+	ULL number_of_request_rates;
+	double normalized_request_rate_from;
+	double normalized_request_rate_to;
+	ULL bus_type;
+	bool save;
+	std::string filename;
+
+	bool simulate_until_exact;
+	bool calc_p_full;
+
+	bool stop;
+};
+
+
 typedef std::priority_queue< std::pair<double, ULL>, std::vector<std::pair<double, ULL> >, std::greater< std::pair<double, ULL> > > transporter_event_queue_type;
 
 class ridesharing_sim
 {
 public:
-	ridesharing_sim(ULL param_N, ULL param_B, ULL param_bus_type, ULL seed);
+	ridesharing_sim(program_parameters* par_par);
 	virtual ~ridesharing_sim();
+
+	program_parameters* par;
 
 	void set_normalized_request_rate(double param_normalized_request_rate);
 	void set_request_rate(double param_request_rate);
@@ -43,13 +68,10 @@ public:
 	void reset_measurements();
 	void print_measurements(std::ofstream& out);
 
-	void init_network(ULL param_number_of_buses, ULL param_number_of_nodes, std::string param_topology);
+	void init_network();
 
 	void init_new_sim(ULL param_number_of_buses,
-		ULL param_number_of_nodes,
-		std::string param_topology,
 		double param_normalized_request_rate,
-		ULL param_bus_type = 0,
 		LL param_num_init_requests = -1);
 	void run_sim_request_list(std::list< std::pair< double, std::pair<ULL, ULL> > > request_list);
 	void run_sim_requests(ULL max_requests);

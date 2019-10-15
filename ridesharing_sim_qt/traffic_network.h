@@ -26,10 +26,11 @@
 class traffic_network
 {
 public:
-	//		traffic_network() {};
-	traffic_network(ULL param_N, std::mt19937_64& param_random_generator);
-	traffic_network(ULL param_N, std::mt19937_64& param_random_generator, std::vector< std::tuple<ULL, ULL, double> > param_links);
-	void init(ULL param_N, std::mt19937_64& param_random_generator, std::vector< std::tuple<ULL, ULL, double> > param_links);
+	
+	traffic_network();
+	traffic_network(ULL param_N);
+	traffic_network(ULL param_N, std::vector< std::tuple<ULL, ULL, double> > param_links);
+	void init(ULL param_N, std::vector< std::tuple<ULL, ULL, double> > param_links);
 
 	virtual ~traffic_network();
 
@@ -81,7 +82,7 @@ private:
 	std::deque< std::pair<ULL, double> > route;
 	std::uniform_real_distribution<double> uniform01;
 
-	std::mt19937_64& random_generator;
+	std::mt19937_64 random_generator;
 
 };
 
