@@ -1,6 +1,72 @@
 #include "measurement_collector.h"
 
-measurement_collector::measurement_collector(traffic_network& param_network) : network(param_network), last_iTime(0), cur_average(0.0), cur_n(0)
+measure::measure()
+{
+	// Variables for measuring the number of scheduled customers in equidistant time intervals
+	last_iTime = 0;
+	double cur_average = 0.0;
+	int cur_n = 0;
+}
+
+void measure::new_measurement(long double val, double time)
+{
+	long double delta1, delta2;
+
+	n += 1;
+	delta1 = val - av;
+	av += delta1 / n;
+	delta2 = val - av;
+	stddev += delta1 * delta2;
+
+	if (calc_partial_averages && time > 0)
+	{
+		int iTime = trunc(time / partial_average_time_interval);
+		if (iTime > last_iTime)
+		{
+			partial_averages.push_back(cur_average);
+			cur_n = 0;
+			cur_average = 0.0;
+			last_iTime = iTime;
+		}
+
+		cur_n += 1;
+		double delta = val - cur_average;
+		cur_average += delta / cur_n;
+	}
+}
+
+void measure::reset()
+{
+	n = 0;
+	av = 0;
+	stddev = 0;
+
+	// reset help variables
+	last_iTime = 0;
+	double cur_average = 0.0;
+	int cur_n = 0;
+}
+
+void measure::enable_partial_average_calculation(double time_interval)
+{
+	calc_partial_averages = true; 
+	partial_average_time_interval = time_interval;
+
+	// reset help variables
+	last_iTime = 0;
+	double cur_average = 0.0;
+	int cur_n = 0;
+}
+
+void measure::print(std::ofstream& out)
+{
+	if (n > 0)
+		out << n << '\t' << av << '\t' << sqrt(stddev / n) << '\t';
+	else
+		out << 0 << '\t' << 0 << '\t' << 0 << '\t';
+};
+
+measurement_collector::measurement_collector(traffic_network& param_network) : network(param_network)
 {
 
 }
@@ -12,20 +78,20 @@ measurement_collector::~measurement_collector()
 
 void measurement_collector::measure_request(customer& c, transporter& t)
 {
-	new_measurement(wait_time, c.get_pickup_time() - c.get_request_time());
-	new_measurement(drive_time, c.get_dropoff_time() - c.get_pickup_time());
-	new_measurement(delay_time, c.get_dropoff_time() - c.get_pickup_time() - network.get_network_distance(c.get_origin(), c.get_destination()) / t.get_velocity());
+	wait_time.new_measurement(c.get_pickup_time() - c.get_request_time());
+	drive_time.new_measurement(c.get_dropoff_time() - c.get_pickup_time());
+	delay_time.new_measurement(c.get_dropoff_time() - c.get_pickup_time() - network.get_network_distance(c.get_origin(), c.get_destination()) / t.get_velocity());
 
 	if (abs(c.get_dropoff_time() - c.get_pickup_time() - network.get_network_distance(c.get_origin(), c.get_destination()) / t.get_velocity()) > 10 * MACRO_EPSILON)
-		new_measurement(fraction_of_delayed_trips, 1);
+		fraction_of_delayed_trips.new_measurement(1);
 	else
-		new_measurement(fraction_of_delayed_trips, 0);
+		fraction_of_delayed_trips.new_measurement(0);
 }
 
 void measurement_collector::measure_trip(std::pair<ULL, double> last_stop, std::pair<ULL, double> current_stop)
 {
-	new_measurement(drive_distance_between_stops, network.get_network_distance(last_stop.first, current_stop.first));
-	new_measurement(drive_time_between_stops, current_stop.second - last_stop.second);
+	drive_distance_between_stops.new_measurement(network.get_network_distance(last_stop.first, current_stop.first));
+	drive_time_between_stops.new_measurement(current_stop.second - last_stop.second);
 }
 
 //void measurement_collector::measure_stops(...)
@@ -36,30 +102,17 @@ void measurement_collector::measure_trip(std::pair<ULL, double> last_stop, std::
 
 void measurement_collector::measure_system_status(std::vector<transporter>& transporter_list, double time)
 {
-	int iTime = trunc(time / (100));
-	if (iTime > last_iTime)
-	{
-		C_averages.push_back(cur_average);
-		cur_n = 0;
-		cur_average = 0.0;
-		last_iTime = iTime;
-	}
-
 	ULL idle_transporters = 0;
 	for (transporter& t : transporter_list)
 	{
-		cur_n += 1;
-		double delta = t.get_number_of_scheduled_customers() - cur_average;
-		cur_average += delta / cur_n;
-
-		new_measurement(occupancy, t.get_occupancy());
-		new_measurement(scheduled_customers, t.get_number_of_scheduled_customers());
-		new_measurement(number_of_planned_stops, t.get_number_of_planned_stops());
-		new_measurement(planned_time_horizon, t.get_planned_time_horizon(time));
+		occupancy.new_measurement(t.get_occupancy());
+		scheduled_customers.new_measurement(t.get_number_of_scheduled_customers(), time);
+		number_of_planned_stops.new_measurement(t.get_number_of_planned_stops());
+		planned_time_horizon.new_measurement(t.get_planned_time_horizon(time));
 		if (t.is_idle())
 			++idle_transporters;
 	}
-	new_measurement(number_of_idle_transporters, idle_transporters);
+	number_of_idle_transporters.new_measurement(idle_transporters);
 }
 
 void measurement_collector::reset()
@@ -78,11 +131,15 @@ void measurement_collector::reset()
 	planned_time_horizon.reset();
 	number_of_idle_transporters.reset();
 
-	// Variables for measuring the number of scheduled customers in equidistant time intervals
-	// (for verifying the validity of the final result)
-	last_iTime = 0;
-	double cur_average = 0.0;
-	int cur_n = 0;
+	p_full.reset();
+	p_full2.reset();
+
+	// important: scheduled customers have to be measured every 100 time units
+	// (this is used for validating the total average result)
+	scheduled_customers.enable_partial_average_calculation(100.0);
+
+	p_full.enable_partial_average_calculation(100.0);
+	p_full2.enable_partial_average_calculation(100.0);
 }
 
 void measurement_collector::print(std::ofstream& out, bool readable)
@@ -102,6 +159,9 @@ void measurement_collector::print(std::ofstream& out, bool readable)
 		number_of_planned_stops.print(out);
 		planned_time_horizon.print(out);
 		number_of_idle_transporters.print(out);
+
+		p_full.print(out);
+		p_full2.print(out);
 
 		out << std::endl;
 	}
@@ -153,18 +213,14 @@ void measurement_collector::print(std::ofstream& out, bool readable)
 		number_of_idle_transporters.print(out);
 		out << std::endl;
 
+		out << "p_full" << std::endl;
+		p_full.print(out);
+		out << std::endl;
+
+		out << "p_full2" << std::endl;
+		p_full2.print(out);
+		out << std::endl;
+
 		out << std::endl;
 	}
-}
-
-
-void measurement_collector::new_measurement(measure& m, long double val)
-{
-	long double delta1, delta2;
-
-	m.n += 1;
-	delta1 = val - m.av;
-	m.av += delta1 / m.n;
-	delta2 = val - m.av;
-	m.stddev += delta1 * delta2;
 }

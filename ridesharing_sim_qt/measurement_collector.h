@@ -24,15 +24,40 @@
 class customer;
 class transporter;
 
-struct measure {
+class measure {
+
+public:
+
+	measure();
+
+	void new_measurement(long double val, double time = -1.0);
+
+	/* We can enable calculating averages of this measure for all measurements within a
+	certain time interval (partial_average_time_interval) */
+	void enable_partial_average_calculation(double time_interval);
+	void disable_partial_average_calculation() { calc_partial_averages = false; }
+
+	unsigned long get_num_measurements() { return n; }
+	long double get_average() { return av; }
+	long double get_stddev() { return stddev; }
+	std::vector<double>& get_partial_averages() { return partial_averages; }
+	void reset();
+	void print(std::ofstream& out);
+
+private:
+
 	unsigned long n;
 	long double av;
 	long double stddev;
 
-	void reset() {
-		n = 0; av = 0; stddev = 0;
-	};
-	void print(std::ofstream& out) { out << n << '\t' << av << '\t' << sqrt(stddev / n) << '\t'; };
+	// Parameters which can be used if averages of this variable for every interval 
+	// of 'partial_average_time_interval' time units are needed
+	bool calc_partial_averages = false;
+	double partial_average_time_interval;
+	std::vector<double> partial_averages;
+	int last_iTime;
+	long double cur_average;
+	int cur_n;
 };
 
 class measurement_collector
@@ -46,14 +71,6 @@ public:
 	void measure_system_status(std::vector<transporter>& transporter_list, double time);
 	void reset();
 	void print(std::ofstream& out, bool readable = false);
-
-	double get_av_scheduled_customers() { return scheduled_customers.av; }
-	std::vector<double> C_averages;		// list of partly averaged values for scheduled_customers
-	double get_stddev_scheduled_customers() { return sqrt(scheduled_customers.stddev/scheduled_customers.n); }
-
-protected:
-
-private:
 
 	measure drive_time;
 	measure wait_time;
@@ -69,15 +86,16 @@ private:
 	measure planned_time_horizon;
 	measure number_of_idle_transporters;
 
-	traffic_network& network;
+	measure p_full;
+	measure p_full2; 
 
-	void new_measurement(measure& m, long double val);
+private:
+
+	traffic_network& network;
 
 	// Variables for measuring the number of scheduled customers in equidistant time intervals
 	// (for verifying the validity of the final result)
-	int last_iTime;
-	double cur_average;
-	int cur_n;
+	
 };
 
 #endif // MEASUREMENTS_H

@@ -50,7 +50,6 @@ ridesharing_sim_qt::ridesharing_sim_qt(QWidget *parent)
 	connect(ui.pushButton, SIGNAL(clicked()), this, SLOT(onButtonSimulateClicked()));
 	connect(ui.pushButton_2, SIGNAL(clicked()), this, SLOT(onButtonStopClicked()));
 	connect(ui.checkBox, SIGNAL(stateChanged(int)), this, SLOT(B_to_checkBoxChanged(int)));
-	connect(ui.checkBox_2, SIGNAL(stateChanged(int)), this, SLOT(SaveCheckBoxChanged(int)));
 	connect(ui.pushButton_3, SIGNAL(clicked()), this, SLOT(onButtonChooseFile1Clicked()));
 	connect(ui.pushButton_4, SIGNAL(clicked()), this, SLOT(onButtonChooseFile2Clicked()));
 	connect(ui.pushButton_5, SIGNAL(clicked()), this, SLOT(onButtonSwapXYClicked()));
@@ -69,18 +68,20 @@ ridesharing_sim_qt::ridesharing_sim_qt(QWidget *parent)
 
 	ui.listWidget->setItemSelected(ui.listWidget->item(0),true);
 
-	ui.checkBox->setChecked(false);
-	ui.checkBox_2->setChecked(true);
+	ui.checkBox->setChecked(true);
+	ui.checkBox_3->setChecked(false);
+	ui.checkBox_4->setChecked(true);
 
-	ui.textEdit->setText("25");
-	ui.textEdit_2->setText("300");
-	ui.textEdit_3->setText("1500");
-	ui.textEdit_4->setText("7.5");
+	ui.textEdit->setText("100");
+	ui.textEdit_2->setText("1");
+	ui.textEdit_3->setText("3000");
+	ui.textEdit_4->setText("2.0");
 	ui.textEdit_5->setText("test.dat");
 	ui.textEdit_6->setDisabled(true);
 	ui.textEdit_7->setText("12");
 	ui.textEdit_8->setDisabled(true);
 	ui.textEdit_9->setDisabled(true);
+	ui.textEdit_12->setText("5");
 
 	ui.customPlot->xAxis->setLabel("x");
 	ui.customPlot->yAxis->setLabel("y");
@@ -125,21 +126,40 @@ void ridesharing_sim_qt::onButtonSimulateClicked()
 		mThread->par.number_of_bus_calculations = 1;
 	}
 	mThread->par.number_of_nodes = std::stoi(ui.textEdit->toPlainText().toStdString());
-	mThread->par.normalized_request_rate = std::stod(ui.textEdit_4->toPlainText().toStdString());
-	//mThread->normalized_request_rate = -1.0;
+	
 
-	mThread->par.number_of_request_rates = 1;
-	//mThread->number_of_request_rates = 20;
-	mThread->par.normalized_request_rate_from = 1.5;
-	mThread->par.normalized_request_rate_to = 4.0;
+	if (ui.checkBox_3->isChecked())
+	{
+		mThread->par.number_of_request_rates = std::stoi(ui.textEdit_10->toPlainText().toStdString());
+		mThread->par.normalized_request_rate = std::stod(ui.textEdit_4->toPlainText().toStdString());
+		mThread->par.normalized_request_rate_from = std::stod(ui.textEdit_4->toPlainText().toStdString());
+		mThread->par.normalized_request_rate_to = std::stod(ui.textEdit_11->toPlainText().toStdString());
+	}
+	else
+	{
+		mThread->par.number_of_request_rates = 1;
+		mThread->par.normalized_request_rate = std::stod(ui.textEdit_4->toPlainText().toStdString());
+		mThread->par.normalized_request_rate_from = mThread->par.normalized_request_rate;
+		mThread->par.normalized_request_rate_to = mThread->par.normalized_request_rate;
+	}
 
-	//mThread->bus_type = 0;    // unlimited capacity
-	mThread->par.bus_type = 1;  // limited capacity
+	int cap = std::stoi(ui.textEdit_12->toPlainText().toStdString());
+	if (cap == -1)
+	{
+		mThread->par.bus_type = 0;  // unlimited capacity
+	}
+	else
+	{
+		mThread->par.bus_type = 1;  // limited capacity
+	}
 
 	mThread->par.simulate_until_exact = true;
-	mThread->par.calc_p_full = true;
+
+	mThread->par.calc_p_full = ui.checkBox_4->isChecked();
+	mThread->par.calc_cap_delay = false;
 	
-	mThread->par.save = ui.checkBox_2->isChecked();
+	mThread->par.save = true;
+
 	if (mThread->par.save)
 	{
 		mThread->par.filename = ui.textEdit_5->toPlainText().toStdString();
@@ -165,17 +185,10 @@ void ridesharing_sim_qt::B_to_checkBoxChanged(int arg1)
 	}
 }
 
-void ridesharing_sim_qt::SaveCheckBoxChanged(int arg1)
-{
-	if (ui.checkBox_2->isChecked())
-		ui.textEdit_5->setDisabled(false);
-	else
-		ui.textEdit_5->setDisabled(true);
-}
 
 void ridesharing_sim_qt::onButtonStopClicked()
 {
-	mThread->par.stop = true;
+	mThread->par.stop_thread = true;
 }
 
 void ridesharing_sim_qt::onProcessTextChanged(QString newText)

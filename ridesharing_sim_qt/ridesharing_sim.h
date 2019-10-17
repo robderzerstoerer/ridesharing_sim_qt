@@ -45,8 +45,9 @@ struct program_parameters
 
 	bool simulate_until_exact;
 	bool calc_p_full;
+	bool calc_cap_delay;
 
-	bool stop;
+	bool stop_thread;
 };
 
 

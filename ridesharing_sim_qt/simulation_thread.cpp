@@ -14,7 +14,7 @@ simulation_thread::~simulation_thread()
 
 void simulation_thread::run()
 {
-	par.stop = false;
+	par.stop_thread = false;
 	std::ofstream out;
 	if (!CUtility::file_exists(par.filename))
 		out.open(par.filename.c_str());
@@ -33,41 +33,15 @@ void simulation_thread::run()
 	{
 		QVector<double> vB, vE;
 		QVector<double> vx, vC, vB_equiv_x_inf, vB_equiv_x;
-		QVector<QPair<ULL, double>> vBEdata;
+		std::vector<std::pair<ULL, double>> vBEdata;
 
-		if (par.number_of_request_rates > 1)
+		// read pre-calculated data for efficiency as a function of B for the present x in this simulation
+		std::string eff_filename = "eff_torus_100_unl_x_" + std::to_string(par.normalized_request_rate).substr(0, 3) + ".dateff.dat";
+		
+		if (!CUtility::read_eff_B_data_from_file(eff_filename, vBEdata))
 		{
-			// read pre-calculated data for efficiency as a function of B
-			std::string line;
-			std::ifstream myfile("torus_25_Efficiency_x_7.5.dateff.dat");
-			bool NumberNext = false;
-			if (myfile.is_open())
-			{
-				while (std::getline(myfile, line))
-				{
-					if (line != "")
-					{
-						// file structure : B <tab> E
-						size_t findtab = line.find('\t');
-						ULL B = std::stoi(line.substr(0, findtab));
-						double E = std::stod(line.substr(findtab + 1));
-						if (vBEdata.size() > 0)
-						{
-							// do not save repeated entries
-							if (vBEdata.back().first != B)
-								vBEdata.push_back(QPair<ULL, double>(B, E));
-						}
-						else
-							vBEdata.push_back(QPair<ULL, double>(B, E));
-					}
-				}
-			}
-			else
-			{
-				std::string errormessage = "Could not open file torus_25_Efficiency_x_7.5.dateff.dat";
-				emit ErrorMessage(errormessage.c_str());
-				return;
-			}
+			std::string errormessage = "Could not open file " + eff_filename;
+			emit ErrorMessage(errormessage.c_str());
 		}
 
 		std::ofstream outplot;
@@ -89,7 +63,7 @@ void simulation_thread::run()
 		double index_high_B = log(par.number_of_buses_to);
 		for (double iter_B = index_low_B; iter_B <= (index_high_B + 0.0001); iter_B += (index_high_B - index_low_B) / (par.number_of_bus_calculations - 1))
 		{
-			if (par.stop)
+			if (par.stop_thread)
 				break;
 			ULL number_of_buses = (int)(exp(iter_B) + 0.5);
 			QString newText = "Simulating " + QString::fromStdString(std::to_string(number_of_buses)) + " buses\n";
@@ -102,7 +76,7 @@ void simulation_thread::run()
 				double index_high_x = log(par.normalized_request_rate_to);
 				for (double iter_x = index_low_x; iter_x <= (index_high_x + 0.0001); iter_x += (index_high_x - index_low_x) / (par.number_of_request_rates - 1))
 				{
-					if (par.stop)
+					if (par.stop_thread)
 						break;
 					double normalized_request_rate = exp(iter_x);
 					QString newText = "Simulating B = " + QString::fromStdString(std::to_string(number_of_buses)) + ", x = " + QString::fromStdString(std::to_string(normalized_request_rate));
@@ -126,33 +100,13 @@ void simulation_thread::run()
 					}
 
 					vB.push_back((double) number_of_buses);
-					double Eff = normalized_request_rate / sim.measurements.get_av_scheduled_customers();
+					double Eff = normalized_request_rate / sim.measurements.scheduled_customers.get_average();
 					vE.push_back(Eff);
 					vx.push_back((double)normalized_request_rate);
-					vC.push_back(sim.measurements.get_av_scheduled_customers());
+					vC.push_back(sim.measurements.scheduled_customers.get_average());
+					
 					// find equivalent number of buses in unlimited-capacity-simulation
-					for (int iter_pre = 0; iter_pre < vBEdata.size(); iter_pre++)
-					{
-						if (iter_pre < vBEdata.size() - 1)
-						{
-							if (Eff > vBEdata[iter_pre].second && Eff < vBEdata[iter_pre + 1].second)
-							{
-								// linear interpolation
-								double B_equiv = ((double)vBEdata[iter_pre].first) + ((double) (vBEdata[iter_pre + 1].first - vBEdata[iter_pre].first)) * (Eff - vBEdata[iter_pre].second) / (vBEdata[iter_pre + 1].second - vBEdata[iter_pre].second);
-								vB_equiv_x_inf.push_back(B_equiv);
-								break;
-							}
-							else if (Eff < vBEdata[iter_pre].second && Eff > vBEdata[iter_pre + 1].second)
-							{
-								vB_equiv_x_inf.push_back((vBEdata[iter_pre].second + vBEdata[iter_pre + 1].second) / 2);
-								break;
-							}
-						}
-						else
-						{
-							vB_equiv_x_inf.push_back((double) vBEdata[iter_pre].first);
-						}
-					}
+					vB_equiv_x_inf.push_back(CUtility::find_effective_B(vBEdata, Eff));
 
 					outplot << vB.back() << '\t' << vE.back() << '\t' << vx.back() << '\t' << vC.back() << '\t' << vB_equiv_x_inf.back() << '\n';
 				}
@@ -169,18 +123,21 @@ void simulation_thread::run()
 					bool exact_result = false;
 					while (!exact_result)
 					{
-						if (par.stop)
+						if (par.stop_thread)
 							break;
+
+						sim.measurements.scheduled_customers.reset();
 
 						//simulate (and measure) for 100 requests per bus (at least 10000 requests)
 						sim.run_sim_requests(std::max((ULL)50000, 500 * number_of_buses));
 
-						double total_C_av = sim.measurements.get_av_scheduled_customers();
-						if (abs(sim.measurements.C_averages.back() - total_C_av) < 0.1 * total_C_av)
+						double total_C_av = sim.measurements.scheduled_customers.get_average();
+						double last_partial_C_av = sim.measurements.scheduled_customers.get_partial_averages().back();
+						if (abs(last_partial_C_av - total_C_av) < 0.1 * total_C_av)
 							exact_result = true;
 						else
 						{
-							QString newText = QString::fromStdString(std::to_string(total_C_av)) + ", " + QString::fromStdString(std::to_string(sim.measurements.C_averages.back()));
+							QString newText = QString::fromStdString(std::to_string(total_C_av)) + ", " + QString::fromStdString(std::to_string(last_partial_C_av));
 							emit ProcessTextChanged(newText);
 						}
 					}
@@ -200,15 +157,66 @@ void simulation_thread::run()
 				}
 
 				vB.push_back((double)number_of_buses);
-				double total_C_av = sim.measurements.get_av_scheduled_customers();
+				double total_C_av = sim.measurements.scheduled_customers.get_average();
 				double Eff = par.normalized_request_rate / total_C_av;
 				vE.push_back(Eff);
 
 				outplot << vB.back() << '\t' << vE.back();
-				if (abs(sim.measurements.C_averages.back() - total_C_av) > 0.01 * total_C_av)
+
+				double last_partial_C_av = sim.measurements.scheduled_customers.get_partial_averages().back();
+				outplot << '\t' << "x" << '\t' << par.normalized_request_rate / last_partial_C_av;
+
+				if (par.calc_p_full)
 				{
-					outplot << '\t' << "x" << '\t' << par.normalized_request_rate / sim.measurements.C_averages.back();
+					double total_p_full_av = sim.measurements.p_full.get_average();
+					outplot << '\t' << "p" << '\t' << total_p_full_av;
+					double last_partial_p_full_av = sim.measurements.p_full.get_partial_averages().back();
+					outplot << '\t' << "px" << '\t' << last_partial_p_full_av;
+
+					double total_p_full2_av = sim.measurements.p_full2.get_average();
+					outplot << '\t' << "p2" << '\t' << total_p_full2_av;
+					double last_partial_p_full2_av = sim.measurements.p_full2.get_partial_averages().back();
+					outplot << '\t' << "p2x" << '\t' << last_partial_p_full2_av;
+
+					/* now:
+						1. Make a decision which calculated efficiency is the correct one (the average or the last value)
+						2. Make a decision which calculated p_full(2) is the correct one (the average or the last value)
+						3. Find the number of buses that would have the same efficiency in a simulation with unlimited capacity
+						4. Find the effective number of buses calculated by B*(1-p_full) and B*(1-p_full2)
+						and output them in this order.
+					*/
+					double real_eff;
+					double real_p_full;
+					double real_p_full2;
+
+					/*
+					if (abs(last_partial_C_av - total_C_av) < 0.06 * total_C_av)
+						real_eff = par.normalized_request_rate / total_C_av;
+					else
+						real_eff = par.normalized_request_rate / last_partial_C_av;
+
+					if (abs(last_partial_p_full_av - total_p_full_av) < 0.06 * total_p_full_av)
+						real_p_full = total_p_full_av;
+					else
+						real_p_full = last_partial_p_full_av;
+
+					if (abs(last_partial_p_full2_av - total_p_full2_av) < 0.06 * total_p_full2_av)
+						real_p_full2 = total_p_full2_av;
+					else
+						real_p_full2 = last_partial_p_full2_av;
+						*/
+
+					real_eff = par.normalized_request_rate / total_C_av;
+					real_p_full = total_p_full_av;
+					real_p_full2 = total_p_full2_av;
+
+					double B_equiv = CUtility::find_effective_B(vBEdata, real_eff);
+					double B_eff_p_full = number_of_buses * (1 - real_p_full);
+					double B_eff_p_full2 = number_of_buses * (1 - real_p_full2);
+
+					outplot << '\t' << B_equiv << '\t' << B_eff_p_full << '\t' << B_eff_p_full2;
 				}
+
 				outplot << '\n';
 			}
 		}
@@ -244,7 +252,7 @@ void simulation_thread::run()
 		double index_high = log(par.normalized_request_rate_to);
 		for (double iter = index_low; iter <= (index_high + 0.0001); iter += (index_high - index_low) / (par.number_of_request_rates - 1))
 		{
-			if (par.stop)
+			if (par.stop_thread)
 				break;
 			double normalized_request_rate = exp(iter);
 			QString newText = "Simulating x = " + QString::fromStdString(std::to_string(normalized_request_rate));
@@ -262,11 +270,17 @@ void simulation_thread::run()
 				bool exact_result = false;
 				while (!exact_result)
 				{
+					if (par.stop_thread)
+						break;
+
+					sim.measurements.scheduled_customers.reset();
+
 					//simulate (and measure) for 100 requests per bus (at least 10000 requests)
 					sim.run_sim_requests(std::max((ULL)50000, 1000 * par.number_of_buses));
 
-					double total_C_av = sim.measurements.get_av_scheduled_customers();
-					if (abs(sim.measurements.C_averages.back() - total_C_av) < 0.1 * total_C_av)
+					double total_C_av = sim.measurements.scheduled_customers.get_average();
+					double last_partial_C_av = sim.measurements.scheduled_customers.get_partial_averages().back();
+					if (abs(last_partial_C_av - total_C_av) < 0.1 * total_C_av)
 						exact_result = true;
 				}
 			}
@@ -285,18 +299,33 @@ void simulation_thread::run()
 			}
 
 			vx.push_back((double)normalized_request_rate);
-			vC.push_back(sim.measurements.get_av_scheduled_customers());
+			vC.push_back(sim.measurements.scheduled_customers.get_average());
 
 			outplot << vx.back() << '\t' 
 				<< vC.back() << '\t' 
-				<< sim.measurements.get_stddev_scheduled_customers() << '\t' 
+				<< sim.measurements.scheduled_customers.get_stddev() << '\t'
 				<< CUtility::two_node_av_scheduled_customers(5, normalized_request_rate, 2) << '\t'
 				<< CUtility::two_node_stddev_scheduled_customers(5, normalized_request_rate, 2);
 
-			if (abs(sim.measurements.C_averages.back() - vC.back()) > 0.01 * vC.back())
+			if (par.calc_p_full)
 			{
-				outplot << '\t' << "x" << '\t' << sim.measurements.C_averages.back();
+				double total_p_full_av = sim.measurements.p_full.get_average();
+				outplot << '\t' << "p1" << '\t' << total_p_full_av;
+				double last_partial_p_full_av = sim.measurements.p_full.get_partial_averages().back();
+				outplot << '\t' << "px" << '\t' << last_partial_p_full_av;
+
+				double total_p_full2_av = sim.measurements.p_full2.get_average();
+				outplot << '\t' << "p2" << '\t' << total_p_full2_av;
+				double last_partial_p_full2_av = sim.measurements.p_full2.get_partial_averages().back();
+				outplot << '\t' << "p2x" << '\t' << last_partial_p_full2_av;
 			}
+
+			double last_partial_C_av = sim.measurements.scheduled_customers.get_partial_averages().back();
+			
+
+			outplot << '\t' << "x" << '\t' << last_partial_C_av;
+
+			
 
 			outplot << '\n';
 		}

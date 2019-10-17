@@ -34,7 +34,6 @@ private slots:
 	void onButtonSavePlotClicked();
 
 	void B_to_checkBoxChanged(int arg1);
-	void SaveCheckBoxChanged(int arg1);
 
 public slots:
 	void onProcessTextChanged(QString newText);

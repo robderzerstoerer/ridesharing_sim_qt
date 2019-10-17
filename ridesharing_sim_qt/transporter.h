@@ -83,6 +83,7 @@ public:
 
 	ULL get_index() { return(index); }
 	LL get_capacity() { return(capacity); }
+	void set_capacity(ULL cap) { capacity = cap;  }
 	double get_velocity() { return(velocity); }
 	ULL get_type() { return(type); }
 
@@ -112,7 +113,7 @@ public:
 	double handle_event_by_type(double time, traffic_network& n, stop& current_stop);
 	double new_route(std::deque< std::pair<ULL, double> > param_new_route);
 
-	offer best_offer(ULL param_origin, ULL param_destination, double param_request_time, traffic_network& n, offer& current_best_offer);
+	offer best_offer(ULL param_origin, ULL param_destination, double param_request_time, traffic_network& n, offer& current_best_offer, bool calc_p_full);
 	double assign_customer(double assignment_time, customer c, offer& o, traffic_network& n);
 
 protected:

@@ -171,7 +171,12 @@ double transporter::new_route(std::deque< std::pair<ULL, double> > param_new_rou
 //		all conditions checked to within epsilon precision (to avoid problems due to addition along the route of a bus)
 //
 
-offer transporter::best_offer(ULL param_origin, ULL param_destination, double param_request_time, traffic_network& n, offer& current_best_offer)
+offer transporter::best_offer(ULL param_origin, 
+	ULL param_destination, 
+	double param_request_time, 
+	traffic_network& n, 
+	offer& current_best_offer, 
+	bool calc_p_full)
 {
 	//request parameters
 	ULL origin = param_origin;
@@ -196,6 +201,11 @@ offer transporter::best_offer(ULL param_origin, ULL param_destination, double pa
 
 	//current best offer
 	offer best_offer(current_best_offer.transporter_index, current_best_offer.best_transporter, current_best_offer.pickup_time, current_best_offer.pickup_insertion, current_best_offer.dropoff_time, current_best_offer.dropoff_insertion);
+
+	// if we want to calculate p_full, we need to calculate the best offer of this transporter to the 
+	// very end, so we have to set back best_offer
+	if (calc_p_full)
+		best_offer = offer();
 
 	ULL temp_location_for_pickup = current_location;
 	ULL temp_location = current_location;
@@ -236,8 +246,8 @@ offer transporter::best_offer(ULL param_origin, ULL param_destination, double pa
 		return(best_offer);
 	}
 
-	//only do all the checking if there can be a better offer
-	if (current_time + n.get_network_distance(current_location, origin) / velocity + n.get_network_distance(origin, destination) / velocity < best_offer.dropoff_time + MACRO_EPSILON)
+	//only do all the checking if there can be a better offer OR we want to calculate p_full
+	if (calc_p_full || (current_time + n.get_network_distance(current_location, origin) / velocity + n.get_network_distance(origin, destination) / velocity < best_offer.dropoff_time + MACRO_EPSILON))
 	{
 		temp_dropoff_insertion = assigned_stops.end();
 
@@ -296,102 +306,55 @@ offer transporter::best_offer(ULL param_origin, ULL param_destination, double pa
 						delay_from_dropoff = std::max(0.0, n.get_network_distance(temp_location, origin) / velocity + n.get_network_distance(origin, destination) / velocity + n.get_network_distance(destination, temp_dropoff_insertion->node_index) / velocity - n.get_network_distance(temp_location, temp_dropoff_insertion->node_index) / velocity);
 						dropoff_is_possible = true;
 
-						//if this is a better dropoff
-						if (dropoff_time < best_offer.dropoff_time - MACRO_EPSILON ||
-							(abs(dropoff_time - best_offer.dropoff_time) <= MACRO_EPSILON && pickup_time > best_offer.pickup_time + MACRO_EPSILON) ||
-							(abs(dropoff_time - best_offer.dropoff_time) <= MACRO_EPSILON && abs(pickup_time - best_offer.pickup_time) <= MACRO_EPSILON && (best_offer.best_transporter != NULL && occupancy > best_offer.best_transporter->get_occupancy())) ||
-							(abs(dropoff_time - best_offer.dropoff_time) <= MACRO_EPSILON && abs(pickup_time - best_offer.pickup_time) <= MACRO_EPSILON && (best_offer.best_transporter != NULL && occupancy == best_offer.best_transporter->get_occupancy()))
-							)
-						{
-
-							//THEN check if it is possible, because this is likely more costly
-							//check only if delay is relevant
-							if (dropoff_is_possible && delay_from_dropoff > MACRO_EPSILON)
-							{
-								delay_location = destination;
-								delay_time = dropoff_time;
-
-								for (check_delay_it = temp_dropoff_insertion; check_delay_it != assigned_stops.end(); ++check_delay_it)
-								{
-									if (check_delay_it->is_dropoff && (delay_time + n.get_network_distance(delay_location, check_delay_it->node_index) / velocity - current_time) > check_delay_it->c_it->get_allowed_dropoff_delay() * (check_delay_it->c_it->get_offer_dropoff_time() - current_time + MACRO_EPSILON))
-									{
-										dropoff_is_possible = false;
-										break;
-									}
-
-									if (check_delay_it->is_pickup && (delay_time + n.get_network_distance(delay_location, check_delay_it->node_index) / velocity - current_time) > check_delay_it->c_it->get_allowed_pickup_delay() * (check_delay_it->c_it->get_offer_pickup_time() - current_time + MACRO_EPSILON))
-									{
-										dropoff_is_possible = false;
-										break;
-									}
-
-									delay_time += n.get_network_distance(delay_location, check_delay_it->node_index) / velocity;
-									delay_location = check_delay_it->node_index;
-								}
-							}
-
-							//if the drop off is actually possible, remember it as the best option
-							if (dropoff_is_possible)
-							{
-								best_offer.transporter_index = index;
-								best_offer.best_transporter = this;
-								best_offer.pickup_insertion = temp_pickup_insertion;
-								best_offer.dropoff_insertion = temp_dropoff_insertion;
-								best_offer.pickup_time = pickup_time;
-								best_offer.dropoff_time = dropoff_time;
-								best_offer.is_better_offer = true;
-							}
-						}
-
 					}
 					else {	//if drop off somewhere on route
 						dropoff_time = temp_time_for_dropoff + n.get_network_distance(temp_location, destination) / velocity;
 						delay_from_dropoff = delay_from_pickup + std::max(0.0, (n.get_network_distance(temp_location, destination) / velocity + n.get_network_distance(destination, temp_dropoff_insertion->node_index) / velocity - n.get_network_distance(temp_location, temp_dropoff_insertion->node_index) / velocity));
 						dropoff_is_possible = true;
+					}
 
-						//if this is a better dropoff
-						if (dropoff_time < best_offer.dropoff_time - MACRO_EPSILON ||
-							(abs(dropoff_time - best_offer.dropoff_time) <= MACRO_EPSILON && pickup_time > best_offer.pickup_time + MACRO_EPSILON) ||
-							(abs(dropoff_time - best_offer.dropoff_time) <= MACRO_EPSILON && abs(pickup_time - best_offer.pickup_time) <= MACRO_EPSILON && (best_offer.best_transporter != NULL && occupancy > best_offer.best_transporter->get_occupancy())) ||
-							(abs(dropoff_time - best_offer.dropoff_time) <= MACRO_EPSILON && abs(pickup_time - best_offer.pickup_time) <= MACRO_EPSILON && (best_offer.best_transporter != NULL && occupancy == best_offer.best_transporter->get_occupancy()))
-							)
+					//if this is a better dropoff
+					if (dropoff_time < best_offer.dropoff_time - MACRO_EPSILON ||
+						(abs(dropoff_time - best_offer.dropoff_time) <= MACRO_EPSILON && pickup_time > best_offer.pickup_time + MACRO_EPSILON) ||
+						(abs(dropoff_time - best_offer.dropoff_time) <= MACRO_EPSILON && abs(pickup_time - best_offer.pickup_time) <= MACRO_EPSILON && (best_offer.best_transporter != NULL && occupancy > best_offer.best_transporter->get_occupancy())) ||
+						(abs(dropoff_time - best_offer.dropoff_time) <= MACRO_EPSILON && abs(pickup_time - best_offer.pickup_time) <= MACRO_EPSILON && (best_offer.best_transporter != NULL && occupancy == best_offer.best_transporter->get_occupancy()))
+						)
+					{
+						//THEN check if it is possible, because this is likely more costly
+						//check only if delay is relevant
+						if (dropoff_is_possible && delay_from_dropoff > MACRO_EPSILON)
 						{
-							//THEN check if it is possible, because this is likely more costly
-							//check only if delay is relevant
-							if (dropoff_is_possible && delay_from_dropoff > MACRO_EPSILON)
-							{
-								delay_location = destination;
-								delay_time = dropoff_time;
+							delay_location = destination;
+							delay_time = dropoff_time;
 
-								for (check_delay_it = temp_dropoff_insertion; check_delay_it != assigned_stops.end(); ++check_delay_it)
+							for (check_delay_it = temp_dropoff_insertion; check_delay_it != assigned_stops.end(); ++check_delay_it)
+							{
+								if (check_delay_it->is_dropoff && (delay_time + n.get_network_distance(delay_location, check_delay_it->node_index) / velocity - current_time) > check_delay_it->c_it->get_allowed_dropoff_delay() * (check_delay_it->c_it->get_offer_dropoff_time() - current_time + MACRO_EPSILON))
 								{
-									if (check_delay_it->is_dropoff && (delay_time + n.get_network_distance(delay_location, check_delay_it->node_index) / velocity - current_time) > check_delay_it->c_it->get_allowed_dropoff_delay() * (check_delay_it->c_it->get_offer_dropoff_time() - current_time + MACRO_EPSILON))
-									{
-										dropoff_is_possible = false;
-										break;
-									}
-									if (check_delay_it->is_pickup && (delay_time + n.get_network_distance(delay_location, check_delay_it->node_index) / velocity - current_time) > check_delay_it->c_it->get_allowed_pickup_delay() * (check_delay_it->c_it->get_offer_pickup_time() - current_time + MACRO_EPSILON))
-									{
-										dropoff_is_possible = false;
-										break;
-									}
-
-									delay_time += n.get_network_distance(delay_location, check_delay_it->node_index) / velocity;
-									delay_location = check_delay_it->node_index;
+									dropoff_is_possible = false;
+									break;
 								}
-							}
+								if (check_delay_it->is_pickup && (delay_time + n.get_network_distance(delay_location, check_delay_it->node_index) / velocity - current_time) > check_delay_it->c_it->get_allowed_pickup_delay() * (check_delay_it->c_it->get_offer_pickup_time() - current_time + MACRO_EPSILON))
+								{
+									dropoff_is_possible = false;
+									break;
+								}
 
-							//if the drop off is actually possible, remember it as the best option
-							if (dropoff_is_possible)
-							{
-								best_offer.transporter_index = index;
-								best_offer.best_transporter = this;
-								best_offer.pickup_insertion = temp_pickup_insertion;
-								best_offer.dropoff_insertion = temp_dropoff_insertion;
-								best_offer.pickup_time = pickup_time;
-								best_offer.dropoff_time = dropoff_time;
-								best_offer.is_better_offer = true;
+								delay_time += n.get_network_distance(delay_location, check_delay_it->node_index) / velocity;
+								delay_location = check_delay_it->node_index;
 							}
+						}
+
+						//if the drop off is actually possible, remember it as the best option
+						if (dropoff_is_possible)
+						{
+							best_offer.transporter_index = index;
+							best_offer.best_transporter = this;
+							best_offer.pickup_insertion = temp_pickup_insertion;
+							best_offer.dropoff_insertion = temp_dropoff_insertion;
+							best_offer.pickup_time = pickup_time;
+							best_offer.dropoff_time = dropoff_time;
+							best_offer.is_better_offer = true;
 						}
 					}
 
@@ -477,16 +440,21 @@ offer transporter::best_offer(ULL param_origin, ULL param_destination, double pa
 		}
 	}
 
-	//decide if best offer of this bus is better than the current best offer
+	// decide if best offer of this bus is better than the current best offer and
+	// return the better of these two
 	if (best_offer.dropoff_time < current_best_offer.dropoff_time ||
 		(abs(best_offer.dropoff_time - current_best_offer.dropoff_time) <= MACRO_EPSILON && best_offer.pickup_time > current_best_offer.pickup_time + MACRO_EPSILON)
 		)
+	{
 		best_offer.is_better_offer = true;
+		return best_offer;
+	}
 	else
+	{
 		best_offer.is_better_offer = false;
-
-	//return the best offer of this bus (contains whether it is a better offer)
-	return(best_offer);
+		return current_best_offer;
+	}
+	
 }
 
 //assign a customer based on the request and the offer made

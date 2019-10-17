@@ -29,6 +29,12 @@ public:
 	static double two_node_av_scheduled_customers(ULL cap, double x, ULL B, double doubcap = -1.0);
 	static double two_node_stddev_scheduled_customers(ULL cap, double x, ULL B);
 
+	// reads Efficiency-data from pre-calculated file, which needs do have the two columns
+	// "efficiency" and "number_of_buses" respectively. Returns if successful.
+	static bool read_eff_B_data_from_file(std::string eff_filename, std::vector<std::pair<ULL, double>> &out_vBEdata);
+	// calculates effective B from data of unlimited capacity simulation
+	static double find_effective_B(std::vector<std::pair<ULL, double>> &vBEdata, double Eff);
+
 private:
 	static std::complex<double> zexpz(std::complex<double> z) { return z * exp(z);	}
 	//The derivative of z * exp(z) = exp(z) + z * exp(z)

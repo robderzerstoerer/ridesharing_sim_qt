@@ -221,7 +221,7 @@ void ridesharing_sim::init_network()
 	{
 		if (par->topology == "two_nodes")
 		{
-			assert(param_number_of_nodes == 2);
+			assert(network.get_number_of_nodes() == 2);
 
 			if (i == 0)
 			{
@@ -309,7 +309,6 @@ void ridesharing_sim::init_new_sim(ULL param_number_of_buses,
 	double param_normalized_request_rate,
 	LL param_num_init_requests)
 {
-	assert(network.get_number_of_nodes() == param_number_of_nodes);
 
 	reset_number_of_buses(param_number_of_buses, par->bus_type);
 	//	std::cout << sim.network.get_mean_pickup_distance() << '\t' << sim.network.get_mean_dropoff_distance() << std::endl;
@@ -453,6 +452,9 @@ double ridesharing_sim::execute_next_event()
 		offer current_offer;
 		offer current_best_offer;
 
+		offer current_unlimited_offer;
+		offer current_best_unlimited_offer;
+
 		ULL request_origin;
 		ULL request_destination;
 
@@ -464,16 +466,47 @@ double ridesharing_sim::execute_next_event()
 		std::tie(request_origin, request_destination) = network.generate_request();
 
 		current_best_offer = offer();
+		current_best_unlimited_offer = offer();
 		//find the best offer for the request
 		for (transporter& t : transporter_list)
 		{
-			current_offer = t.best_offer(request_origin, request_destination, event_time, network, current_best_offer);
+			current_offer = t.best_offer(request_origin, request_destination, event_time, network, current_best_offer, true);
+			
 			if (current_offer.is_better_offer)
 			{
 				assert(current_offer.dropoff_time <= current_best_offer.dropoff_time);
 				current_best_offer = current_offer;
 			}
+
+			if (par->calc_p_full)
+			{
+				// now see what is happening if we do not restrict the capacity of the transporter
+				ULL cap = t.get_capacity();
+				t.set_capacity(-1);
+				current_unlimited_offer = t.best_offer(request_origin, request_destination, event_time, network, current_best_unlimited_offer, true);
+				t.set_capacity(cap);  // return to restricted capacity
+
+				if (current_unlimited_offer.is_better_offer)
+				{
+					current_best_unlimited_offer = current_unlimited_offer;
+				}
+
+				
+				if (current_unlimited_offer.pickup_insertion == current_offer.pickup_insertion &&
+					current_unlimited_offer.dropoff_insertion == current_offer.dropoff_insertion)
+					measurements.p_full.new_measurement(0, event_time);
+				else
+					measurements.p_full.new_measurement(1, event_time);
+			}
+
 		}
+
+		if (current_best_unlimited_offer.best_transporter == current_best_offer.best_transporter &&
+			current_best_unlimited_offer.pickup_insertion == current_best_offer.pickup_insertion &&
+			current_best_unlimited_offer.dropoff_insertion == current_best_offer.dropoff_insertion)
+			measurements.p_full2.new_measurement(0, event_time);
+		else
+			measurements.p_full2.new_measurement(1, event_time);
 
 		//assign the request to the best transporter and update the events
 		event_transporter_index = current_best_offer.transporter_index;
@@ -569,7 +602,7 @@ void ridesharing_sim::run_sim_request_list(std::list< std::pair< double, std::pa
 			//find the best offer for the request
 			for (transporter& t : transporter_list)
 			{
-				current_offer = t.best_offer(request_origin, request_destination, event_time, network, current_best_offer);
+				current_offer = t.best_offer(request_origin, request_destination, event_time, network, current_best_offer, false);
 				if (current_offer.is_better_offer)
 				{
 					assert(current_offer.dropoff_time <= current_best_offer.dropoff_time);

@@ -151,3 +151,70 @@ double CUtility::two_node_stddev_scheduled_customers(ULL cap, double x, ULL B)
 
 	return sqrt(2 / B * ((dcap * (dcap + 2 * x) + 6 * x * (dcap - x) * (dcap - x) - (dcap - x) * (dcap - x) * (dcap - x) * (dcap - x)) / (12 * (dcap - x) * (dcap - x)) - sum.real()) + (double(B - 1)) / B * x);
 }
+
+
+bool CUtility::read_eff_B_data_from_file(std::string eff_filename, std::vector<std::pair<ULL, double>>& out_vBEdata)
+{
+	std::ifstream myfile(eff_filename);
+
+	bool NumberNext = false;
+	std::string line;
+	if (myfile.is_open())
+	{
+		while (std::getline(myfile, line))
+		{
+			if (line != "")
+			{
+				// file structure : B <tab> E
+				size_t findtab = line.find('\t');
+				ULL B = std::stoi(line.substr(0, findtab));
+				double E = std::stod(line.substr(findtab + 1));
+				if (out_vBEdata.size() > 0)
+				{
+					// do not save repeated entries
+					if (out_vBEdata.back().first != B)
+						out_vBEdata.push_back(std::make_pair(B, E));
+				}
+				else
+					out_vBEdata.push_back(std::make_pair(B, E));
+			}
+		}
+		return true;
+	}
+	else
+		return false;
+}
+
+
+double CUtility::find_effective_B(std::vector<std::pair<ULL, double>> &vBEdata, double Eff)
+{
+	// If the measured efficiency is smaller than any efficiency in vBEdata,
+	// return the smallest number of buses in vBEdata
+	if (Eff < vBEdata[0].second)
+	{
+		return vBEdata[0].first;
+	}
+
+	// otherwise, we have to interpolate
+	for (int i = 0; i < vBEdata.size(); i++)
+	{
+		if (i < vBEdata.size() - 1)
+		{
+			if (Eff > vBEdata[i].second && Eff < vBEdata[i + 1].second)
+			{
+				// linear interpolation
+				double B_equiv = ((double)vBEdata[i].first) + ((double)(vBEdata[i + 1].first - vBEdata[i].first)) * (Eff - vBEdata[i].second) / (vBEdata[i + 1].second - vBEdata[i].second);
+				return B_equiv;
+			}
+			else if (Eff < vBEdata[i].second && Eff > vBEdata[i + 1].second)
+			{
+				return (vBEdata[i].second + vBEdata[i + 1].second) / 2;
+			}
+		}
+		else
+		{
+			// We have reached the end of our efficiency list. Return the last value (highest B).
+			return (double)vBEdata[i].first;
+		}
+	}
+}
