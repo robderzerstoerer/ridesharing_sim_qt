@@ -22,6 +22,8 @@ class CUtility
 public:
 	static bool file_exists(std::string filename);
 
+	static std::string find_new_filename(std::string filename);
+
 	// Code for calculating Lambert W from https://github.com/IstvanMezo/LambertW-function
 	static std::complex<double> LambertW(std::complex<double> z, int k = 0);
 
@@ -35,6 +37,9 @@ public:
 	// calculates effective B from data of unlimited capacity simulation
 	static double find_effective_B(std::vector<std::pair<ULL, double>> &vBEdata, double Eff);
 
+	static double calc_p_full(int B, int seated_customers, int capacity);
+
+
 private:
 	static std::complex<double> zexpz(std::complex<double> z) { return z * exp(z);	}
 	//The derivative of z * exp(z) = exp(z) + z * exp(z)
@@ -44,5 +49,7 @@ private:
 
 	//Determine the initial point for the root finding
 	static std::complex<double> InitPoint(std::complex<double> z, int k);
+
+	static double num_customer_permutations(int n, int k, int cap);
 };
 

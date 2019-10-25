@@ -12,6 +12,17 @@ public:
 	~simulation_thread();
 	void run();
 
+	void simulate_B_list(simulation_parameters& sim_par,
+		std::ofstream& out,
+		std::ofstream& outplot,
+		std::vector<std::pair<ULL, double>>& vBEdata = std::vector<std::pair<ULL, double>>());
+
+	// returns Efficiency and  if job cancelled or failed
+	double single_simulation(simulation_parameters &sim_par, 
+		std::ofstream& out, 
+		std::ofstream& outplot, 
+		std::vector<std::pair<ULL, double>>& vBEdata = std::vector<std::pair<ULL, double>>());
+
 	program_parameters par;
 
 signals:

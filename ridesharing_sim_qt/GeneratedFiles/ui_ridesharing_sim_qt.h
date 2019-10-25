@@ -182,7 +182,7 @@ public:
         label_10->setGeometry(QRect(760, 530, 81, 31));
         checkBox_3 = new QCheckBox(centralWidget);
         checkBox_3->setObjectName(QString::fromUtf8("checkBox_3"));
-        checkBox_3->setGeometry(QRect(890, 480, 191, 31));
+        checkBox_3->setGeometry(QRect(890, 480, 121, 31));
         textEdit_11 = new QTextEdit(centralWidget);
         textEdit_11->setObjectName(QString::fromUtf8("textEdit_11"));
         textEdit_11->setGeometry(QRect(880, 530, 251, 31));

@@ -21,33 +21,65 @@
 #include <fstream>
 #include <string>
 #include <functional>
+#include <ctime>
 
 #include "measurement_collector.h"
 #include "traffic_network.h"
 #include "customer.h"
 #include "transporter.h"
 
+
+// Parameters for running many simulations with different parameters
 struct program_parameters
 {
-	std::string topology;
-	ULL number_of_buses = 0;
-	ULL number_of_buses_from;
-	ULL number_of_buses_to;
-	ULL number_of_bus_calculations;
-	ULL number_of_nodes;
-	double normalized_request_rate;
-	ULL number_of_request_rates;
-	double normalized_request_rate_from;
-	double normalized_request_rate_to;
-	ULL bus_type;
-	bool save;
-	std::string filename;
+	bool simulate_everything;
+	std::vector<std::pair<std::string, ULL>> topology_list;  // (topology_name, number_of_nodes)
+
+	std::vector<ULL> B_list;
+
+	std::vector<int> capacity_list;
+
+	std::vector<double> x_list;
+
+	ULL num_requests_per_bus_init;
+	ULL num_requests_per_bus_sim;
+
+	// Do we want to abort any point in the simulation after simulating a certain time?
+	double scan_point_sim_time;  // in seconds, ~ 30s
+	// when should we abort after simulating a longer time?
+	double max_point_sim_time; // in seconds, ~ 5 min
 
 	bool simulate_until_exact;
+
 	bool calc_p_full;
-	bool calc_cap_delay;
+	bool calc_cap_delay;  //unused
+
+	std::string filename;
 
 	bool stop_thread;
+};
+
+
+// parameters for one simulation of definite topology, number of buses, capacity etc.
+struct simulation_parameters
+{
+	program_parameters* parent;
+
+	std::string topology;
+	ULL number_of_nodes;
+	const ULL number_of_poisson_random_edges = 200;
+
+	ULL number_of_buses;
+
+	int capacity;
+
+	double normalized_request_rate;
+
+	bool calc_p_full;
+	bool calc_cap_delay;  //unused
+
+	// Do we want to abort this simulation after simulating a certain time?
+	double max_sim_time;  // in seconds
 };
 
 
@@ -56,26 +88,26 @@ typedef std::priority_queue< std::pair<double, ULL>, std::vector<std::pair<doubl
 class ridesharing_sim
 {
 public:
-	ridesharing_sim(program_parameters* par_par);
+	ridesharing_sim(simulation_parameters* par_par);
 	virtual ~ridesharing_sim();
 
-	program_parameters* par;
+	simulation_parameters* par;
 
 	void set_normalized_request_rate(double param_normalized_request_rate);
 	void set_request_rate(double param_request_rate);
 
-	void reset_number_of_buses(ULL param_number_of_buses, ULL param_bus_type = 0);
+	void reset_number_of_buses(ULL param_number_of_buses, int param_capacity);
 
 	void reset_measurements();
 	void print_measurements(std::ofstream& out);
 
 	void init_network();
 
-	void init_new_sim(ULL param_number_of_buses,
+	bool init_new_sim(ULL param_number_of_buses,
 		double param_normalized_request_rate,
 		LL param_num_init_requests = -1);
 	void run_sim_request_list(std::list< std::pair< double, std::pair<ULL, ULL> > > request_list);
-	void run_sim_requests(ULL max_requests);
+	bool run_sim_requests(ULL max_requests);
 	void run_sim_time(long double max_time);
 
 	double execute_next_event();
@@ -122,6 +154,8 @@ public:
 
 	std::mt19937_64 random_generator;
 	std::exponential_distribution<double> exp_dist;
+
+	std::clock_t start_clock;
 };
 
 #endif // RIDSHARING_SIM_H

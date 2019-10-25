@@ -111,6 +111,10 @@ void measurement_collector::measure_system_status(std::vector<transporter>& tran
 		planned_time_horizon.new_measurement(t.get_planned_time_horizon(time));
 		if (t.is_idle())
 			++idle_transporters;
+		if (t.get_occupancy() == t.get_capacity())
+			p_full_snap.new_measurement(1);
+		else
+			p_full_snap.new_measurement(0);
 	}
 	number_of_idle_transporters.new_measurement(idle_transporters);
 }
@@ -133,6 +137,7 @@ void measurement_collector::reset()
 
 	p_full.reset();
 	p_full2.reset();
+	p_full_snap.reset();
 
 	// important: scheduled customers have to be measured every 100 time units
 	// (this is used for validating the total average result)
@@ -162,6 +167,7 @@ void measurement_collector::print(std::ofstream& out, bool readable)
 
 		p_full.print(out);
 		p_full2.print(out);
+		p_full_snap.print(out);
 
 		out << std::endl;
 	}
@@ -219,6 +225,10 @@ void measurement_collector::print(std::ofstream& out, bool readable)
 
 		out << "p_full2" << std::endl;
 		p_full2.print(out);
+		out << std::endl;
+
+		out << "p_full_snap" << std::endl;
+		p_full_snap.print(out);
 		out << std::endl;
 
 		out << std::endl;

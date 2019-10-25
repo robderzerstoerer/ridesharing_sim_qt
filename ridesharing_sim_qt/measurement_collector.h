@@ -88,6 +88,7 @@ public:
 
 	measure p_full;
 	measure p_full2; 
+	measure p_full_snap;
 
 private:
 

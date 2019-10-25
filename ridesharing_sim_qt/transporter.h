@@ -76,16 +76,14 @@ struct offer
 class transporter
 {
 public:
-	transporter(ULL param_index, ULL param_location, ULL param_type, std::mt19937_64 param_random_generator);
-	void reset(ULL param_index, ULL param_location, ULL param_type);
-	void init_by_type();
+	transporter(ULL param_index, ULL param_location, int param_capacity, std::mt19937_64 param_random_generator);
+	void reset(ULL param_index, ULL param_location, int param_capacity);
 	virtual ~transporter();
 
 	ULL get_index() { return(index); }
 	LL get_capacity() { return(capacity); }
 	void set_capacity(ULL cap) { capacity = cap;  }
 	double get_velocity() { return(velocity); }
-	ULL get_type() { return(type); }
 
 	ULL get_current_location() { return(current_location); }
 	double get_current_time() { return(current_time); }
@@ -123,8 +121,6 @@ private:
 
 	LL capacity;		//negative value --> infinite capacity
 	double velocity;
-	ULL type;
-	//add arbitrary parameters how
 
 	//next node to be at and when the transporter arrives
 	ULL current_location;

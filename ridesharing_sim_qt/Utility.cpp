@@ -1,6 +1,9 @@
 #include <vector>
 #include <complex>
+#include <random>
 #include <qmessagebox.h>
+#include <boost/math/special_functions/binomial.hpp>
+#include <boost/multiprecision/cpp_dec_float.hpp>
 #include "utility.h"
 
 #ifndef _EPSILON
@@ -12,6 +15,24 @@ bool CUtility::file_exists(std::string filename)
 {
 	std::ifstream infile(filename);
 	return infile.good();
+}
+
+std::string CUtility::find_new_filename(std::string filename)
+{
+	bool b_found_name = false;
+	int itry = 2;
+	std::string newname;
+	while (!b_found_name)
+	{
+		newname = filename.substr(0, filename.length() - 4) + "_" + std::to_string(itry) + ".dat";
+		if (!CUtility::file_exists(newname))
+		{
+			b_found_name = true;
+		}
+		itry++;
+	}
+
+	return newname;
 }
 
 std::complex<double> CUtility::InitPoint(std::complex<double> z, int k)
@@ -217,4 +238,49 @@ double CUtility::find_effective_B(std::vector<std::pair<ULL, double>> &vBEdata, 
 			return (double)vBEdata[i].first;
 		}
 	}
+}
+
+double CUtility::calc_p_full(int B, int seated_customers, int capacity)
+{
+	double sum = 0.0;
+
+	for (int n = 1; n <= B; n++)
+	{
+		if ((seated_customers - n * capacity) < 0)
+			break;
+		if ((seated_customers - n * capacity) > (B - n) * (capacity - 1))
+			continue;
+
+		double bin1 = boost::math::binomial_coefficient<double>(B, n);
+		int a = B - n;
+		int b = seated_customers - n * capacity;
+		int c = capacity - 1;
+		double cust_perm = num_customer_permutations(a, b, c);
+		sum += n * bin1 * cust_perm;
+	}
+
+	return sum / (B * num_customer_permutations(B, seated_customers, capacity));
+}
+
+double CUtility::num_customer_permutations(int n, int k, int cap)
+{
+	boost::multiprecision::cpp_dec_float_100 sum = 0.0;
+
+	for (int j = 0; j <= n; j++)
+	{
+		boost::multiprecision::cpp_dec_float_100 bin1 = boost::math::binomial_coefficient<boost::multiprecision::cpp_dec_float_100>(n, j);
+
+		boost::multiprecision::cpp_dec_float_100 bin2 = 0.0;
+		int up = n + k - j * (cap + 1) - 1;
+		if (up >= n - 1)
+			bin2 = boost::math::binomial_coefficient<boost::multiprecision::cpp_dec_float_100>(up, n - 1);
+
+		boost::multiprecision::cpp_dec_float_100 term = bin1 * bin2;
+		if ((j % 2) == 1)
+			term = -term;
+
+		sum += term;
+	}
+
+	return sum.convert_to<double>();
 }

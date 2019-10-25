@@ -1,12 +1,14 @@
 #include "transporter.h"
 
 //constructor, initialize all necessary variables
-transporter::transporter(ULL param_index, ULL param_location, ULL param_type, std::mt19937_64 param_random_generator) : random_generator(param_random_generator)
+transporter::transporter(ULL param_index, ULL param_location, int param_capacity, std::mt19937_64 param_random_generator) : random_generator(param_random_generator)
 {
 	//bus starts in a given location with no next arrival (current time)
 	index = param_index;
 	current_location = param_location;
 	current_time = -1;
+
+	velocity = 1;
 
 	//bus has no current route
 	node_of_last_stop = current_location;
@@ -24,16 +26,17 @@ transporter::transporter(ULL param_index, ULL param_location, ULL param_type, st
 	idle = true;
 
 	//set type of bus and initialize parameters accordingly
-	type = param_type;
-	init_by_type();
+	capacity = param_capacity;
 }
 
 //reset a transporter as if starting a new simulation (mostly same as above)
-void transporter::reset(ULL param_index, ULL param_location, ULL param_type)
+void transporter::reset(ULL param_index, ULL param_location, int param_capacity)
 {
 	index = param_index;
 	current_location = param_location;
 	current_time = -1;
+
+	velocity = 1;
 
 	node_of_last_stop = current_location;
 	time_of_last_stop = -1;
@@ -46,8 +49,7 @@ void transporter::reset(ULL param_index, ULL param_location, ULL param_type)
 
 	idle = true;
 
-	type = param_type;
-	init_by_type();
+	capacity = param_capacity;
 }
 
 //clear all containers
@@ -178,6 +180,10 @@ offer transporter::best_offer(ULL param_origin,
 	offer& current_best_offer, 
 	bool calc_p_full)
 {
+	static int num = 0;
+	num++;
+	if (num % 168 == 0)
+		num = 0;
 	//request parameters
 	ULL origin = param_origin;
 	ULL destination = param_destination;
@@ -241,6 +247,21 @@ offer transporter::best_offer(ULL param_origin,
 		else {
 			//sanity check just to make sure nothing weird is going on
 			assert(current_location != origin || pickup_time <= best_offer.pickup_time);
+		}
+
+		// decide if best offer of this bus is better than the current best offer and
+	// return the better of these two
+		if (best_offer.dropoff_time < current_best_offer.dropoff_time ||
+			(abs(best_offer.dropoff_time - current_best_offer.dropoff_time) <= MACRO_EPSILON && best_offer.pickup_time > current_best_offer.pickup_time + MACRO_EPSILON)
+			)
+		{
+			best_offer.is_better_offer = true;
+			return best_offer;
+		}
+		else
+		{
+			best_offer.is_better_offer = false;
+			return current_best_offer;
 		}
 
 		return(best_offer);
@@ -452,7 +473,7 @@ offer transporter::best_offer(ULL param_origin,
 	else
 	{
 		best_offer.is_better_offer = false;
-		return current_best_offer;
+		return best_offer;
 	}
 	
 }
@@ -511,23 +532,6 @@ double transporter::assign_customer(double assignment_time, customer c, offer& o
 }
 
 
-
-//initialize capacity and velocity of transporters depending on their type
-void transporter::init_by_type()
-{
-	//default behavior:
-	//	velocity  = 1  (determines the timescale of the system, without loss of generality)
-	//  capacity = -1  (negative values indicate infinite capacity)
-	if (type == 0)
-	{
-		velocity = 1;
-		capacity = -1;
-	}
-	else {
-		velocity = 1;
-		capacity = 5;
-	}
-}
 
 //handle events that are not pickup or delivery (not used so far, do nothing and do return a negative time --> no new event)
 //return the time of the next event for this bus
