@@ -45,7 +45,8 @@
 ridesharing_sim_qt::ridesharing_sim_qt(QWidget *parent)
 	: QMainWindow(parent)
 {
-	mThread = new simulation_thread;
+	mThread[0] = new simulation_thread;
+	mThread[1] = new simulation_thread;
 	ui.setupUi(this);
 	connect(ui.pushButton, SIGNAL(clicked()), this, SLOT(onButtonSimulateClicked()));
 	connect(ui.pushButton_2, SIGNAL(clicked()), this, SLOT(onButtonStopClicked()));
@@ -57,9 +58,12 @@ ridesharing_sim_qt::ridesharing_sim_qt(QWidget *parent)
 	connect(ui.pushButton_7, SIGNAL(clicked()), this, SLOT(onButtonSavePlotClicked()));
 
 	qRegisterMetaType<QVector<double>>("QVector<double>");
-	connect(mThread, SIGNAL(ProcessTextChanged(QString)), this, SLOT(onProcessTextChanged(QString)));
-	connect(mThread, SIGNAL(GraphChanged(QVector<double>, QVector<double>)), this, SLOT(onGraphChanged(QVector<double>, QVector<double>)));
-	connect(mThread, SIGNAL(ErrorMessage(QString)), this, SLOT(onErrorMessage(QString)));
+	connect(mThread[0], SIGNAL(ProcessTextChanged(QString)), this, SLOT(onProcessTextChanged(QString)));
+	connect(mThread[0], SIGNAL(GraphChanged(QVector<double>, QVector<double>)), this, SLOT(onGraphChanged(QVector<double>, QVector<double>)));
+	connect(mThread[0], SIGNAL(ErrorMessage(QString)), this, SLOT(onErrorMessage(QString)));
+	connect(mThread[1], SIGNAL(ProcessTextChanged(QString)), this, SLOT(onProcessTextChanged(QString)));
+	connect(mThread[1], SIGNAL(GraphChanged(QVector<double>, QVector<double>)), this, SLOT(onGraphChanged(QVector<double>, QVector<double>)));
+	connect(mThread[1], SIGNAL(ErrorMessage(QString)), this, SLOT(onErrorMessage(QString)));
 	
 	ui.listWidget->addItem("torus");
 	ui.listWidget->addItem("ring");
@@ -125,53 +129,42 @@ ridesharing_sim_qt::ridesharing_sim_qt(QWidget *parent)
 
 void ridesharing_sim_qt::onButtonSimulateClicked()
 {
-	// make sure we do not use old values of B, x and the topologies
-	mThread->par.B_list.clear();
-	mThread->par.x_list.clear();
-	mThread->par.topology_list.clear();
+	// make sure we do not use old values of B, x, capacities and the topologies
+	mThread[0]->par.B_list.clear();
+	mThread[0]->par.x_list.clear();
+	mThread[0]->par.topology_list.clear();
+	mThread[0]->par.capacity_list.clear();
 
 	ui.customPlot->graph(0)->setData(QVector<double>(), QVector<double>());
 	ui.customPlot->graph(0)->setPen(QPen(Qt::blue));
 	ui.customPlot->replot();
 
 	// global simulation variables
-	mThread->par.simulate_everything = true;
-	mThread->par.simulate_until_exact = true;
-	mThread->par.num_requests_per_bus_init = 100;
-	mThread->par.num_requests_per_bus_sim = 1000;
-	mThread->par.calc_cap_delay = false;
-	if (mThread->par.simulate_everything)
+	mThread[0]->par.simulate_everything = true;
+	mThread[0]->par.simulate_until_exact = true;
+	mThread[0]->par.foldername = "allsim2_2\\";
+	mThread[0]->par.num_requests_per_bus_init = 2000;
+	mThread[0]->par.num_requests_per_bus_sim = 2000;
+	mThread[0]->par.calc_cap_delay = false;
+	if (mThread[0]->par.simulate_everything)
 	{
-		mThread->par.capacity_list = { 1, 2, 3, 4, 5, 6, 7, 8};
+		mThread[0]->par.capacity_list = {1, 2, 3, 4, 5, 6, 7, 8};
 	}
 	else
-		mThread->par.capacity_list.push_back(std::stoi(ui.textEdit_12->toPlainText().toStdString()));
+		mThread[0]->par.capacity_list.push_back(std::stoi(ui.textEdit_12->toPlainText().toStdString()));
 	
-	if (mThread->par.simulate_everything)
+	if (mThread[0]->par.simulate_everything)
 	{
-		mThread->par.topology_list = {
-			// std::make_pair("two_nodes", 2),
-			// std::make_pair("ring", 25),
-			// std::make_pair("ring", 100),
-			// std::make_pair("directed_ring", 25),
-			// std::make_pair("torus", 25),
-			std::make_pair("torus", 100),
-			// std::make_pair("star", 4),
-			// std::make_pair("3cayley_tree", 94),
-			// std::make_pair("complete_graph", 5),
-			// std::make_pair("delaunay_random_torus", 5)
-		};
-
-		mThread->par.scan_point_sim_time = 30; // 30s
-		mThread->par.max_point_sim_time = 300; // 5min
+		mThread[0]->par.scan_point_sim_time = 30; // 30 s
+		mThread[0]->par.max_point_sim_time = 360; // 6 min
 	}
 	else
 	{
 		// use topology input from ListWidget and TextEdit
-		mThread->par.topology_list = { std::make_pair(ui.listWidget->selectedItems().front()->text().toStdString(), std::stoi(ui.textEdit->toPlainText().toStdString())) };
+		mThread[0]->par.topology_list = { std::make_pair(ui.listWidget->selectedItems().front()->text().toStdString(), std::stoi(ui.textEdit->toPlainText().toStdString())) };
 
-		mThread->par.scan_point_sim_time = 1e6;
-		mThread->par.max_point_sim_time = 1e6;
+		mThread[0]->par.scan_point_sim_time = 1e6;
+		mThread[0]->par.max_point_sim_time = 1e6;
 	}
 
 	if (ui.checkBox->isChecked())
@@ -186,13 +179,13 @@ void ridesharing_sim_qt::onButtonSimulateClicked()
 		for (double iter_B = index_low_B; iter_B <= (index_high_B + 0.0001); iter_B += (index_high_B - index_low_B) / (num_B - 1))
 		{
 			int B = (int)(exp(iter_B) + 0.5);
-			mThread->par.B_list.push_back(B);
+			mThread[0]->par.B_list.push_back(B);
 		}
 	}
 	else
 	{
 		// just use this single value of B
-		mThread->par.B_list.push_back(std::stoi(ui.textEdit_2->toPlainText().toStdString()));
+		mThread[0]->par.B_list.push_back(std::stoi(ui.textEdit_2->toPlainText().toStdString()));
 	}	
 	
 
@@ -205,22 +198,55 @@ void ridesharing_sim_qt::onButtonSimulateClicked()
 		// use linearly spaced values for x
 		for (double x = x_from; x <= (x_to + 0.0001); x += (x_to - x_from) / (num_x -1))
 		{
-			mThread->par.x_list.push_back(x);
+			mThread[0]->par.x_list.push_back(x);
 		}
 	}
 	else
 	{
 		// just use this single value of x
-		mThread->par.x_list.push_back(std::stod(ui.textEdit_4->toPlainText().toStdString()));
+		mThread[0]->par.x_list.push_back(std::stod(ui.textEdit_4->toPlainText().toStdString()));
 	}
 
-	mThread->par.calc_p_full = ui.checkBox_4->isChecked();
+	mThread[0]->par.calc_p_full = ui.checkBox_4->isChecked();
 	
-	mThread->par.filename = ui.textEdit_5->toPlainText().toStdString();
+	mThread[0]->par.filename = ui.textEdit_5->toPlainText().toStdString();
+
+	mThread[1]->par = mThread[0]->par;
+
+	if (mThread[0]->par.simulate_everything)
+	{
+		mThread[0]->par.topology_list = {
+			// std::make_pair("simplified_city", 16),
+			// std::make_pair("two_nodes", 2),
+			// std::make_pair("ring", 25),
+			// std::make_pair("ring", 100),
+			// std::make_pair("directed_ring", 25),
+			// std::make_pair("torus", 25),
+			// std::make_pair("torus", 100),
+			// std::make_pair("complete_graph", 5),
+			// std::make_pair("star", 4),
+			std::make_pair("3cayley_tree", 46),
+			// std::make_pair("delaunay_random_torus", 25)
+		};
+		mThread[1]->par.topology_list = {
+			// std::make_pair("two_nodes", 2),
+			// std::make_pair("ring", 25),
+			// std::make_pair("ring", 100),
+			// std::make_pair("directed_ring", 25),
+			// std::make_pair("torus", 25),
+			// std::make_pair("torus", 100),
+			// std::make_pair("complete_graph", 5),
+			std::make_pair("star", 4),
+			// std::make_pair("3cayley_tree", 46),
+			// std::make_pair("delaunay_random_torus", 25)
+		};
+	}
 
 	// Start Thread
-	mThread->start();
-
+	mThread[0]->start();
+	// multithreading only if parallel computing makes sense
+	if (mThread[0]->par.simulate_everything)
+		mThread[1]->start();
 	
 }
 
@@ -241,7 +267,8 @@ void ridesharing_sim_qt::B_to_checkBoxChanged(int arg1)
 
 void ridesharing_sim_qt::onButtonStopClicked()
 {
-	mThread->par.stop_thread = true;
+	mThread[0]->par.stop_thread = true;
+	mThread[1]->par.stop_thread = true;
 }
 
 void ridesharing_sim_qt::onProcessTextChanged(QString newText)
@@ -286,53 +313,8 @@ void ridesharing_sim_qt::onGraphChanged(QVector<double> vB, QVector<double> vE)
 
 void ridesharing_sim_qt::read_file(std::string filename, int iFile)
 {
-	for (int i = 0; i < 3; i++)
+	if (CUtility::read_file(filename, averages[iFile], stddevs[iFile], counts[iFile]))
 	{
-		averages[iFile].clear();
-		stddevs[iFile].clear();
-		counts[iFile].clear();
-	}
-
-	std::string line;
-	std::ifstream myfile(filename);
-	std::string prevLine = "";
-	bool NumberNext = false;
-	if (myfile.is_open())
-	{
-		while (std::getline(myfile, line))
-		{
-			if (line == "PARAMS" || line == "MEASUREMENTS" || line == "")
-			{
-				NumberNext = false;
-			}
-			else if (NumberNext == true)
-			{
-				// extract n, av, stddev
-				int find1 = line.find('\t');
-				if (find1 != std::string::npos)
-				{
-					int find2 = line.find('\t', find1 + 1);
-					counts[iFile][prevLine].push_back(std::stod(line.substr(0, find1)));
-					averages[iFile][prevLine].push_back(std::stod(line.substr(find1 + 1, find2 - find1 - 1)));
-					stddevs[iFile][prevLine].push_back(std::stod(line.substr(find2 + 1, line.length() - find2 - 1)));
-				}
-				else	// no standard deviation or multiple measurements stored
-				{
-					averages[iFile][prevLine].push_back(std::stod(line));
-					stddevs[iFile][prevLine].push_back(-1.0);
-					counts[iFile][prevLine].push_back(-1.0);
-				}
-
-				NumberNext = false;
-			}
-			else // new variable incoming
-			{
-				prevLine = line;
-				NumberNext = true;
-			}
-		}
-		myfile.close();
-
 		QListWidget* list = NULL;
 		if (iFile == 0)
 			list = ui.listWidget_2;

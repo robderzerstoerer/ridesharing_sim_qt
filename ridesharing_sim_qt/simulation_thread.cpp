@@ -39,7 +39,7 @@ void simulation_thread::run()
 			{
 				if (par.stop_thread)
 					break;
-
+				
 				simulation_parameters sim_par;
 				sim_par.parent = &par;
 				sim_par.normalized_request_rate = x;
@@ -57,12 +57,14 @@ void simulation_thread::run()
 				std::string out_plotfilename;
 				// data from pre-calculated efficiency for unlimited capacity
 				std::vector<std::pair<ULL, double>> vBEdata;
+				std::vector<double> wait_time_data_unlim;
 
 				if (par.capacity_list.size() == 1 && par.x_list.size() == 1)
 					out_filename = par.filename;
 				else
 				{
-					out_filename = topology_n.first +
+					out_filename = par.foldername + 
+						topology_n.first +
 						"_N_" + std::to_string(topology_n.second) +
 						"_cap_" + std::to_string(cap) +
 						"_x_" + std::to_string(x + 0.0001).substr(0, 3) +
@@ -110,9 +112,15 @@ void simulation_thread::run()
 							std::string errormessage = "Could not open file " + eff_filename;
 							emit ErrorMessage(errormessage.c_str());
 						}
+						else
+						{
+							std::map<std::string, std::vector<double>> averages, stddevs, counts;
+							CUtility::read_file(eff_filename.substr(0, eff_filename.length() - 7), averages, stddevs, counts);
+							wait_time_data_unlim = averages["wait_time"];
+						}
 					}
 
-					simulate_B_list(sim_par, out, outplot, vBEdata);
+					simulate_B_list(sim_par, out, outplot, vBEdata, wait_time_data_unlim);
 				}
 				else
 				{
@@ -126,40 +134,26 @@ void simulation_thread::run()
 						std::ofstream out_eff_plot;
 						// We are simulating for multiple x. Therefore, we need to get a new filename for each x
 						std::string eff_filename =
+							par.foldername +
 							"eff_" + topology_n.first +
 							"_N_" + std::to_string(topology_n.second) +
 							"_unl" +
 							"_x_" + std::to_string(x + 0.0001).substr(0, 3) +
 							".dat";
 
-						if (!CUtility::file_exists(eff_filename))
-							out_eff.open(eff_filename.c_str());
-						else
-						{
-							// look for alternative filename
-							std::string newname = CUtility::find_new_filename(eff_filename);
-							out_eff.open(newname.c_str());
-
-							std::string errormessage = "File " + eff_filename + " already exists.\nUsing " + newname + " instead.";
-							emit ErrorMessage(errormessage.c_str());
-
-							eff_filename = newname;
-						}
-
 						std::string eff_plotfilename = eff_filename + "eff.dat";
+
+						// if this file doesn't already exist, we have to calculate it
 						if (!CUtility::file_exists(eff_plotfilename))
-							out_eff_plot.open(eff_plotfilename.c_str());
-						else
 						{
-							std::string errormessage = "File " + eff_plotfilename + " already exists.";
-							emit ErrorMessage(errormessage.c_str());
-							return;
+							out_eff.open(eff_filename.c_str());
+							out_eff_plot.open(eff_plotfilename.c_str());
+
+							simulate_B_list(sim_par, out_eff, out_eff_plot);
+
+							out_eff.close();
+							out_eff_plot.close();
 						}
-
-						simulate_B_list(sim_par, out_eff, out_eff_plot);
-
-						out_eff.close();
-						out_eff_plot.close();
 
 						// read pre-calculated data for efficiency as a function of B for the present x in this simulation
 						if (!CUtility::read_eff_B_data_from_file(eff_plotfilename, vBEdata))
@@ -172,6 +166,7 @@ void simulation_thread::run()
 					{
 						// we already have pre-calculated data for efficiency. Read it.
 						std::string vBEdata_filename =
+							par.foldername +
 							"eff_" + topology_n.first +
 							"_N_" + std::to_string(topology_n.second) +
 							"_unl" +
@@ -189,7 +184,7 @@ void simulation_thread::run()
 					sim_par.capacity = cap;
 					sim_par.calc_p_full = par.calc_p_full;
 
-					simulate_B_list(sim_par, out, outplot, vBEdata);
+					simulate_B_list(sim_par, out, outplot, vBEdata, wait_time_data_unlim);
 
 				}
 
@@ -203,9 +198,13 @@ void simulation_thread::run()
 
 }
 
-void simulation_thread::simulate_B_list(simulation_parameters& sim_par, std::ofstream& out, std::ofstream& outplot, std::vector<std::pair<ULL, double>>& vBEdata)
+void simulation_thread::simulate_B_list(
+	simulation_parameters& sim_par, 
+	std::ofstream& out, std::ofstream& outplot, 
+	std::vector<std::pair<ULL, double>>& vBEdata,
+	std::vector<double> wait_time_data_unlim)
 {
-	// QVariables for plotting
+	// Qt variables for plotting
 	QVector<double> vB, vE;
 	
 	// first: scan with smaller simulation time
@@ -230,7 +229,7 @@ void simulation_thread::simulate_B_list(simulation_parameters& sim_par, std::ofs
 		emit GraphChanged(vB, vE);
 
 		// simulate
-		double Eff = single_simulation(sim_par, out, outplot, vBEdata);
+		double Eff = single_simulation(sim_par, out, outplot, vBEdata, wait_time_data_unlim);
 
 		if (!b_prev_successful && Eff > 0.0)
 		{
@@ -254,6 +253,36 @@ void simulation_thread::simulate_B_list(simulation_parameters& sim_par, std::ofs
 		current_index++;
 	}
 
+	// if none of the scans was successful: try 5th last element with longer sim time
+	if (!b_prev_successful && par.B_list.size() >= 5)
+	{
+		sim_par.max_sim_time = par.max_point_sim_time;
+
+		if (par.stop_thread)
+			return;
+
+		sim_par.number_of_buses = par.B_list[par.B_list.size() - 5];
+
+		QString newText = "Simulating " + QString(sim_par.topology.c_str()) +
+			", N=" + QString(std::to_string(sim_par.number_of_nodes).c_str()) +
+			", x=" + QString(std::to_string(sim_par.normalized_request_rate).c_str()) +
+			", cap=" + QString(std::to_string(sim_par.capacity).c_str()) +
+			", B=" + QString(std::to_string(sim_par.number_of_buses).c_str());
+		emit ProcessTextChanged(newText);
+		emit GraphChanged(vB, vE);
+
+		// simulate
+		double Eff = single_simulation(sim_par, out, outplot, vBEdata, wait_time_data_unlim);
+
+		if (Eff > 0.0)
+		{
+			vB.push_front(sim_par.number_of_buses);
+			vE.push_front(Eff);
+			index_first_successful = par.B_list.size() - 5;
+			index_last_successful  = par.B_list.size() - 5;
+		}
+	}
+
 	// then: if some points have been skipped, try these with a longer simulation time
 	sim_par.max_sim_time = par.max_point_sim_time;
 	for (int i = index_first_successful - 1; i > 0; i--)
@@ -272,7 +301,7 @@ void simulation_thread::simulate_B_list(simulation_parameters& sim_par, std::ofs
 		emit GraphChanged(vB, vE);
 
 		// simulate
-		double Eff = single_simulation(sim_par, out, outplot, vBEdata);
+		double Eff = single_simulation(sim_par, out, outplot, vBEdata, wait_time_data_unlim);
 
 		if (Eff < 0.0)
 			break;
@@ -299,7 +328,7 @@ void simulation_thread::simulate_B_list(simulation_parameters& sim_par, std::ofs
 		emit GraphChanged(vB, vE);
 
 		// simulate
-		double Eff = single_simulation(sim_par, out, outplot, vBEdata);
+		double Eff = single_simulation(sim_par, out, outplot, vBEdata, wait_time_data_unlim);
 
 		if (Eff < 0.0)
 			break;
@@ -311,7 +340,11 @@ void simulation_thread::simulate_B_list(simulation_parameters& sim_par, std::ofs
 	}
 }
 
-double simulation_thread::single_simulation(simulation_parameters& sim_par, std::ofstream& out, std::ofstream& outplot, std::vector<std::pair<ULL, double>>& vBEdata)
+double simulation_thread::single_simulation(
+	simulation_parameters& sim_par,
+	std::ofstream& out, std::ofstream& outplot,
+	std::vector<std::pair<ULL, double>>& vBEdata,
+	std::vector<double> wait_time_data_unlim)
 {
 	ridesharing_sim sim(&sim_par);
 	sim.init_network();
@@ -320,7 +353,7 @@ double simulation_thread::single_simulation(simulation_parameters& sim_par, std:
 		return -1.0;
 
 	//turn on measurements with a given step size, measure every (number of buses) requests for a total of ~ 100 measurements
-	sim.enable_measurements((2.0 * sim_par.number_of_buses) / sim.request_rate);
+	sim.enable_measurements((2.34546789 * sim_par.number_of_buses) / sim.request_rate);
 
 	if (par.simulate_until_exact)
 	{
@@ -420,7 +453,27 @@ double simulation_thread::single_simulation(simulation_parameters& sim_par, std:
 		double B_eff_p_full = sim_par.number_of_buses * (1 - real_p_full);
 		double B_eff_p_full2 = sim_par.number_of_buses * (1 - real_p_full2);
 
-		outplot << '\t' << B_equiv << '\t' << B_eff_p_full << '\t' << B_eff_p_full2;
+		outplot << '\t' << B_equiv << '\t' << B_eff_p_full << '\t' << B_eff_p_full2; 
+
+		/*
+		int found_B = -1;
+		for (int f = 0; f < par.B_list.size(); f++)
+		{
+			if (par.B_list[f] == sim_par.number_of_buses)
+			{
+				found_B = f;
+				break;
+			}
+		}
+		if (found_B != -1)
+		{
+			double C_unlim = total_C_av - wait_time_data_unlim[found_B] * sim.network.get_mean_dropoff_distance() / sim_par.normalized_request_rate * CUtility::polylog_B(total_p_full2_av, sim_par.number_of_buses);
+			outplot << '\t' << CUtility::find_effective_B(vBEdata, sim_par.normalized_request_rate / C_unlim);
+		}
+		else
+		{
+
+		} */
 	}
 
 	outplot << '\n';

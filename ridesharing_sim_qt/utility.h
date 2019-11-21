@@ -27,6 +27,8 @@ public:
 	// Code for calculating Lambert W from https://github.com/IstvanMezo/LambertW-function
 	static std::complex<double> LambertW(std::complex<double> z, int k = 0);
 
+	static double polylog_B(double p_full, int B);
+
 	// theoretical solution for minimal (two node) graph and 1 Bus
 	static double two_node_av_scheduled_customers(ULL cap, double x, ULL B, double doubcap = -1.0);
 	static double two_node_stddev_scheduled_customers(ULL cap, double x, ULL B);
@@ -36,6 +38,11 @@ public:
 	static bool read_eff_B_data_from_file(std::string eff_filename, std::vector<std::pair<ULL, double>> &out_vBEdata);
 	// calculates effective B from data of unlimited capacity simulation
 	static double find_effective_B(std::vector<std::pair<ULL, double>> &vBEdata, double Eff);
+
+	static bool read_file(std::string filename,
+		std::map<std::string, std::vector<double>>& averages,
+		std::map<std::string, std::vector<double>>& stddevs,
+		std::map<std::string, std::vector<double>>& counts);
 
 	static double calc_p_full(int B, int seated_customers, int capacity);
 

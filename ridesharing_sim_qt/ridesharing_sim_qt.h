@@ -11,7 +11,7 @@ class ridesharing_sim_qt : public QMainWindow
 
 public:
 	ridesharing_sim_qt(QWidget *parent = Q_NULLPTR);
-	simulation_thread* mThread;
+	simulation_thread* mThread[2];
 	
 
 private:

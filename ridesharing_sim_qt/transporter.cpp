@@ -261,7 +261,7 @@ offer transporter::best_offer(ULL param_origin,
 		else
 		{
 			best_offer.is_better_offer = false;
-			return current_best_offer;
+			return best_offer;
 		}
 
 		return(best_offer);

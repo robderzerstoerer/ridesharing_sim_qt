@@ -83,6 +83,18 @@ std::complex<double> CUtility::LambertW(std::complex<double> z, int k)
 	return w;
 }
 
+double CUtility::polylog_B(double p_full, int B)
+{
+	double sum = 0.0;
+
+	for (int i = 1; i <= B; i++)
+	{
+		sum += sqrt((double)i) * (1 - p_full) * pow(p_full, i - 1);
+	}
+
+	return sum;
+}
+
 double CUtility::two_node_av_scheduled_customers(ULL cap, double x, ULL B, double doubcap)
 {
 	double dcap = (double)cap;
@@ -173,6 +185,60 @@ double CUtility::two_node_stddev_scheduled_customers(ULL cap, double x, ULL B)
 	return sqrt(2 / B * ((dcap * (dcap + 2 * x) + 6 * x * (dcap - x) * (dcap - x) - (dcap - x) * (dcap - x) * (dcap - x) * (dcap - x)) / (12 * (dcap - x) * (dcap - x)) - sum.real()) + (double(B - 1)) / B * x);
 }
 
+bool CUtility::read_file(std::string filename,
+	std::map<std::string, std::vector<double>>& averages,
+	std::map<std::string, std::vector<double>>& stddevs,
+	std::map<std::string, std::vector<double>>& counts)
+{
+	averages.clear();
+	stddevs.clear();
+	counts.clear();
+
+	std::string line;
+	std::ifstream myfile(filename);
+	std::string prevLine = "";
+	bool NumberNext = false;
+	if (myfile.is_open())
+	{
+		while (std::getline(myfile, line))
+		{
+			if (line == "PARAMS" || line == "MEASUREMENTS" || line == "")
+			{
+				NumberNext = false;
+			}
+			else if (NumberNext == true)
+			{
+				// extract n, av, stddev
+				int find1 = line.find('\t');
+				if (find1 != std::string::npos)
+				{
+					int find2 = line.find('\t', find1 + 1);
+					counts[prevLine].push_back(std::stod(line.substr(0, find1)));
+					averages[prevLine].push_back(std::stod(line.substr(find1 + 1, find2 - find1 - 1)));
+					stddevs[prevLine].push_back(std::stod(line.substr(find2 + 1, line.length() - find2 - 1)));
+				}
+				else	// no standard deviation or multiple measurements stored
+				{
+					averages[prevLine].push_back(std::stod(line));
+					stddevs[prevLine].push_back(-1.0);
+					counts[prevLine].push_back(-1.0);
+				}
+
+				NumberNext = false;
+			}
+			else // new variable incoming
+			{
+				prevLine = line;
+				NumberNext = true;
+			}
+		}
+		myfile.close();
+
+		return true;
+	}
+	else
+		return false;
+}
 
 bool CUtility::read_eff_B_data_from_file(std::string eff_filename, std::vector<std::pair<ULL, double>>& out_vBEdata)
 {

@@ -15,13 +15,15 @@ public:
 	void simulate_B_list(simulation_parameters& sim_par,
 		std::ofstream& out,
 		std::ofstream& outplot,
-		std::vector<std::pair<ULL, double>>& vBEdata = std::vector<std::pair<ULL, double>>());
+		std::vector<std::pair<ULL, double>>& vBEdata = std::vector<std::pair<ULL, double>>(),
+		std::vector<double> wait_time_data_unlim = std::vector<double>());
 
 	// returns Efficiency and  if job cancelled or failed
 	double single_simulation(simulation_parameters &sim_par, 
 		std::ofstream& out, 
 		std::ofstream& outplot, 
-		std::vector<std::pair<ULL, double>>& vBEdata = std::vector<std::pair<ULL, double>>());
+		std::vector<std::pair<ULL, double>>& vBEdata = std::vector<std::pair<ULL, double>>(),
+		std::vector<double> wait_time_data_unlim = std::vector<double>());
 
 	program_parameters par;
 

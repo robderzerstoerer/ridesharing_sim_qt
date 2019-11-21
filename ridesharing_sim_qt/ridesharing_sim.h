@@ -54,6 +54,7 @@ struct program_parameters
 	bool calc_p_full;
 	bool calc_cap_delay;  //unused
 
+	std::string foldername;
 	std::string filename;
 
 	bool stop_thread;

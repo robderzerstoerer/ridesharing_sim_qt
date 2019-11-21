@@ -118,7 +118,7 @@ void ridesharing_sim::reset_number_of_buses(ULL param_number_of_buses, int param
 
 	next_request_time = 0;
 
-	reset_measurements();
+	// reset_measurements();
 	disable_measurements();
 	disable_timeseries_output();
 
@@ -624,10 +624,9 @@ bool ridesharing_sim::init_new_sim(ULL param_number_of_buses,
 			}
 		}
 	}
-	else if (par->topology == "star")
+	/*else if (par->topology == "star")
 	{
 		//use this to ensure uniform distribution of transporters for the four node star topology
-		std::list< std::pair< double, std::pair<ULL, ULL> > > request_list;
 		for (double t = 0; t < 6.0 * (par->number_of_nodes - 1.0) / (long double)par->number_of_buses; )//t += 2.0 * (number_of_nodes-1.0) / (long double) number_of_buses)
 			//t from 0 to 6 trips along edge, distance between buses:
 		{
@@ -639,11 +638,10 @@ bool ridesharing_sim::init_new_sim(ULL param_number_of_buses,
 				t += 2.0 / par->number_of_buses;
 			}
 		}
-	}
+	}*/
 	else  // if (par->topology == "complete graph") or others
 	{
 		//use this to ensure uniform distribution of transporters for the complete graph topology
-		std::list< std::pair< double, std::pair<ULL, ULL> > > request_list;
 		for (double t = 0; t < 5.0; t += (1.0 * par->number_of_nodes * (par->number_of_nodes - 1)) / par->number_of_buses)
 		{
 			for (unsigned int i = 0; i < par->number_of_nodes; ++i)

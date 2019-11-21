@@ -1,0 +1,952 @@
+PARAMS
+
+time - start_of_measured_time
+249635
+total_requests - start_of_measured_total_requests
+50000
+total_serviced_requests - start_of_measured_serviced_requests
+50002
+transporter_list.size()
+1
+request_rate
+0.2
+normalized_request_rate
+0.5
+network.get_mean_pickup_distance()
+2.5
+network.get_mean_dropoff_distance()
+2.5
+network.get_request_asymmetry()
+0
+total_velocity
+1
+
+MEASUREMENTS
+
+wait_time
+50002	6.78902	4.696	
+drive_time
+50002	3.27503	2.34996	
+delay_time
+50002	0.771229	2.14036	
+fraction_of_delayed_trips
+50002	0.173953	0.379069	
+drive_time_between_stops
+100005	2.03506	1.08213	
+drive_distance_between_stops
+100005	2.03506	1.08213	
+occupancy
+24963	0.656692	0.779496	
+scheduled_customers
+24963	2.0153	1.66946	
+number_of_planned_stops
+24963	3.37391	2.94088	
+planned_time_horizon
+24963	6.35404	5.49936	
+number_of_idle_transporters
+24963	0.185434	0.38865	
+p_full
+0	0	0	
+p_full2
+50000	1	0	
+p_full_snap
+24963	0	0	
+
+
+
+PARAMS
+
+time - start_of_measured_time
+124817
+total_requests - start_of_measured_total_requests
+50000
+total_serviced_requests - start_of_measured_serviced_requests
+50002
+transporter_list.size()
+2
+request_rate
+0.4
+normalized_request_rate
+0.5
+network.get_mean_pickup_distance()
+2.5
+network.get_mean_dropoff_distance()
+2.5
+network.get_request_asymmetry()
+0
+total_velocity
+2
+
+MEASUREMENTS
+
+wait_time
+50002	4.02044	2.64359	
+drive_time
+50002	2.85461	1.54188	
+delay_time
+50002	0.339506	1.16648	
+fraction_of_delayed_trips
+50002	0.114415	0.318315	
+drive_time_between_stops
+100003	1.99161	1.05386	
+drive_distance_between_stops
+100003	1.99161	1.05386	
+occupancy
+24962	0.570547	0.668768	
+scheduled_customers
+24962	1.3785	1.08012	
+number_of_planned_stops
+24962	2.18644	1.83977	
+planned_time_horizon
+24962	3.83584	3.31365	
+number_of_idle_transporters
+12481	0.405897	0.652737	
+p_full
+0	0	0	
+p_full2
+50000	1	0	
+p_full_snap
+24962	0	0	
+
+
+
+PARAMS
+
+time - start_of_measured_time
+124817
+total_requests - start_of_measured_total_requests
+50000
+total_serviced_requests - start_of_measured_serviced_requests
+50002
+transporter_list.size()
+2
+request_rate
+0.4
+normalized_request_rate
+0.5
+network.get_mean_pickup_distance()
+2.5
+network.get_mean_dropoff_distance()
+2.5
+network.get_request_asymmetry()
+0
+total_velocity
+2
+
+MEASUREMENTS
+
+wait_time
+50002	4.02044	2.64359	
+drive_time
+50002	2.85461	1.54188	
+delay_time
+50002	0.339506	1.16648	
+fraction_of_delayed_trips
+50002	0.114415	0.318315	
+drive_time_between_stops
+100003	1.99161	1.05386	
+drive_distance_between_stops
+100003	1.99161	1.05386	
+occupancy
+24962	0.570547	0.668768	
+scheduled_customers
+24962	1.3785	1.08012	
+number_of_planned_stops
+24962	2.18644	1.83977	
+planned_time_horizon
+24962	3.83584	3.31365	
+number_of_idle_transporters
+12481	0.405897	0.652737	
+p_full
+0	0	0	
+p_full2
+50000	1	0	
+p_full_snap
+24962	0	0	
+
+
+
+PARAMS
+
+time - start_of_measured_time
+62408.7
+total_requests - start_of_measured_total_requests
+50000
+total_serviced_requests - start_of_measured_serviced_requests
+50003
+transporter_list.size()
+4
+request_rate
+0.8
+normalized_request_rate
+0.5
+network.get_mean_pickup_distance()
+2.5
+network.get_mean_dropoff_distance()
+2.5
+network.get_request_asymmetry()
+0
+total_velocity
+4
+
+MEASUREMENTS
+
+wait_time
+50003	2.42013	1.49541	
+drive_time
+50003	2.62184	1.12791	
+delay_time
+50003	0.116893	0.528071	
+fraction_of_delayed_trips
+50003	0.0634962	0.243853	
+drive_time_between_stops
+100006	1.87208	1.03328	
+drive_distance_between_stops
+100006	1.87208	1.03328	
+occupancy
+24960	0.526242	0.599439	
+scheduled_customers
+24960	1.01162	0.774044	
+number_of_planned_stops
+24960	1.497	1.26132	
+planned_time_horizon
+24960	2.40588	2.16922	
+number_of_idle_transporters
+6240	0.989744	1.11152	
+p_full
+0	0	0	
+p_full2
+50000	1	0	
+p_full_snap
+24960	0	0	
+
+
+
+PARAMS
+
+time - start_of_measured_time
+49927
+total_requests - start_of_measured_total_requests
+50000
+total_serviced_requests - start_of_measured_serviced_requests
+50003
+transporter_list.size()
+5
+request_rate
+1
+normalized_request_rate
+0.5
+network.get_mean_pickup_distance()
+2.5
+network.get_mean_dropoff_distance()
+2.5
+network.get_request_asymmetry()
+0
+total_velocity
+5
+
+MEASUREMENTS
+
+wait_time
+50003	2.05346	1.26437	
+drive_time
+50003	2.58766	1.07975	
+delay_time
+50003	0.0854349	0.423237	
+fraction_of_delayed_trips
+50003	0.0515769	0.221171	
+drive_time_between_stops
+100006	1.81992	1.03256	
+drive_distance_between_stops
+100006	1.81992	1.03256	
+occupancy
+24960	0.513462	0.593416	
+scheduled_customers
+24960	0.925	0.724337	
+number_of_planned_stops
+24960	1.33654	1.15988	
+planned_time_horizon
+24960	2.08741	1.96234	
+number_of_idle_transporters
+4992	1.3778	1.30959	
+p_full
+0	0	0	
+p_full2
+50000	1	0	
+p_full_snap
+24960	0	0	
+
+
+
+PARAMS
+
+time - start_of_measured_time
+31204.4
+total_requests - start_of_measured_total_requests
+50000
+total_serviced_requests - start_of_measured_serviced_requests
+49999
+transporter_list.size()
+8
+request_rate
+1.6
+normalized_request_rate
+0.5
+network.get_mean_pickup_distance()
+2.5
+network.get_mean_dropoff_distance()
+2.5
+network.get_request_asymmetry()
+0
+total_velocity
+8
+
+MEASUREMENTS
+
+wait_time
+49999	1.48086	0.922089	
+drive_time
+49999	2.54987	1.01485	
+delay_time
+49999	0.0431809	0.254945	
+fraction_of_delayed_trips
+49999	0.0336607	0.180354	
+drive_time_between_stops
+100001	1.70353	1.05302	
+drive_distance_between_stops
+100001	1.70353	1.05302	
+occupancy
+24960	0.511859	0.578753	
+scheduled_customers
+24960	0.807332	0.653408	
+number_of_planned_stops
+24960	1.1028	1.00153	
+planned_time_horizon
+24960	1.64293	1.6593	
+number_of_idle_transporters
+3120	2.54038	1.82494	
+p_full
+0	0	0	
+p_full2
+50000	1	0	
+p_full_snap
+24960	0	0	
+
+
+
+PARAMS
+
+time - start_of_measured_time
+38437.5
+total_requests - start_of_measured_total_requests
+100000
+total_serviced_requests - start_of_measured_serviced_requests
+99995
+transporter_list.size()
+13
+request_rate
+2.6
+normalized_request_rate
+0.5
+network.get_mean_pickup_distance()
+2.5
+network.get_mean_dropoff_distance()
+2.5
+network.get_request_asymmetry()
+0
+total_velocity
+13
+
+MEASUREMENTS
+
+wait_time
+99995	1.06476	0.731006	
+drive_time
+99995	2.51928	0.986025	
+delay_time
+99995	0.0212011	0.15669	
+fraction_of_delayed_trips
+99995	0.019371	0.137825	
+drive_time_between_stops
+199990	1.57045	1.09254	
+drive_distance_between_stops
+199990	1.57045	1.09254	
+occupancy
+49959	0.505054	0.573445	
+scheduled_customers
+49959	0.714826	0.624406	
+number_of_planned_stops
+49959	0.924598	0.904439	
+planned_time_horizon
+49959	1.32639	1.46021	
+number_of_idle_transporters
+3843	4.84179	2.35668	
+p_full
+0	0	0	
+p_full2
+100000	1	0	
+p_full_snap
+49959	0	0	
+
+
+
+PARAMS
+
+time - start_of_measured_time
+13138.7
+total_requests - start_of_measured_total_requests
+50000
+total_serviced_requests - start_of_measured_serviced_requests
+50000
+transporter_list.size()
+19
+request_rate
+3.8
+normalized_request_rate
+0.5
+network.get_mean_pickup_distance()
+2.5
+network.get_mean_dropoff_distance()
+2.5
+network.get_request_asymmetry()
+0
+total_velocity
+19
+
+MEASUREMENTS
+
+wait_time
+50000	0.829603	0.639079	
+drive_time
+50000	2.51878	0.976467	
+delay_time
+50000	0.01468	0.124517	
+fraction_of_delayed_trips
+50000	0.01418	0.118233	
+drive_time_between_stops
+100000	1.48133	1.13402	
+drive_distance_between_stops
+100000	1.48133	1.13402	
+occupancy
+24947	0.500541	0.571596	
+scheduled_customers
+24947	0.666493	0.619534	
+number_of_planned_stops
+24947	0.832445	0.865733	
+planned_time_horizon
+24947	1.16751	1.35934	
+number_of_idle_transporters
+1313	7.76999	2.90554	
+p_full
+0	0	0	
+p_full2
+50000	1	0	
+p_full_snap
+24947	0	0	
+
+
+
+PARAMS
+
+time - start_of_measured_time
+9965.01
+total_requests - start_of_measured_total_requests
+58000
+total_serviced_requests - start_of_measured_serviced_requests
+58013
+transporter_list.size()
+29
+request_rate
+5.8
+normalized_request_rate
+0.5
+network.get_mean_pickup_distance()
+2.5
+network.get_mean_dropoff_distance()
+2.5
+network.get_request_asymmetry()
+0
+total_velocity
+29
+
+MEASUREMENTS
+
+wait_time
+58013	0.625281	0.561019	
+drive_time
+58013	2.51664	0.966803	
+delay_time
+58013	0.00801544	0.0907028	
+fraction_of_delayed_trips
+58013	0.00787754	0.0884053	
+drive_time_between_stops
+116013	1.39552	1.17314	
+drive_distance_between_stops
+116013	1.39552	1.17314	
+occupancy
+28884	0.505055	0.572722	
+scheduled_customers
+28884	0.62938	0.619343	
+number_of_planned_stops
+28884	0.753704	0.824217	
+planned_time_horizon
+28884	1.04291	1.28256	
+number_of_idle_transporters
+996	12.8042	3.51372	
+p_full
+0	0	0	
+p_full2
+58000	1	0	
+p_full_snap
+28884	0	0	
+
+
+
+PARAMS
+
+time - start_of_measured_time
+9969.33
+total_requests - start_of_measured_total_requests
+88000
+total_serviced_requests - start_of_measured_serviced_requests
+88003
+transporter_list.size()
+44
+request_rate
+8.8
+normalized_request_rate
+0.5
+network.get_mean_pickup_distance()
+2.5
+network.get_mean_dropoff_distance()
+2.5
+network.get_request_asymmetry()
+0
+total_velocity
+44
+
+MEASUREMENTS
+
+wait_time
+88003	0.467674	0.500249	
+drive_time
+88003	2.49989	0.958621	
+delay_time
+88003	0.00351124	0.0597252	
+fraction_of_delayed_trips
+88003	0.00347715	0.0588648	
+drive_time_between_stops
+176002	1.31966	1.2054	
+drive_distance_between_stops
+176002	1.31966	1.2054	
+occupancy
+43824	0.502647	0.574174	
+scheduled_customers
+43824	0.599078	0.619408	
+number_of_planned_stops
+43824	0.695509	0.795043	
+planned_time_horizon
+43824	0.942697	1.21361	
+number_of_idle_transporters
+996	20.5803	4.17568	
+p_full
+0	0	0	
+p_full2
+88000	1	0	
+p_full_snap
+43824	0	0	
+
+
+
+PARAMS
+
+time - start_of_measured_time
+9994.77
+total_requests - start_of_measured_total_requests
+136000
+total_serviced_requests - start_of_measured_serviced_requests
+136002
+transporter_list.size()
+68
+request_rate
+13.6
+normalized_request_rate
+0.5
+network.get_mean_pickup_distance()
+2.5
+network.get_mean_dropoff_distance()
+2.5
+network.get_request_asymmetry()
+0
+total_velocity
+68
+
+MEASUREMENTS
+
+wait_time
+136002	0.338297	0.438711	
+drive_time
+136002	2.50104	0.958793	
+delay_time
+136002	0.00166174	0.0407306	
+fraction_of_delayed_trips
+136002	0.00166174	0.0407306	
+drive_time_between_stops
+271998	1.25766	1.23922	
+drive_distance_between_stops
+271998	1.25766	1.23922	
+occupancy
+67932	0.503135	0.576104	
+scheduled_customers
+67932	0.569658	0.617911	
+number_of_planned_stops
+67932	0.63618	0.756697	
+planned_time_horizon
+67932	0.857677	1.14975	
+number_of_idle_transporters
+999	33.5906	4.89198	
+p_full
+0	0	0	
+p_full2
+136000	1	0	
+p_full_snap
+67932	0	0	
+
+
+
+PARAMS
+
+time - start_of_measured_time
+9974.28
+total_requests - start_of_measured_total_requests
+206000
+total_serviced_requests - start_of_measured_serviced_requests
+205998
+transporter_list.size()
+103
+request_rate
+20.6
+normalized_request_rate
+0.5
+network.get_mean_pickup_distance()
+2.5
+network.get_mean_dropoff_distance()
+2.5
+network.get_request_asymmetry()
+0
+total_velocity
+103
+
+MEASUREMENTS
+
+wait_time
+205998	0.241634	0.376815	
+drive_time
+205998	2.50056	0.957057	
+delay_time
+205998	0.00049515	0.0222465	
+fraction_of_delayed_trips
+205998	0.00049515	0.0222465	
+drive_time_between_stops
+412001	1.21222	1.26236	
+drive_distance_between_stops
+412001	1.21222	1.26236	
+occupancy
+102691	0.502731	0.580627	
+scheduled_customers
+102691	0.551412	0.622437	
+number_of_planned_stops
+102691	0.600092	0.739318	
+planned_time_horizon
+102691	0.801296	1.10561	
+number_of_idle_transporters
+997	52.7924	5.89426	
+p_full
+0	0	0	
+p_full2
+206000	1	0	
+p_full_snap
+102691	0	0	
+
+
+
+PARAMS
+
+time - start_of_measured_time
+9976.73
+total_requests - start_of_measured_total_requests
+314000
+total_serviced_requests - start_of_measured_serviced_requests
+314018
+transporter_list.size()
+157
+request_rate
+31.4
+normalized_request_rate
+0.5
+network.get_mean_pickup_distance()
+2.5
+network.get_mean_dropoff_distance()
+2.5
+network.get_request_asymmetry()
+0
+total_velocity
+157
+
+MEASUREMENTS
+
+wait_time
+314018	0.166352	0.310622	
+drive_time
+314018	2.50419	0.958267	
+delay_time
+314018	0.000111459	0.0105568	
+fraction_of_delayed_trips
+314018	0.000111459	0.0105568	
+drive_time_between_stops
+628023	1.18166	1.28039	
+drive_distance_between_stops
+628023	1.18166	1.28039	
+occupancy
+156529	0.501294	0.583381	
+scheduled_customers
+156529	0.535166	0.623334	
+number_of_planned_stops
+156529	0.569038	0.719687	
+planned_time_horizon
+156529	0.758003	1.07134	
+number_of_idle_transporters
+997	82.7192	7.30572	
+p_full
+0	0	0	
+p_full2
+314000	1	0	
+p_full_snap
+156529	0	0	
+
+
+
+PARAMS
+
+time - start_of_measured_time
+9995.61
+total_requests - start_of_measured_total_requests
+478000
+total_serviced_requests - start_of_measured_serviced_requests
+478021
+transporter_list.size()
+239
+request_rate
+47.8
+normalized_request_rate
+0.5
+network.get_mean_pickup_distance()
+2.5
+network.get_mean_dropoff_distance()
+2.5
+network.get_request_asymmetry()
+0
+total_velocity
+239
+
+MEASUREMENTS
+
+wait_time
+478021	0.104924	0.238593	
+drive_time
+478021	2.49916	0.956856	
+delay_time
+478021	2.51035e-05	0.00501028	
+fraction_of_delayed_trips
+478021	2.51035e-05	0.00501028	
+drive_time_between_stops
+956020	1.17008	1.30187	
+drive_distance_between_stops
+956020	1.17008	1.30187	
+occupancy
+238761	0.499755	0.576207	
+scheduled_customers
+238761	0.520675	0.608368	
+number_of_planned_stops
+238761	0.541596	0.678675	
+planned_time_horizon
+238761	0.725068	1.03876	
+number_of_idle_transporters
+999	127.062	9.09961	
+p_full
+0	0	0	
+p_full2
+478000	1	0	
+p_full_snap
+238761	0	0	
+
+
+
+PARAMS
+
+time - start_of_measured_time
+10001.4
+total_requests - start_of_measured_total_requests
+730000
+total_serviced_requests - start_of_measured_serviced_requests
+730023
+transporter_list.size()
+365
+request_rate
+73
+normalized_request_rate
+0.5
+network.get_mean_pickup_distance()
+2.5
+network.get_mean_dropoff_distance()
+2.5
+network.get_request_asymmetry()
+0
+total_velocity
+365
+
+MEASUREMENTS
+
+wait_time
+730023	0.0579623	0.162622	
+drive_time
+730023	2.49946	0.957245	
+delay_time
+730023	1.49501e-17	1.92783e-14	
+fraction_of_delayed_trips
+730023	0	0	
+drive_time_between_stops
+1460029	1.17843	1.32871	
+drive_distance_between_stops
+1460029	1.17843	1.32871	
+occupancy
+365000	0.499022	0.565137	
+scheduled_customers
+365000	0.510567	0.586808	
+number_of_planned_stops
+365000	0.522112	0.632065	
+planned_time_horizon
+365000	0.708873	1.01619	
+number_of_idle_transporters
+1000	193.413	11.919	
+p_full
+0	0	0	
+p_full2
+730000	1	0	
+p_full_snap
+365000	0	0	
+
+
+
+PARAMS
+
+time - start_of_measured_time
+9995.93
+total_requests - start_of_measured_total_requests
+1112000
+total_serviced_requests - start_of_measured_serviced_requests
+1112025
+transporter_list.size()
+556
+request_rate
+111.2
+normalized_request_rate
+0.5
+network.get_mean_pickup_distance()
+2.5
+network.get_mean_dropoff_distance()
+2.5
+network.get_request_asymmetry()
+0
+total_velocity
+556
+
+MEASUREMENTS
+
+wait_time
+1112025	0.0292921	0.100078	
+drive_time
+1112025	2.49968	0.957548	
+delay_time
+1112025	8.17873e-18	2.00419e-14	
+fraction_of_delayed_trips
+1112025	0	0	
+drive_time_between_stops
+2224024	1.19352	1.35162	
+drive_distance_between_stops
+2224024	1.19352	1.35162	
+occupancy
+555444	0.501572	0.550284	
+scheduled_customers
+555444	0.507372	0.562677	
+number_of_planned_stops
+555444	0.513173	0.588176	
+planned_time_horizon
+555444	0.706373	1.0036	
+number_of_idle_transporters
+999	289.776	15.1891	
+p_full
+0	0	0	
+p_full2
+1112000	1	0	
+p_full_snap
+555444	0	0	
+
+
+
+PARAMS
+
+time - start_of_measured_time
+9995.83
+total_requests - start_of_measured_total_requests
+1694000
+total_serviced_requests - start_of_measured_serviced_requests
+1694003
+transporter_list.size()
+847
+request_rate
+169.4
+normalized_request_rate
+0.5
+network.get_mean_pickup_distance()
+2.5
+network.get_mean_dropoff_distance()
+2.5
+network.get_request_asymmetry()
+0
+total_velocity
+847
+
+MEASUREMENTS
+
+wait_time
+1694003	0.0128301	0.054518	
+drive_time
+1694003	2.50094	0.957461	
+delay_time
+1694003	-5.36891e-18	1.99123e-14	
+fraction_of_delayed_trips
+1694003	0	0	
+drive_time_between_stops
+3387999	1.21246	1.37488	
+drive_distance_between_stops
+3387999	1.21246	1.37488	
+occupancy
+846153	0.499033	0.533129	
+scheduled_customers
+846153	0.50166	0.539007	
+number_of_planned_stops
+846153	0.504287	0.551281	
+planned_time_horizon
+846153	0.706897	0.997247	
+number_of_idle_transporters
+999	436.958	19.5276	
+p_full
+0	0	0	
+p_full2
+1694000	1	0	
+p_full_snap
+846153	0	0	
+
+
+
