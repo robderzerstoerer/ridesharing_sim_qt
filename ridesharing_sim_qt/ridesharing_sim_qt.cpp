@@ -116,7 +116,11 @@ ridesharing_sim_qt::ridesharing_sim_qt(QWidget *parent)
 
 	std::string message;
 
-	message += std::to_string(120) + ": " + std::to_string(CUtility::calc_p_full(30, 120, 5)) + '\n';
+	traffic_network n;
+	n.init("3cayley_tree", 46);
+	message += std::to_string(n.get_p_2n()) + '\n';
+
+	message += std::to_string(120) + ": " + std::to_string(CUtility::calc_p_full(44, 140, 8)) + '\n';
 	/*
 	for (int a_c = 0; a_c <= 15; a_c++)
 	{
@@ -140,11 +144,11 @@ void ridesharing_sim_qt::onButtonSimulateClicked()
 	ui.customPlot->replot();
 
 	// global simulation variables
-	mThread[0]->par.simulate_everything = true;
+	mThread[0]->par.simulate_everything = false;
 	mThread[0]->par.simulate_until_exact = true;
 	mThread[0]->par.foldername = "allsim2_2\\";
-	mThread[0]->par.num_requests_per_bus_init = 2000;
-	mThread[0]->par.num_requests_per_bus_sim = 2000;
+	mThread[0]->par.num_requests_per_bus_init = 4000;
+	mThread[0]->par.num_requests_per_bus_sim = 4000;
 	mThread[0]->par.calc_cap_delay = false;
 	if (mThread[0]->par.simulate_everything)
 	{

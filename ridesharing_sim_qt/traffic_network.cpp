@@ -1,4 +1,5 @@
 #include "traffic_network.h"
+#include "network.h"
 #include <functional>
 
 traffic_network::traffic_network()
@@ -41,6 +42,344 @@ void traffic_network::init(ULL param_N, std::vector< std::tuple<ULL, ULL, double
 	random_origin = std::discrete_distribution<ULL>(origin_probabilities.begin(), origin_probabilities.end());
 	destination_probabilities = std::vector<double>(number_of_nodes, 1.0 / number_of_nodes);
 	random_destination = std::discrete_distribution<ULL>(destination_probabilities.begin(), destination_probabilities.end());
+	recalc_mean_distances();
+}
+
+void traffic_network::init(std::string topology, ULL param_N)
+{
+	random_generator.seed(1);
+	init(param_N, std::vector< std::tuple<ULL, ULL, double> >());
+	//create topologies
+	//add links for each node in the network
+	for (unsigned int i = 0; i < number_of_nodes; ++i)
+	{
+		if (topology == "two_nodes")
+		{
+			assert(param_N == 2);
+
+			if (i == 0)
+			{
+				add_link(0, 1, 1);
+				add_link(1, 0, 1);
+			}
+		}
+
+		if (topology == "ring")
+		{
+			//create a path-graph (a line)
+			if (i < number_of_nodes - 1)
+			{
+				add_link(i, i + 1, 1);
+				add_link(i + 1, i, 1);
+			}
+
+			//close the ring
+			if (i == number_of_nodes - 1)
+			{
+				add_link(0, number_of_nodes - 1, 1);
+				add_link(number_of_nodes - 1, 0, 1);
+			}
+
+		}
+
+		if (topology == "directed ring")
+		{
+			//create a path-graph (a line)
+			if (i < number_of_nodes - 1)
+			{
+				add_link(i, i + 1, 1);
+			}
+
+			//close the ring
+			if (i == number_of_nodes - 1)
+			{
+				add_link(number_of_nodes - 1, 0, 1);
+			}
+
+		}
+
+		if (topology == "double_ring")
+		{
+			if (i < number_of_nodes / 2 - 1)
+			{
+				add_link(i, i + 1, 1);
+				add_link(i + 1, i, 1);
+			}
+			else if (i > number_of_nodes / 2 - 1 && i < number_of_nodes - 1)
+			{
+				add_link(i, i + 1, 1);
+				add_link(i + 1, i, 1);
+			}
+
+			if (i == number_of_nodes / 2 - 1)
+			{
+				add_link(0, number_of_nodes / 2 - 1, 1);
+				add_link(number_of_nodes / 2 - 1, 0, 1);
+			}
+
+			if (i == number_of_nodes - 1)
+			{
+				add_link(number_of_nodes / 2, number_of_nodes - 1, 1);
+				add_link(number_of_nodes - 1, number_of_nodes / 2, 1);
+			}
+
+			if (i == 0)
+			{
+				add_link(number_of_nodes / 2, 0, 1);
+				add_link(0, number_of_nodes / 2, 1);
+			}
+		}
+
+		if (topology == "ladder")
+		{
+			if (i < number_of_nodes / 2 - 1)
+			{
+				add_link(i, i + 1, 1);
+				add_link(i + 1, i, 1);
+			}
+			else if (i > number_of_nodes / 2 - 1 && i < number_of_nodes - 1)
+			{
+				add_link(i, i + 1, 1);
+				add_link(i + 1, i, 1);
+			}
+
+			if (i == number_of_nodes / 2 - 1)
+			{
+				add_link(0, number_of_nodes / 2 - 1, 1);
+				add_link(number_of_nodes / 2 - 1, 0, 1);
+			}
+
+			if (i == number_of_nodes - 1)
+			{
+				add_link(number_of_nodes / 2, number_of_nodes - 1, 1);
+				add_link(number_of_nodes - 1, number_of_nodes / 2, 1);
+			}
+
+			if (i < number_of_nodes / 2)
+			{
+				add_link(i + number_of_nodes / 2, i, 1);
+				add_link(i, i + number_of_nodes / 2, 1);
+			}
+		}
+
+		if (topology == "3ladder")
+		{
+			unsigned int k = 3;
+			for (unsigned int m = 0; m < k; ++m)
+			{
+				if (i >= m * number_of_nodes / k && i < (m + 1) * number_of_nodes / k - 1)
+				{
+					add_link(i, i + 1, 1);
+					add_link(i + 1, i, 1);
+
+					add_link(i, (i + number_of_nodes / k) % number_of_nodes, 1);
+					add_link((i + number_of_nodes / k) % number_of_nodes, i, 1);
+				}
+
+				if (i + 1 == (m + 1) * number_of_nodes / k)
+				{
+					add_link(m * number_of_nodes / k, (m + 1) * number_of_nodes / k - 1, 1);
+					add_link((m + 1) * number_of_nodes / k - 1, m * number_of_nodes / k, 1);
+
+					add_link(i, (i + number_of_nodes / k) % number_of_nodes, 1);
+					add_link((i + number_of_nodes / k) % number_of_nodes, i, 1);
+				}
+			}
+		}
+
+		if (topology == "4ladder")
+		{
+			unsigned int k = 4;
+			for (unsigned int m = 0; m < k; ++m)
+			{
+				if (i >= m * number_of_nodes / k && i < (m + 1) * number_of_nodes / k - 1)
+				{
+					add_link(i, i + 1, 1);
+					add_link(i + 1, i, 1);
+
+					add_link(i, (i + number_of_nodes / k) % number_of_nodes, 1);
+					add_link((i + number_of_nodes / k) % number_of_nodes, i, 1);
+				}
+
+				if (i + 1 == (m + 1) * number_of_nodes / k)
+				{
+					add_link(m * number_of_nodes / k, (m + 1) * number_of_nodes / k - 1, 1);
+					add_link((m + 1) * number_of_nodes / k - 1, m * number_of_nodes / k, 1);
+
+					add_link(i, (i + number_of_nodes / k) % number_of_nodes, 1);
+					add_link((i + number_of_nodes / k) % number_of_nodes, i, 1);
+				}
+			}
+		}
+
+		//					if(topology == "star")
+		//					{
+		//						//star
+		//						if(i < number_of_nodes-1)
+		//						{
+		//							sim.network.add_link(i  , number_of_nodes - 1, 1);
+		//							sim.network.add_link(number_of_nodes - 1, i  , 1);
+		//						}
+		//					}
+		//
+		if (topology == "star")
+		{
+			//star
+			if (i > 0)
+			{
+				add_link(i, 0, 1);
+				add_link(0, i, 1);
+			}
+		}
+
+		if (topology == "grid" || topology == "torus")
+		{
+			//grid
+			unsigned int L = sqrt(number_of_nodes);
+			if (i % L != L - 1)
+			{
+				add_link(i, i + 1, 1);
+				add_link(i + 1, i, 1);
+			}
+			if (i < L * (L - 1))
+			{
+				add_link(i, i + L, 1);
+				add_link(i + L, i, 1);
+			}
+			if (topology == "torus")
+			{
+				//torus
+				if (i % L == L - 1)
+				{
+					add_link(i, i + 1 - L, 1);
+					add_link(i + 1 - L, i, 1);
+				}
+				if (i >= L * (L - 1))
+				{
+					add_link(i, (i + L) % number_of_nodes, 1);
+					add_link((i + L) % number_of_nodes, i, 1);
+				}
+			}
+		}
+
+		if (topology == "simplified_city")
+		{
+			//simplified city (spiderweb)
+			unsigned int arms = sqrt(number_of_nodes);
+			unsigned int nodes_per_arm = sqrt(number_of_nodes);
+			unsigned int nodes_between_circles = nodes_per_arm / floor(sqrt(nodes_per_arm));
+			//arms
+			if (i % nodes_per_arm != 0)
+			{
+				add_link(i, i - 1, 1);
+				add_link(i - 1, i, 1);
+			}
+
+			//rings
+			if ((i % nodes_per_arm) % nodes_between_circles == 0)
+			{
+				add_link(i, (i + nodes_per_arm) % number_of_nodes, 1);
+				add_link((i + nodes_per_arm) % number_of_nodes, i, 1);
+			}
+		}
+
+		if (topology == "complete_graph")
+		{
+			for (unsigned int j = i + 1; j < number_of_nodes; ++j)
+			{
+				add_link(i, j, 1);
+				add_link(j, i, 1);
+			}
+		}
+
+		if (topology == "3cayley_tree")
+		{
+			for (unsigned int i = 0; i < number_of_nodes; ++i)
+			{
+				if (i > 0)
+				{
+					if (i < 4)
+					{
+						add_link(i, 0, 1);
+						add_link(0, i, 1);
+					}
+					else {
+						add_link(i, i / 2 - 1, 1);
+						add_link(i / 2 - 1, i, 1);
+					}
+				}
+			}
+		}
+
+		if (topology == "poisson_random")
+		{
+			poisson_random_network<std::mt19937_64> network_edgelist(random_generator, number_of_nodes, number_of_poisson_random_edges);
+
+			std::vector< std::vector< long int > > temp_dist(number_of_nodes, std::vector<long int >(number_of_nodes, 100000));
+
+			while (!distances(network_edgelist.network_edgelist, number_of_nodes, temp_dist))
+			{
+				network_edgelist.random_network_links(number_of_nodes, number_of_poisson_random_edges);
+			}
+
+			for (auto n : network_edgelist.edges())
+				for (auto e : n.second)
+					add_link(n.first, e, 1);
+
+			break;
+		}
+
+		if (topology == "delaunay_random_torus")
+		{
+			delaunay_network<std::mt19937_64> delaunay_net(random_generator, number_of_nodes, true);
+			for (auto e : delaunay_net.edges())
+			{
+				add_link(e.first, e.second, delaunay_net.distance(e.first, e.second));
+				add_link(e.second, e.first, delaunay_net.distance(e.second, e.first));
+			}
+			break;
+
+			//						//test torus topology
+			//						std::ofstream testout("delaunay_pos.dat");
+			//						for(unsigned int i = 0; i < number_of_nodes; ++i)
+			//							testout << i << '\t' << delaunay_net.position(i).x() << '\t' << delaunay_net.position(i).y() << std::endl;
+			//						testout.close();
+			//
+			//						testout.open("delaunay_links.dat");
+			//						for(auto e : delaunay_net.edges())
+			//						{
+			////							if(delaunay_net.distance(e.first, e.second) < 0.2)
+			//								testout << e.first << '\t' << e.second << std::endl;
+			//						}
+			//						testout.close();
+			//
+			//						return(1);
+		}
+
+		if (topology == "gabriel_random_torus")
+		{
+			delaunay_network<std::mt19937_64> delaunay_net(random_generator, number_of_nodes, true);
+			delaunay_net.random_gabriel_network();
+
+			for (auto e : delaunay_net.edges())
+			{
+				add_link(e.first, e.second, delaunay_net.distance(e.first, e.second));
+				add_link(e.second, e.first, delaunay_net.distance(e.second, e.first));
+			}
+
+			break;
+		}
+	}
+
+	//pre-calculate distance matrix (to find shortest paths later)
+	create_distances();
+
+	//set probability distribution for origin and destination of requests
+	//requests are uncorrelated from one random node to another random node
+	//note: this currently allows requests from a node to itself (this should probably be changed due to mathematical problems when trying to calculate with this in extreme cases)
+	set_origin_probabilities();			//default: uniform
+	set_destination_probabilities();	//default: uniform
+													//recompute mean distance with respect to request distribution
 	recalc_mean_distances();
 }
 
@@ -208,6 +547,31 @@ void traffic_network::recalc_mean_distances()
 double traffic_network::get_network_distance(ULL from, ULL to)
 {
 	return(network_distances[from][to]);
+}
+
+double traffic_network::get_p_2n()
+{
+	std::vector<int> p_l_to_go(number_of_nodes, 0);
+	
+	for (int i = 0; i < number_of_nodes; i++)
+	{
+		for (int j = 0; j < number_of_nodes; j++)
+			p_l_to_go[(int)(get_network_distance(i, j) + 0.5)]++;
+	}
+
+	int sum1 = 0.0;
+	int sum2 = 0.0;
+	for (int i = 2; i < number_of_nodes; i++)
+	{
+		sum1 += p_l_to_go[i];
+		for (int j = i; j < number_of_nodes; j++)
+		{
+			sum2 += p_l_to_go[j];
+		}
+	}
+
+	//return (1.0 * p_l_to_go[1]) / (sum1 + p_l_to_go[1]);
+	return (1.0 * sum1) / sum2;
 }
 
 //generate a new request based on the (uncorrelated) origin and destination probabilities

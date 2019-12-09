@@ -31,6 +31,7 @@ public:
 	traffic_network(ULL param_N);
 	traffic_network(ULL param_N, std::vector< std::tuple<ULL, ULL, double> > param_links);
 	void init(ULL param_N, std::vector< std::tuple<ULL, ULL, double> > param_links);
+	void init(std::string topology, ULL param_N);
 
 	virtual ~traffic_network();
 
@@ -53,6 +54,7 @@ public:
 
 		return(asymmetry / 2);
 	}
+	double get_p_2n();
 
 	double get_network_distance(ULL from, ULL to);	//from i to j
 
@@ -83,6 +85,8 @@ private:
 	std::uniform_real_distribution<double> uniform01;
 
 	std::mt19937_64 random_generator;
+
+	const ULL number_of_poisson_random_edges = 200;
 
 };
 

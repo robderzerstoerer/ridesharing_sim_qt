@@ -68,7 +68,6 @@ struct simulation_parameters
 
 	std::string topology;
 	ULL number_of_nodes;
-	const ULL number_of_poisson_random_edges = 200;
 
 	ULL number_of_buses;
 
