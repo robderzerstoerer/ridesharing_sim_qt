@@ -1,6 +1,7 @@
 #include "traffic_network.h"
 #include "network.h"
 #include <functional>
+#include <fstream>
 
 traffic_network::traffic_network()
 {
@@ -371,6 +372,50 @@ void traffic_network::init(std::string topology, ULL param_N)
 		}
 	}
 
+	if (topology == "berlin_mitte" ||
+		topology == "bornholm" ||
+		topology == "goettingen" ||
+		topology == "isle_of_man" ||
+		topology == "jersey" ||
+		topology == "korfu" ||
+		topology == "mallorca" ||
+		topology == "manhattan" ||
+		topology == "modena" ||
+		topology == "ostfriesland" ||
+		topology == "rural_poland")
+	{
+		// read from file
+		std::string filename = "citynetworks\\graph_" + topology + "_converted.dat";
+		std::ifstream cityfile(filename);
+		assert(cityfile.is_open());
+
+		ULL temp_from, temp_to;
+		double temp_dist;
+		ULL N = 0;
+
+		while (!cityfile.eof())
+		{
+			cityfile >> temp_from >> temp_to >> temp_dist;
+			if (temp_from > N)
+				N = temp_from;
+			if (temp_to > N)
+				N = temp_to;
+		}
+		N += 1;    //make sure to count node 0 as well
+		cityfile.close();
+
+		init(N, std::vector< std::tuple<ULL, ULL, double> >());
+
+		cityfile.open(filename);
+		while (!cityfile.eof())
+		{
+			cityfile >> temp_from >> temp_to >> temp_dist;
+			add_link(temp_from, temp_to, temp_dist);
+			add_link(temp_to, temp_from, temp_dist);
+		}
+		cityfile.close();
+	}
+
 	//pre-calculate distance matrix (to find shortest paths later)
 	create_distances();
 
@@ -549,6 +594,26 @@ double traffic_network::get_network_distance(ULL from, ULL to)
 	return(network_distances[from][to]);
 }
 
+double traffic_network::get_p_l1()
+{
+	std::vector<int> p_l_to_go(number_of_nodes, 0);
+
+	for (int i = 0; i < number_of_nodes; i++)
+	{
+		for (int j = 0; j < number_of_nodes; j++)
+			p_l_to_go[(int)(get_network_distance(i, j) + 0.5)]++;
+	}
+
+	int sum1 = 0.0;
+	int sum2 = 0.0;
+	for (int i = 1; i < number_of_nodes; i++)
+	{
+		sum1 += p_l_to_go[i];
+	}
+
+	return (1.0 * p_l_to_go[1]) / (sum1);
+}
+
 double traffic_network::get_p_2n()
 {
 	std::vector<int> p_l_to_go(number_of_nodes, 0);
@@ -570,7 +635,6 @@ double traffic_network::get_p_2n()
 		}
 	}
 
-	//return (1.0 * p_l_to_go[1]) / (sum1 + p_l_to_go[1]);
 	return (1.0 * sum1) / sum2;
 }
 
@@ -626,7 +690,7 @@ std::deque< std::pair<ULL, double> > traffic_network::find_shortest_path(ULL fro
 		//advance time along the route
 		current_time += get_network_distance(current_node, potential_route_nodes[0]) / velocity;
 
-																					   //choose randomly from all possible next nodes ( NOTE: this is NOT EXATCLY THE SAME(!) as choosing randomly from all possible routes, but good enough to randomize routes in regular topologies, e.g. a torus)
+		//choose randomly from all possible next nodes ( NOTE: this is NOT EXATCLY THE SAME(!) as choosing randomly from all possible routes, but good enough to randomize routes in regular topologies, e.g. a torus)
 		current_node = potential_route_nodes[(ULL)(potential_route_nodes.size() * uniform01(random_generator))];
 
 		//add the node to the route

@@ -17,6 +17,17 @@
 
 constexpr double pi = 3.14159265358979323846;
 
+#define FIT_A 0.254783105563
+#define FIT_C -1.26347049141
+#define FIT_D -0.559174166344
+#define FIT_E 0.011734652797
+#define FIT_G -10.6369376982
+#define FIT_H -1.15375238312
+#define FIT_I 0.0217529264488
+#define FIT_J 0.471233330997
+#define FIT_K 0.183602945701
+#define FIT_L -0.00383227915831
+
 class CUtility
 {
 public:
@@ -39,12 +50,17 @@ public:
 	// calculates effective B from data of unlimited capacity simulation
 	static double find_effective_B(std::vector<std::pair<ULL, double>> &vBEdata, double Eff);
 
+	static bool read_B_halves(std::string file, std::map<std::string, std::vector<std::pair<float, float>>> &out);
+	static double find_B_half_x(std::vector <std::pair<float, float>>& bhalves, double x);
+
 	static bool read_file(std::string filename,
 		std::map<std::string, std::vector<double>>& averages,
 		std::map<std::string, std::vector<double>>& stddevs,
 		std::map<std::string, std::vector<double>>& counts);
 
 	static double calc_p_full(int B, int seated_customers, int capacity);
+
+	static double fit_func_2d(double B_B_half, double p_full_inf);
 
 
 private:

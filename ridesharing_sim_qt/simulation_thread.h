@@ -3,6 +3,9 @@
 #include <QThread>
 #include "ridesharing_sim.h"
 
+#define MIN(a,b) ((a)<(b)?(a):(b))
+#define MAX(a,b) ((a)>(b)?(a):(b))
+
 class simulation_thread : public QThread
 {
 	Q_OBJECT
@@ -15,15 +18,13 @@ public:
 	void simulate_B_list(simulation_parameters& sim_par,
 		std::ofstream& out,
 		std::ofstream& outplot,
-		std::vector<std::pair<ULL, double>>& vBEdata = std::vector<std::pair<ULL, double>>(),
-		std::vector<double> wait_time_data_unlim = std::vector<double>());
+		std::vector<std::pair<ULL, double>>& vBEdata = std::vector<std::pair<ULL, double>>());
 
-	// returns Efficiency and  if job cancelled or failed
+	// returns Efficiency and negative if job cancelled or failed
 	double single_simulation(simulation_parameters &sim_par, 
 		std::ofstream& out, 
 		std::ofstream& outplot, 
-		std::vector<std::pair<ULL, double>>& vBEdata = std::vector<std::pair<ULL, double>>(),
-		std::vector<double> wait_time_data_unlim = std::vector<double>());
+		std::vector<std::pair<ULL, double>>& vBEdata = std::vector<std::pair<ULL, double>>());
 
 	program_parameters par;
 

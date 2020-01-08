@@ -27,6 +27,7 @@
 #include "utility.h"
 
 
+
 #ifndef _INTEGER_TYPES
 #define ULL uint64_t
 #define LL int64_t
@@ -81,9 +82,25 @@ ridesharing_sim_qt::ridesharing_sim_qt(QWidget *parent)
 	ui.listWidget->addItem("poisson_random");
 	ui.listWidget->addItem("delaunay_random_torus");
 	ui.listWidget->addItem("gabriel_random_torus");
+	ui.listWidget->addItem("berlin_mitte");
+	ui.listWidget->addItem("bornholm");
+	ui.listWidget->addItem("goettingen");
+	ui.listWidget->addItem("isle_of_man");
+	ui.listWidget->addItem("jersey");
+	ui.listWidget->addItem("korfu");
+	ui.listWidget->addItem("mallorca");
+	ui.listWidget->addItem("manhattan");
+	ui.listWidget->addItem("modena");
+	ui.listWidget->addItem("ostfriesland");
+	ui.listWidget->addItem("rural_poland");
 	
+	ui.listWidget_4->addItem("SIMPLE_SIM");
+	ui.listWidget_4->addItem("EVERYTHING");
+	ui.listWidget_4->addItem("B_AIM");
+
 
 	ui.listWidget->setItemSelected(ui.listWidget->item(0),true);
+	ui.listWidget_4->setItemSelected(ui.listWidget_4->item(0), true);
 
 	ui.checkBox->setChecked(true);
 	ui.checkBox_3->setChecked(false);
@@ -99,6 +116,8 @@ ridesharing_sim_qt::ridesharing_sim_qt(QWidget *parent)
 	ui.textEdit_8->setDisabled(true);
 	ui.textEdit_9->setDisabled(true);
 	ui.textEdit_12->setText("5");
+	ui.textEdit_13->setText("50");
+	ui.textEdit_14->setText("0.5");
 
 	ui.customPlot->xAxis->setLabel("x");
 	ui.customPlot->yAxis->setLabel("y");
@@ -118,7 +137,7 @@ ridesharing_sim_qt::ridesharing_sim_qt(QWidget *parent)
 
 	traffic_network n;
 	n.init("3cayley_tree", 46);
-	message += std::to_string(n.get_p_2n()) + '\n';
+	message += std::to_string(n.get_p_l1()) + ", " + std::to_string(n.get_p_2n()) + '\n';
 
 	message += std::to_string(120) + ": " + std::to_string(CUtility::calc_p_full(44, 140, 8)) + '\n';
 	/*
@@ -144,32 +163,58 @@ void ridesharing_sim_qt::onButtonSimulateClicked()
 	ui.customPlot->replot();
 
 	// global simulation variables
-	mThread[0]->par.simulate_everything = false;
 	mThread[0]->par.simulate_until_exact = true;
-	mThread[0]->par.foldername = "allsim2_2\\";
-	mThread[0]->par.num_requests_per_bus_init = 4000;
-	mThread[0]->par.num_requests_per_bus_sim = 4000;
+	mThread[0]->par.foldername = "allsim2_3\\";
+	mThread[0]->par.num_requests_per_bus_init = 2000;
+	mThread[0]->par.num_requests_per_bus_sim = 2000;
 	mThread[0]->par.calc_cap_delay = false;
-	if (mThread[0]->par.simulate_everything)
+
+	if (ui.listWidget_4->selectedItems().front()->text().toStdString() == "SIMPLE_SIM")
+		mThread[0]->par.sim_mode = SIMPLE_SIM;
+	else if (ui.listWidget_4->selectedItems().front()->text().toStdString() == "EVERYTHING")
+		mThread[0]->par.sim_mode = EVERYTHING;
+	else if (ui.listWidget_4->selectedItems().front()->text().toStdString() == "B_AIM")
+		mThread[0]->par.sim_mode = B_AIM;
+
+	if (mThread[0]->par.sim_mode == EVERYTHING)
 	{
 		mThread[0]->par.capacity_list = {1, 2, 3, 4, 5, 6, 7, 8};
+
+		mThread[0]->par.scan_point_sim_time = 60; // 60 s
+		mThread[0]->par.max_point_sim_time = 480; // 8 min
 	}
-	else
-		mThread[0]->par.capacity_list.push_back(std::stoi(ui.textEdit_12->toPlainText().toStdString()));
-	
-	if (mThread[0]->par.simulate_everything)
+	else if (mThread[0]->par.sim_mode == SIMPLE_SIM)
 	{
-		mThread[0]->par.scan_point_sim_time = 30; // 30 s
-		mThread[0]->par.max_point_sim_time = 360; // 6 min
-	}
-	else
-	{
+		mThread[0]->par.capacity_list = { std::stoi(ui.textEdit_12->toPlainText().toStdString()) };
+
 		// use topology input from ListWidget and TextEdit
 		mThread[0]->par.topology_list = { std::make_pair(ui.listWidget->selectedItems().front()->text().toStdString(), std::stoi(ui.textEdit->toPlainText().toStdString())) };
 
 		mThread[0]->par.scan_point_sim_time = 1e6;
 		mThread[0]->par.max_point_sim_time = 1e6;
 	}
+	else if (mThread[0]->par.sim_mode == B_AIM)
+	{
+		int max_cap = 12;
+		int min_cap = 12;
+		for (int i = max_cap; i >= min_cap; i--)
+			mThread[0]->par.capacity_list.push_back(i);
+
+		// use topology input from ListWidget and TextEdit
+		std::string topo = ui.listWidget->selectedItems().front()->text().toStdString();
+		int N = std::stoi(ui.textEdit->toPlainText().toStdString());
+		mThread[0]->par.topology_list = { std::make_pair(topo, N) };
+
+		mThread[0]->par.max_point_sim_time = 120;
+
+		mThread[0]->par.lambda = std::stod(ui.textEdit_13->toPlainText().toStdString());
+		mThread[0]->par.E_aim = std::stod(ui.textEdit_14->toPlainText().toStdString());
+
+		//traffic_network net();
+		//net.init(topo, N);
+
+	}
+	
 
 	if (ui.checkBox->isChecked())
 	{
@@ -217,7 +262,7 @@ void ridesharing_sim_qt::onButtonSimulateClicked()
 
 	mThread[1]->par = mThread[0]->par;
 
-	if (mThread[0]->par.simulate_everything)
+	if (mThread[0]->par.sim_mode == EVERYTHING)
 	{
 		mThread[0]->par.topology_list = {
 			// std::make_pair("simplified_city", 16),
@@ -226,30 +271,31 @@ void ridesharing_sim_qt::onButtonSimulateClicked()
 			// std::make_pair("ring", 100),
 			// std::make_pair("directed_ring", 25),
 			// std::make_pair("torus", 25),
-			// std::make_pair("torus", 100),
+			// std::make_pair("grid", 100),
 			// std::make_pair("complete_graph", 5),
 			// std::make_pair("star", 4),
-			std::make_pair("3cayley_tree", 46),
+			// std::make_pair("3cayley_tree", 46),
 			// std::make_pair("delaunay_random_torus", 25)
+			// std::make_pair("bornholm", 100),
 		};
 		mThread[1]->par.topology_list = {
-			// std::make_pair("two_nodes", 2),
+			// std::make_pair("two_node	s", 2),
 			// std::make_pair("ring", 25),
 			// std::make_pair("ring", 100),
 			// std::make_pair("directed_ring", 25),
 			// std::make_pair("torus", 25),
 			// std::make_pair("torus", 100),
 			// std::make_pair("complete_graph", 5),
-			std::make_pair("star", 4),
+			// std::make_pair("star", 4),
 			// std::make_pair("3cayley_tree", 46),
-			// std::make_pair("delaunay_random_torus", 25)
+			std::make_pair("delaunay_random_torus", 100)
 		};
 	}
 
 	// Start Thread
 	mThread[0]->start();
 	// multithreading only if parallel computing makes sense
-	if (mThread[0]->par.simulate_everything)
+	if (mThread[0]->par.sim_mode == EVERYTHING)
 		mThread[1]->start();
 	
 }

@@ -29,10 +29,18 @@
 #include "transporter.h"
 
 
+enum ESIM_MODE 
+{
+	SIMPLE_SIM,
+	EVERYTHING,
+	B_AIM
+};
+
 // Parameters for running many simulations with different parameters
 struct program_parameters
 {
-	bool simulate_everything;
+	ESIM_MODE sim_mode;
+
 	std::vector<std::pair<std::string, ULL>> topology_list;  // (topology_name, number_of_nodes)
 
 	std::vector<ULL> B_list;
@@ -40,6 +48,9 @@ struct program_parameters
 	std::vector<int> capacity_list;
 
 	std::vector<double> x_list;
+
+	double E_aim;
+	double lambda;
 
 	ULL num_requests_per_bus_init;
 	ULL num_requests_per_bus_sim;

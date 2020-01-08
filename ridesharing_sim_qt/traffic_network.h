@@ -54,6 +54,7 @@ public:
 
 		return(asymmetry / 2);
 	}
+	double get_p_l1();
 	double get_p_2n();
 
 	double get_network_distance(ULL from, ULL to);	//from i to j

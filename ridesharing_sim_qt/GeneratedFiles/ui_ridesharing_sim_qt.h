@@ -68,6 +68,12 @@ public:
     QLabel *label_11;
     QTextEdit *textEdit_12;
     QCheckBox *checkBox_4;
+    QListWidget *listWidget_4;
+    QLabel *label_12;
+    QTextEdit *textEdit_13;
+    QTextEdit *textEdit_14;
+    QLabel *label_13;
+    QLabel *label_14;
     QMenuBar *menuBar;
     QToolBar *mainToolBar;
     QStatusBar *statusBar;
@@ -195,6 +201,24 @@ public:
         checkBox_4 = new QCheckBox(centralWidget);
         checkBox_4->setObjectName(QString::fromUtf8("checkBox_4"));
         checkBox_4->setGeometry(QRect(890, 620, 191, 31));
+        listWidget_4 = new QListWidget(centralWidget);
+        listWidget_4->setObjectName(QString::fromUtf8("listWidget_4"));
+        listWidget_4->setGeometry(QRect(70, 730, 331, 111));
+        label_12 = new QLabel(centralWidget);
+        label_12->setObjectName(QString::fromUtf8("label_12"));
+        label_12->setGeometry(QRect(70, 700, 81, 31));
+        textEdit_13 = new QTextEdit(centralWidget);
+        textEdit_13->setObjectName(QString::fromUtf8("textEdit_13"));
+        textEdit_13->setGeometry(QRect(530, 730, 101, 31));
+        textEdit_14 = new QTextEdit(centralWidget);
+        textEdit_14->setObjectName(QString::fromUtf8("textEdit_14"));
+        textEdit_14->setGeometry(QRect(530, 790, 101, 31));
+        label_13 = new QLabel(centralWidget);
+        label_13->setObjectName(QString::fromUtf8("label_13"));
+        label_13->setGeometry(QRect(440, 730, 81, 31));
+        label_14 = new QLabel(centralWidget);
+        label_14->setObjectName(QString::fromUtf8("label_14"));
+        label_14->setGeometry(QRect(440, 790, 81, 31));
         ridesharing_sim_qtClass->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(ridesharing_sim_qtClass);
         menuBar->setObjectName(QString::fromUtf8("menuBar"));
@@ -236,6 +260,9 @@ public:
         checkBox_3->setText(QCoreApplication::translate("ridesharing_sim_qtClass", "Num_x:", nullptr));
         label_11->setText(QCoreApplication::translate("ridesharing_sim_qtClass", "capacity", nullptr));
         checkBox_4->setText(QCoreApplication::translate("ridesharing_sim_qtClass", "calc_p_full", nullptr));
+        label_12->setText(QCoreApplication::translate("ridesharing_sim_qtClass", "Mode", nullptr));
+        label_13->setText(QCoreApplication::translate("ridesharing_sim_qtClass", "lambda", nullptr));
+        label_14->setText(QCoreApplication::translate("ridesharing_sim_qtClass", "E_aim", nullptr));
     } // retranslateUi
 
 };

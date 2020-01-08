@@ -266,6 +266,7 @@ bool CUtility::read_eff_B_data_from_file(std::string eff_filename, std::vector<s
 					out_vBEdata.push_back(std::make_pair(B, E));
 			}
 		}
+		myfile.close();
 		return true;
 	}
 	else
@@ -304,6 +305,56 @@ double CUtility::find_effective_B(std::vector<std::pair<ULL, double>> &vBEdata, 
 			return (double)vBEdata[i].first;
 		}
 	}
+}
+
+bool CUtility::read_B_halves(std::string file, std::map<std::string, std::vector<std::pair<float, float>>> &out)
+{
+	out.clear();
+
+	std::ifstream myfile(file);
+
+	std::string line;
+	std::string curtopo = "";
+
+	if (myfile.is_open())
+	{
+		while (std::getline(myfile, line))
+		{
+			if (line.find_first_of("abcdefghijklmnopqrstuvwxyz") != std::string::npos)
+			{
+				curtopo = line;
+			}
+			else
+			{
+				// new (x, B1/2) pair
+				size_t findspace = line.find(' ');
+				float x = std::stof(line.substr(0, findspace));
+				float bh = std::stof(line.substr(findspace + 1));
+				out[curtopo].push_back(std::make_pair(x, bh));
+			}
+		}
+		myfile.close();
+		return true;
+	}
+	else
+		return false;
+}
+
+double CUtility::find_B_half_x(std::vector <std::pair<float, float>>& bhalves, double x)
+{
+	for (int i = 0; i < bhalves.size(); i++)
+	{
+		if (bhalves[i].first > x)
+		{
+			if (i == 0)
+				return bhalves[0].second;
+
+			double factor = (x - bhalves[i - 1].first) / (bhalves[i].first - bhalves[i - 1].first);
+			return bhalves[i - 1].second + factor * (bhalves[i].second - bhalves[i - 1].second);
+		}
+	}
+
+	return bhalves[bhalves.size() - 1].second;
 }
 
 double CUtility::calc_p_full(int B, int seated_customers, int capacity)
@@ -349,4 +400,13 @@ double CUtility::num_customer_permutations(int n, int k, int cap)
 	}
 
 	return sum.convert_to<double>();
+}
+
+double CUtility::fit_func_2d(double B_B_half, double p_full_inf)
+{
+	return B_B_half / (B_B_half + sqrt(B_B_half) / (sqrt(B_B_half) + FIT_A)) *
+		(1.0 - 1.0 / B_B_half *
+		 ((FIT_C + FIT_D * B_B_half + FIT_E * B_B_half * B_B_half) * (p_full_inf - exp(-1 / p_full_inf)) -
+		  (FIT_G + FIT_H * B_B_half + FIT_I * B_B_half * B_B_half) * (p_full_inf * p_full_inf - exp(-1 / p_full_inf)) +
+		  (FIT_J + FIT_K * B_B_half + FIT_L * B_B_half * B_B_half) * (sqrt(p_full_inf) - exp(-1 / p_full_inf)) - exp(-1 / p_full_inf)));
 }
