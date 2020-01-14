@@ -97,9 +97,11 @@ void simulation_thread::run()
 
 				bool finished = false;
 				int last_res = 0;
-				int step_size = MAX(int(B_guess * 0.05), 1);
+				int step_size = MAX(int(B_guess * 0.1), 1);
 				std::vector<int> checked_B_list;
 				std::vector<double> checked_E_list;
+				int min_B = 0;
+				int max_B = 10000000;
 
 				while (!finished)
 				{
@@ -108,6 +110,9 @@ void simulation_thread::run()
 					double x = par.lambda * lav / (1.0 * B_guess);  // replace 1.0 with transporter velocity if neccessary
 					if (x >= cap)
 					{
+						min_B = MAX(min_B, B_guess);
+						if (last_res != 0 && step_size > 1)
+							step_size--;
 						B_guess = B_guess + step_size;
 						continue;
 					}
@@ -115,42 +120,44 @@ void simulation_thread::run()
 					std::vector<int>::iterator it = std::find(checked_B_list.begin(), checked_B_list.end(), B_guess);
 					if (it != checked_B_list.end())
 					{
-						// done, now find out which B gives closest efficiency to aim
-						finished = true;
-						sort_B_E_vectors(checked_B_list, checked_E_list);
-						int closest_B = -1;
-						double closest_E = -1.0;
-
-						for (int i = 0; i < checked_E_list.size(); i++)
+						if (step_size == 1)
 						{
-							if (abs(checked_E_list[i] - par.E_aim) < abs(closest_E - par.E_aim))
+							// done, now find out which B gives closest efficiency to aim
+							finished = true;
+							sort_B_E_vectors(checked_B_list, checked_E_list);
+							int closest_B = -1;
+							double closest_E = -1.0;
+
+							for (int i = 0; i < checked_E_list.size(); i++)
 							{
-								closest_B = checked_B_list[i];
-								closest_E = checked_E_list[i];
+								if (abs(checked_E_list[i] - par.E_aim) < abs(closest_E - par.E_aim))
+								{
+									closest_B = checked_B_list[i];
+									closest_E = checked_E_list[i];
+								}
 							}
-						}
-						
-						// write solutions
-						B_theta[cap] = closest_B;
-						E_theta[cap] = closest_E;
-						break;
 
-						/*int index = std::distance(checked_B_list.begin(), it);
-						double old_E = checked_E_list[index];
-						if (abs(last_Eff - par.E_aim) < abs(old_E - par.E_aim))
-						{
-							B_theta[cap] = last_B_guess;
-							E_theta[cap] = last_Eff;
+							// write solutions
+							B_theta[cap] = closest_B;
+							E_theta[cap] = closest_E;
+							break;
 						}
 						else
 						{
-							B_theta[cap] = B_guess;
-							E_theta[cap] = old_E;
-							break;
-						} */
+							step_size = (int) (step_size / 2.0);
+							B_guess = (int) ((last_B_guess + B_guess) / 2 + 0.5);
+							continue;
+						}
 					}
 					else
 					{
+						if (B_guess <= min_B || B_guess >= max_B)
+						{
+							step_size = (int)(step_size / 2.0);
+							B_guess = (int)((last_B_guess + B_guess) / 2 + 0.5);
+							continue;
+						}
+
 						// not yet done iterating
 						double B_half_x = CUtility::find_B_half_x(bhalves[topokey], x);
 
@@ -173,6 +180,7 @@ void simulation_thread::run()
 						{
 							if (Eff < par.E_aim)
 							{
+								min_B = B_guess;
 								last_B_guess = B_guess;
 								last_res = -1;
 								last_Eff = Eff;
@@ -180,6 +188,7 @@ void simulation_thread::run()
 							}
 							else
 							{
+								max_B = B_guess;
 								if (B_guess == 1)
 								{
 									B_theta[cap] = B_guess;
@@ -196,6 +205,7 @@ void simulation_thread::run()
 						{
 							if (Eff < par.E_aim)
 							{
+								min_B = MAX(min_B, B_guess);
 								last_B_guess = B_guess;
 								last_res = -1;
 								last_Eff = Eff;
@@ -203,6 +213,7 @@ void simulation_thread::run()
 							}
 							else
 							{
+								max_B = MIN(max_B, B_guess);
 								last_B_guess = B_guess;
 								last_res = 1;
 								last_Eff = Eff;
@@ -214,6 +225,7 @@ void simulation_thread::run()
 						{
 							if (Eff > par.E_aim)
 							{
+								max_B = MIN(max_B, B_guess);
 								if (B_guess == 1)
 								{
 									B_theta[cap] = B_guess;
@@ -227,6 +239,7 @@ void simulation_thread::run()
 							}
 							else
 							{
+								min_B = MAX(min_B, B_guess);
 								last_B_guess = B_guess;
 								last_res = 1;
 								last_Eff = Eff;
@@ -240,7 +253,11 @@ void simulation_thread::run()
 
 			// output
 			std::ofstream out;
-			std::string out_filename = par.filename;
+			std::string out_filename = topology_n.first +
+				"_N_" + std::to_string(topology_n.second) +
+				"_aim_" + std::to_string(par.E_aim + 0.0001).substr(0, 5) +
+				"_lambda_" + std::to_string(par.lambda + 0.0001).substr(0, 5) +
+				".dat";
 
 			if (!CUtility::file_exists(out_filename))
 				out.open(out_filename.c_str());

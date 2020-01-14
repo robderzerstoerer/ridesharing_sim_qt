@@ -5,6 +5,13 @@
 #include "simulation_thread.h"
 
 
+#ifndef _INTEGER_TYPES
+#define ULL uint64_t
+#define LL int64_t
+#define _INTEGER_TYPES
+#endif
+
+
 class ridesharing_sim_qt : public QMainWindow
 {
 	Q_OBJECT

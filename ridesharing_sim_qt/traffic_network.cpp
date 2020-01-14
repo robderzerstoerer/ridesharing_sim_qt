@@ -601,27 +601,29 @@ double traffic_network::get_p_l1()
 	for (int i = 0; i < number_of_nodes; i++)
 	{
 		for (int j = 0; j < number_of_nodes; j++)
-			p_l_to_go[(int)(get_network_distance(i, j) + 0.5)]++;
+			if (i != j)
+				p_l_to_go[find_shortest_path(i, j, 0.0, 1.0).size() - 1]++;
 	}
 
 	int sum1 = 0.0;
-	int sum2 = 0.0;
 	for (int i = 1; i < number_of_nodes; i++)
 	{
 		sum1 += p_l_to_go[i];
 	}
 
 	return (1.0 * p_l_to_go[1]) / (sum1);
+
 }
 
 double traffic_network::get_p_2n()
 {
 	std::vector<int> p_l_to_go(number_of_nodes, 0);
-	
+
 	for (int i = 0; i < number_of_nodes; i++)
 	{
 		for (int j = 0; j < number_of_nodes; j++)
-			p_l_to_go[(int)(get_network_distance(i, j) + 0.5)]++;
+			if (i != j)
+				p_l_to_go[find_shortest_path(i, j, 0.0, 1.0).size() - 1]++;
 	}
 
 	int sum1 = 0.0;
@@ -636,6 +638,28 @@ double traffic_network::get_p_2n()
 	}
 
 	return (1.0 * sum1) / sum2;
+}
+
+double traffic_network::get_dav()
+{
+	// compute all shortest paths and calculate the average distance between 2 consecutive nodes on this path
+	double sum = 0.0;
+	int num = 0;
+
+	for (int i = 0; i < number_of_nodes; i++)
+	{
+		for (int j = 0; j < number_of_nodes; j++)
+		{
+			if (i != j)
+			{
+				std::deque< std::pair<ULL, double> > path = find_shortest_path(i, j, 0.0, 1.0);
+				sum += path.back().second;
+				num += path.size() - 1;
+			}
+		}
+	}
+
+	return sum / num;
 }
 
 //generate a new request based on the (uncorrelated) origin and destination probabilities

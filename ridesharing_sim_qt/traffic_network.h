@@ -56,9 +56,10 @@ public:
 	}
 	double get_p_l1();
 	double get_p_2n();
+	double get_dav();
 
 	double get_network_distance(ULL from, ULL to);	//from i to j
-
+	std::map< ULL, std::set< std::pair<ULL, double> > > get_edgelist() { return edgelist; }
 	ULL get_number_of_nodes() { return number_of_nodes; }
 
 	std::pair< ULL, ULL > generate_request();
