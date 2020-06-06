@@ -1,0 +1,112 @@
+PARAMS
+
+time - start_of_measured_time
+499990
+total_requests - start_of_measured_total_requests
+1500000
+total_serviced_requests - start_of_measured_serviced_requests
+1499998
+transporter_list.size()
+1
+request_rate
+3
+normalized_request_rate
+3
+network.get_mean_pickup_distance()
+1
+network.get_mean_dropoff_distance()
+1
+network.get_request_asymmetry()
+0
+total_velocity
+1
+
+MEASUREMENTS
+
+wait_time
+1499998	1.13234	0.670543	
+drive_time
+1499998	1	8.23572e-14	
+delay_time
+1499998	1.16415e-16	8.2318e-14	
+fraction_of_delayed_trips
+1499998	2e-06	0.00141421	
+drive_time_between_stops
+2999997	0.166167	0.372231	
+drive_distance_between_stops
+2999997	0.166167	0.372231	
+occupancy
+639518	3.00123	1.48394	
+scheduled_customers
+639518	6.39807	2.77736	
+number_of_planned_stops
+639518	9.79491	4.75427	
+planned_time_horizon
+639518	2.0644	0.660444	
+number_of_idle_transporters
+639518	0.00294441	0.0541824	
+p_full
+1500000	0.0800847	0.271424	
+p_full2
+1500000	0.0800847	0.271424	
+p_full_snap
+639518	0.222084	0.415648	
+
+
+
+PARAMS
+
+time - start_of_measured_time
+249995
+total_requests - start_of_measured_total_requests
+1500000
+total_serviced_requests - start_of_measured_serviced_requests
+1500003
+transporter_list.size()
+2
+request_rate
+6
+normalized_request_rate
+3
+network.get_mean_pickup_distance()
+1
+network.get_mean_dropoff_distance()
+1
+network.get_request_asymmetry()
+0
+total_velocity
+2
+
+MEASUREMENTS
+
+wait_time
+1500003	0.586628	0.363403	
+drive_time
+1500003	1	0	
+delay_time
+1500003	0	0	
+fraction_of_delayed_trips
+1500003	0	0	
+drive_time_between_stops
+3000008	0.165138	0.371305	
+drive_distance_between_stops
+3000008	0.165138	0.371305	
+occupancy
+639518	3.00125	1.49927	
+scheduled_customers
+639518	4.76061	2.33283	
+number_of_planned_stops
+639518	6.51997	3.76876	
+planned_time_horizon
+639518	1.25469	0.480153	
+number_of_idle_transporters
+319759	0.0180761	0.135184	
+p_full
+3000000	0.0395797	0.19497	
+p_full2
+1500000	0.078	0.268172	
+p_full_snap
+639518	0.23291	0.422685	
+
+
+

@@ -167,6 +167,7 @@ public:
 	std::exponential_distribution<double> exp_dist;
 
 	std::clock_t start_clock;
+	std::clock_t last_clock;
 };
 
 #endif // RIDSHARING_SIM_H

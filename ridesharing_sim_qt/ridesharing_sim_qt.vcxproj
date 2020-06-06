@@ -30,13 +30,13 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
-    <IncludePath>C:\Users\ms119322\Documents\Cpp libs\boost_1_64_0;C:\Users\ms119322\Documents\Cpp libs\boost_1_64_0\boost\math\special_functions;C:\Users\ms119322\Anaconda3\Lib\site-packages\numpy\core\include;C:\Users\ms119322\Anaconda3\include;C:\Users\ms119322\Anaconda3\Library\include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Users\ms119322\Anaconda3\Lib\site-packages\numpy\core\lib;C:\Users\ms119322\Anaconda3\libs;C:\Users\ms119322\Anaconda3\Library\lib;C:\Users\ms119322\Anaconda3\Lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\Users\ms119322\Documents\Cpp libs\boost_1_64_0;C:\Users\ms119322\Documents\Cpp libs\boost_1_64_0\boost\math\special_functions;$(IncludePath)</IncludePath>
+    <LibraryPath>$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
-    <IncludePath>C:\Users\ms119322\Documents\Cpp libs\boost_1_64_0\boost\math\special_functions;C:\Users\ms119322\Documents\Cpp libs\boost_1_64_0;C:\Users\ms119322\Anaconda3\Lib\site-packages\numpy\core\include;C:\Users\ms119322\Anaconda3\include;C:\Users\ms119322\Anaconda3\Library\include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Users\ms119322\Anaconda3\Lib\site-packages\numpy\core\lib;C:\Users\ms119322\Anaconda3\libs;C:\Users\ms119322\Anaconda3\Library\lib;C:\Users\ms119322\Anaconda3\Lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\Users\ms119322\Documents\Cpp libs\boost_1_64_0\boost\math\special_functions;C:\Users\ms119322\Documents\Cpp libs\boost_1_64_0;$(IncludePath)</IncludePath>
+    <LibraryPath>$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <Target Name="QtMsBuildNotFound" BeforeTargets="CustomBuild;ClCompile" Condition="!Exists('$(QtMsBuild)\qt.targets') or !Exists('$(QtMsBuild)\qt.props')">
     <Message Importance="High" Text="QtMsBuild: could not locate qt.targets, qt.props; project may not build correctly." />
@@ -68,7 +68,7 @@
       <OutputFile>$(OutDir)\$(ProjectName).exe</OutputFile>
       <AdditionalLibraryDirectories>$(QTDIR)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>python36.lib;qtmaind.lib;Qt5Cored.lib;Qt5Guid.lib;Qt5Widgetsd.lib;Qt5PrintSupportd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>qtmaind.lib;Qt5Cored.lib;Qt5Guid.lib;Qt5Widgetsd.lib;Qt5PrintSupportd.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <QtMoc>
       <OutputFile>.\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp</OutputFile>
@@ -99,7 +99,7 @@
       <OutputFile>$(OutDir)\$(ProjectName).exe</OutputFile>
       <AdditionalLibraryDirectories>$(QTDIR)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>false</GenerateDebugInformation>
-      <AdditionalDependencies>python36.lib;qtmain.lib;Qt5Core.lib;Qt5Gui.lib;Qt5Widgets.lib;Qt5PrintSupport.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>qtmain.lib;Qt5Core.lib;Qt5Gui.lib;Qt5Widgets.lib;Qt5PrintSupport.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <QtMoc>
       <OutputFile>.\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp</OutputFile>

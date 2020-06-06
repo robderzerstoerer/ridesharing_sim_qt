@@ -223,6 +223,7 @@ bool ridesharing_sim::init_new_sim(ULL param_number_of_buses,
 	LL param_num_init_requests)
 {
 	start_clock = std::clock();
+	last_clock = start_clock;
 
 	reset_number_of_buses(param_number_of_buses, par->capacity);
 	//	std::cout << sim.network.get_mean_pickup_distance() << '\t' << sim.network.get_mean_dropoff_distance() << std::endl;
@@ -337,12 +338,30 @@ bool ridesharing_sim::run_sim_requests(ULL sim_requests)
 {
 	ULL max_requests = total_requests + sim_requests;
 
+	std::ofstream c_num_file;
+	c_num_file.open("c_num_file_" + par->topology + "_N_" + std::to_string(par->number_of_nodes) + ".dat");
+
+	int last_num_req = 0;
 	while (total_requests < max_requests)
 	{
 		time = execute_next_event();
+
+		// Abort if ...
+		// 1. Allowed time is over
 		if (time < 0)
 			return false;
+		// 2. Too many scheduled customers
+		if (measurements.scheduled_customers.get_partial_averages().size() > 0)
+			if (measurements.scheduled_customers.get_partial_averages().back() > 600)
+				return false;
+
+		if ((total_requests % (50 * par->number_of_buses)) == 0 && total_requests > last_num_req)
+			c_num_file << total_requests << "\t" << measurements.scheduled_customers.get_average() << "\n";
+
+		last_num_req = total_requests;
 	}
+
+	c_num_file.close();
 
 	return true;
 }
@@ -364,10 +383,17 @@ double ridesharing_sim::execute_next_event()
 {
 	double event_time;
 
-	double duration = (std::clock() - start_clock) / (double)CLOCKS_PER_SEC;
+	std::clock_t now_clock = std::clock();
+	double duration = (now_clock - start_clock) / (double)CLOCKS_PER_SEC;
 	if (duration > par->max_sim_time)
-		return -1.0;
+	{
+		if (((now_clock - last_clock) / (double)CLOCKS_PER_SEC) > 10)
+			start_clock += (now_clock - last_clock);
+		else
+			return -1.0;
+	}
 
+	last_clock = now_clock;
 
 	//if the next event is an output event (and output is enabled)
 	if (do_timeseries_output &&
@@ -449,8 +475,8 @@ double ridesharing_sim::execute_next_event()
 
 		if (current_best_unlimited_offer.best_transporter == current_best_offer.best_transporter)
 		{
-			if (current_best_unlimited_offer.pickup_insertion == current_best_offer.pickup_insertion &&
-				current_best_unlimited_offer.dropoff_insertion == current_best_offer.dropoff_insertion)
+			if (abs(current_best_unlimited_offer.pickup_time - current_best_offer.pickup_time) <= 0.00001 &&
+				abs(current_best_unlimited_offer.dropoff_time - current_best_offer.dropoff_time) <= 0.00001)
 				measurements.p_full2.new_measurement(0, event_time);
 			else
 				measurements.p_full2.new_measurement(1, event_time);

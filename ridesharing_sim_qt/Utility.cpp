@@ -104,6 +104,7 @@ double CUtility::two_node_av_scheduled_customers(ULL cap, double x, ULL B, doubl
 		return 1e10;
 
 	std::vector<std::complex<double>> zeroes;
+	/* below: stupid???
 	if (cap % 2 == 1)
 	{
 		for (int i = 0; i < cap; i++)
@@ -122,7 +123,13 @@ double CUtility::two_node_av_scheduled_customers(ULL cap, double x, ULL B, doubl
 			zeroes.push_back(-(dcap) / x * LambertW(-arg, 0));
 			zeroes.push_back(-(dcap) / x * LambertW(arg, 0));
 		}
+	}*/
+	for (int k = 0; k < (dcap - MACRO_EPSILON); k++)
+	{
+		std::complex<double> arg = std::polar<double>(1.0, pi * (2 * (double)k) / (dcap)) * x / (dcap)* exp(-x / (dcap));
+		zeroes.push_back(-(dcap) / x * LambertW(-arg, 0));
 	}
+
 
 	std::complex<double> sum{ 0.0, 0.0 };
 	for (int i = 0; i < cap; i++)
@@ -137,7 +144,7 @@ double CUtility::two_node_av_scheduled_customers(ULL cap, double x, ULL B, doubl
 		Msgbox.exec();
 	}
 
-	return 2 / B * ((doubcap - (doubcap - x)* (doubcap - x))/ (2 * (doubcap - x)) + sum.real()) + (double (B-1))/B * x;
+	return 2.0 / B * ((doubcap - (doubcap - x)* (doubcap - x))/ (2 * (doubcap - x)) + sum.real()) + (double (B-1))/B * x;
 	//return sum.real();
 }
 

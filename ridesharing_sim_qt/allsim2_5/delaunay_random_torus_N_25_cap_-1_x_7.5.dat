@@ -1,0 +1,112 @@
+PARAMS
+
+time - start_of_measured_time
+105.615
+total_requests - start_of_measured_total_requests
+1112000
+total_serviced_requests - start_of_measured_serviced_requests
+1111984
+transporter_list.size()
+556
+request_rate
+10524.5
+normalized_request_rate
+7.5
+network.get_mean_pickup_distance()
+0.396217
+network.get_mean_dropoff_distance()
+0.396217
+network.get_request_asymmetry()
+0
+total_velocity
+556
+
+MEASUREMENTS
+
+wait_time
+1111984	0.0462336	0.0396145	
+drive_time
+1111984	0.407356	0.16402	
+delay_time
+1111984	0.011286	0.0248807	
+fraction_of_delayed_trips
+1111984	0.287965	0.452815	
+drive_time_between_stops
+2224058	0.0264027	0.0754241	
+drive_distance_between_stops
+2224058	0.0264027	0.0754241	
+occupancy
+473712	7.71432	4.44233	
+scheduled_customers
+473712	8.58675	4.86838	
+number_of_planned_stops
+473712	9.45918	5.8922	
+planned_time_horizon
+473712	0.4547	0.137613	
+number_of_idle_transporters
+852	0	0	
+p_full
+0	0	0	
+p_full2
+1112000	1	0	
+p_full_snap
+473712	0	0	
+
+
+
+PARAMS
+
+time - start_of_measured_time
+105.614
+total_requests - start_of_measured_total_requests
+1694000
+total_serviced_requests - start_of_measured_serviced_requests
+1693935
+transporter_list.size()
+847
+request_rate
+16032.9
+normalized_request_rate
+7.5
+network.get_mean_pickup_distance()
+0.396217
+network.get_mean_dropoff_distance()
+0.396217
+network.get_request_asymmetry()
+0
+total_velocity
+847
+
+MEASUREMENTS
+
+wait_time
+1693935	0.0333933	0.0294401	
+drive_time
+1693935	0.403077	0.161002	
+delay_time
+1693935	0.00686249	0.0176243	
+fraction_of_delayed_trips
+1693935	0.225603	0.417978	
+drive_time_between_stops
+3387939	0.0264035	0.0761491	
+drive_distance_between_stops
+3387939	0.0264035	0.0761491	
+occupancy
+721644	7.63232	4.55584	
+scheduled_customers
+721644	8.26266	4.88787	
+number_of_planned_stops
+721644	8.89301	5.70599	
+planned_time_horizon
+721644	0.422888	0.141571	
+number_of_idle_transporters
+852	0	0	
+p_full
+0	0	0	
+p_full2
+1694000	1	0	
+p_full_snap
+721644	0	0	
+
+
+

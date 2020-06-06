@@ -1,0 +1,112 @@
+PARAMS
+
+time - start_of_measured_time
+749985
+total_requests - start_of_measured_total_requests
+1500000
+total_serviced_requests - start_of_measured_serviced_requests
+1500002
+transporter_list.size()
+1
+request_rate
+2
+normalized_request_rate
+2
+network.get_mean_pickup_distance()
+1
+network.get_mean_dropoff_distance()
+1
+network.get_request_asymmetry()
+0
+total_velocity
+1
+
+MEASUREMENTS
+
+wait_time
+1500002	1.01393	0.59573	
+drive_time
+1500002	1	0	
+delay_time
+1500002	0	0	
+fraction_of_delayed_trips
+1500002	0	0	
+drive_time_between_stops
+3000007	0.244452	0.429762	
+drive_distance_between_stops
+3000007	0.244452	0.429762	
+occupancy
+639518	2.00061	1.34656	
+scheduled_customers
+639518	4.02819	2.10907	
+number_of_planned_stops
+639518	6.05577	3.45648	
+planned_time_horizon
+639518	1.7077	0.690542	
+number_of_idle_transporters
+639518	0.0222371	0.147454	
+p_full
+1500000	0.0138413	0.116832	
+p_full2
+1500000	0.0138413	0.116832	
+p_full_snap
+639518	0.0551118	0.228198	
+
+
+
+PARAMS
+
+time - start_of_measured_time
+374992
+total_requests - start_of_measured_total_requests
+1500000
+total_serviced_requests - start_of_measured_serviced_requests
+1500000
+transporter_list.size()
+2
+request_rate
+4
+normalized_request_rate
+2
+network.get_mean_pickup_distance()
+1
+network.get_mean_dropoff_distance()
+1
+network.get_request_asymmetry()
+0
+total_velocity
+2
+
+MEASUREMENTS
+
+wait_time
+1500000	0.526914	0.356493	
+drive_time
+1500000	1	6.72125e-14	
+delay_time
+1500000	-7.76102e-17	6.72124e-14	
+fraction_of_delayed_trips
+1500000	1.33333e-06	0.0011547	
+drive_time_between_stops
+3000003	0.238544	0.426194	
+drive_distance_between_stops
+3000003	0.238544	0.426194	
+occupancy
+639518	2.00042	1.36365	
+scheduled_customers
+639518	3.05412	1.93377	
+number_of_planned_stops
+639518	4.10782	2.98209	
+planned_time_horizon
+639518	1.0483	0.533587	
+number_of_idle_transporters
+319759	0.0909779	0.30074	
+p_full
+3000000	0.00916933	0.0953166	
+p_full2
+1500000	0.0183107	0.134072	
+p_full_snap
+639518	0.0653821	0.247199	
+
+
+

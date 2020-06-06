@@ -73,8 +73,9 @@ void simulation_thread::run()
 			ULL B_guess = MAX(int(x_guess * bhalf + 0.5), 1);
 			ULL last_B_guess = B_guess;
 			double last_Eff = -1.0;
-			std::vector<int> B_theta(par.capacity_list[0] + 1, 0);
-			std::vector<double> E_theta(par.capacity_list[0] + 1, 0);
+
+			std::vector<int> B_theta(std::max(par.capacity_list[0] + 1, 1), 0);
+			std::vector<double> E_theta(std::max(par.capacity_list[0] + 1, 1), 0);
 
 			traffic_network n;
 			n.init(topology_n.first, topology_n.second);
@@ -107,8 +108,13 @@ void simulation_thread::run()
 				{
 					if (par.stop_thread)
 						break;
-					double x = par.lambda * lav / (1.0 * B_guess);  // replace 1.0 with transporter velocity if neccessary
-					if (x >= cap)
+					double x = -1.0;
+					if (par.lambda > 0.0)
+						x = par.lambda * lav / (1.0 * B_guess);  // replace 1.0 with transporter velocity if neccessary
+					else
+						x = par.x_list[0];
+
+					if (x >= cap && cap > 0)
 					{
 						min_B = MAX(min_B, B_guess);
 						if (last_res != 0 && step_size > 1)
@@ -138,8 +144,8 @@ void simulation_thread::run()
 							}
 
 							// write solutions
-							B_theta[cap] = closest_B;
-							E_theta[cap] = closest_E;
+							B_theta[std::max(cap,0)] = closest_B;
+							E_theta[std::max(cap, 0)] = closest_E;
 							break;
 						}
 						else
@@ -191,8 +197,8 @@ void simulation_thread::run()
 								max_B = B_guess;
 								if (B_guess == 1)
 								{
-									B_theta[cap] = B_guess;
-									E_theta[cap] = Eff;
+									B_theta[std::max(cap, 0)] = B_guess;
+									E_theta[std::max(cap, 0)] = Eff;
 									break;
 								}
 								last_B_guess = B_guess;
@@ -228,8 +234,8 @@ void simulation_thread::run()
 								max_B = MIN(max_B, B_guess);
 								if (B_guess == 1)
 								{
-									B_theta[cap] = B_guess;
-									E_theta[cap] = Eff;
+									B_theta[std::max(cap, 0)] = B_guess;
+									E_theta[std::max(cap, 0)] = Eff;
 									break;
 								}
 								last_B_guess = B_guess;
@@ -253,7 +259,7 @@ void simulation_thread::run()
 
 			// output
 			std::ofstream out;
-			std::string out_filename = topology_n.first +
+			std::string out_filename = par.foldername + topology_n.first +
 				"_N_" + std::to_string(topology_n.second) +
 				"_aim_" + std::to_string(par.E_aim + 0.0001).substr(0, 5) +
 				"_lambda_" + std::to_string(par.lambda + 0.0001).substr(0, 5) +
@@ -274,10 +280,19 @@ void simulation_thread::run()
 			}
 
 			std::string msg = "";
-			for (int i = 1; i < B_theta.size(); i++)
+			int cap_start;
+			if (par.capacity_list[0] > 0)
 			{
-				out << i << '\t' << B_theta[i] << '\t' << E_theta[i] << '\n';
-				msg += std::to_string(i) + " " + std::to_string(B_theta[i]) + " " + std::to_string(E_theta[i]) + '\n';
+				for (int i = 1; i < B_theta.size(); i++)
+				{
+					out << i << '\t' << B_theta[i] << '\t' << E_theta[i] << '\n';
+					msg += std::to_string(i) + " " + std::to_string(B_theta[i]) + " " + std::to_string(E_theta[i]) + '\n';
+				}
+			}
+			else
+			{
+				out << -1 << '\t' << B_theta[0] << '\t' << E_theta[0] << '\n';
+				msg += std::to_string(-1) + " " + std::to_string(B_theta[0]) + " " + std::to_string(E_theta[0]) + '\n';
 			}
 			emit ErrorMessage(msg.c_str());
 
@@ -300,19 +315,176 @@ void simulation_thread::run()
 					}
 				}
 
-				for (double x : x_list)
+				if (par.B_list.size() > 1)
+				{
+					for (double x : x_list)
+					{
+						if (par.stop_thread)
+							break;
+
+						simulation_parameters sim_par;
+						sim_par.parent = &par;
+						sim_par.normalized_request_rate = x;
+						sim_par.topology = topology_n.first;
+						sim_par.number_of_nodes = topology_n.second;
+						sim_par.calc_cap_delay = par.calc_cap_delay;
+						sim_par.calc_p_full = par.calc_p_full; // will maybe be changed if Efficiency data has to be calculated (see below)
+						sim_par.capacity = cap;
+
+						// full data output
+						std::ofstream out;
+						std::string out_filename;
+						// condensed data for plotting etc
+						std::ofstream outplot;
+						std::string out_plotfilename;
+						// data from pre-calculated efficiency for unlimited capacity
+						std::vector<std::pair<ULL, double>> vBEdata;
+
+						if (par.topology_list.size() == 1 && par.capacity_list.size() == 1 && par.x_list.size() == 1)
+							out_filename = par.filename;
+						else
+						{
+							out_filename = par.foldername +
+								topology_n.first +
+								"_N_" + std::to_string(topology_n.second) +
+								"_cap_" + std::to_string(cap) +
+								"_x_" + std::to_string(x + 0.0001).substr(0, 3) +
+								".dat";
+						}
+
+						if (!CUtility::file_exists(out_filename))
+							out.open(out_filename.c_str());
+						else
+						{
+							// look for alternative filename
+							std::string newname = CUtility::find_new_filename(out_filename);
+							out.open(newname.c_str());
+
+							std::string errormessage = "File " + out_filename + " already exists.\nUsing " + newname + " instead.";
+							emit ErrorMessage(errormessage.c_str());
+
+							out_filename = newname;
+						}
+
+						std::string plotfilename = out_filename + "eff.dat";
+						if (!CUtility::file_exists(plotfilename))
+							outplot.open(plotfilename.c_str());
+						else
+						{
+							std::string errormessage = "File " + plotfilename + " already exists.";
+							emit ErrorMessage(errormessage.c_str());
+							return;
+						}
+
+						if (par.capacity_list.size() == 1 && par.x_list.size() == 1)
+						{
+							if (par.calc_p_full)
+							{
+								/*
+								// read pre-calculated data for efficiency as a function of B for the present x in this simulation
+								std::string eff_filename =
+									"eff_" + topology_n.first +
+									"_N_" + std::to_string(topology_n.second) +
+									"_unl" +
+									"_x_" + std::to_string(x + 0.0001).substr(0, 3) +
+									".dateff.dat";
+
+								if (!CUtility::read_eff_B_data_from_file(eff_filename, vBEdata))
+								{
+									std::string errormessage = "Could not open file " + eff_filename;
+									emit ErrorMessage(errormessage.c_str());
+								}
+								*/
+							}
+
+							simulate_B_list(sim_par, out, outplot, vBEdata);
+						}
+						else
+						{
+							if (par.sim_mode == EVERYTHING)
+							{
+								// We have to evaluate the efficiencies with unlimited capacities first
+								sim_par.capacity = -1;
+								sim_par.calc_p_full = false;
+
+								std::ofstream out_eff;
+								std::ofstream out_eff_plot;
+								// We are simulating for multiple x. Therefore, we need to get a new filename for each x
+								std::string eff_filename =
+									par.foldername +
+									"eff_" + topology_n.first +
+									"_N_" + std::to_string(topology_n.second) +
+									"_unl" +
+									"_x_" + std::to_string(x + 0.0001).substr(0, 3) +
+									".dat";
+
+								std::string eff_plotfilename = eff_filename + "eff.dat";
+
+								// if this file doesn't already exist, we have to calculate it
+								if (!CUtility::file_exists(eff_plotfilename))
+								{
+									out_eff.open(eff_filename.c_str());
+									out_eff_plot.open(eff_plotfilename.c_str());
+
+									simulate_B_list(sim_par, out_eff, out_eff_plot);
+
+									out_eff.close();
+									out_eff_plot.close();
+								}
+
+								// read pre-calculated data for efficiency as a function of B for the present x in this simulation
+								if (!CUtility::read_eff_B_data_from_file(eff_plotfilename, vBEdata))
+								{
+									std::string errormessage = "Could not open file " + eff_filename;
+									emit ErrorMessage(errormessage.c_str());
+								}
+							}
+							else if (par.calc_p_full)
+							{
+								// we already have pre-calculated data for efficiency. Read it.
+								std::string vBEdata_filename =
+									par.foldername +
+									"eff_" + topology_n.first +
+									"_N_" + std::to_string(topology_n.second) +
+									"_unl" +
+									"_x_" + std::to_string(x + 0.0001).substr(0, 3) +
+									".dateff.dat";
+
+								if (!CUtility::read_eff_B_data_from_file(vBEdata_filename, vBEdata))
+								{
+									std::string errormessage = "Could not open file " + vBEdata_filename;
+									emit ErrorMessage(errormessage.c_str());
+								}
+							}
+
+							// now the actual calculation with limited capacity. Here, also we need to calculate the p_full(2)
+							sim_par.capacity = cap;
+							sim_par.calc_p_full = par.calc_p_full;
+
+							simulate_B_list(sim_par, out, outplot, vBEdata);
+
+						}
+
+						out.close();
+						outplot.close();
+
+						emit ProcessTextChanged("Done simulating");
+					}
+				}
+				else // if B_list.size() == 1
 				{
 					if (par.stop_thread)
 						break;
 
 					simulation_parameters sim_par;
 					sim_par.parent = &par;
-					sim_par.normalized_request_rate = x;
 					sim_par.topology = topology_n.first;
 					sim_par.number_of_nodes = topology_n.second;
+					sim_par.number_of_buses = par.B_list[0];
 					sim_par.calc_cap_delay = par.calc_cap_delay;
 					sim_par.calc_p_full = par.calc_p_full; // will maybe be changed if Efficiency data has to be calculated (see below)
 					sim_par.capacity = cap;
+					sim_par.max_sim_time = par.max_point_sim_time;
 
 					// full data output
 					std::ofstream out;
@@ -320,20 +492,13 @@ void simulation_thread::run()
 					// condensed data for plotting etc
 					std::ofstream outplot;
 					std::string out_plotfilename;
-					// data from pre-calculated efficiency for unlimited capacity
-					std::vector<std::pair<ULL, double>> vBEdata;
 
-					if (par.capacity_list.size() == 1 && par.x_list.size() == 1)
-						out_filename = par.filename;
-					else
-					{
-						out_filename = par.foldername +
-							topology_n.first +
-							"_N_" + std::to_string(topology_n.second) +
-							"_cap_" + std::to_string(cap) +
-							"_x_" + std::to_string(x + 0.0001).substr(0, 3) +
-							".dat";
-					}
+					out_filename = par.foldername +
+						topology_n.first +
+						"_N_" + std::to_string(topology_n.second) +
+						"_cap_" + std::to_string(cap) +
+						"_B_" + std::to_string(sim_par.number_of_buses) +
+						".dat";
 
 					if (!CUtility::file_exists(out_filename))
 						out.open(out_filename.c_str());
@@ -359,91 +524,33 @@ void simulation_thread::run()
 						return;
 					}
 
-					if (par.capacity_list.size() == 1 && par.x_list.size() == 1)
+					QVector<double> vx, vE;
+
+					for (double x : par.x_list)
 					{
-						if (par.calc_p_full)
-						{
-							// read pre-calculated data for efficiency as a function of B for the present x in this simulation
-							std::string eff_filename =
-								"eff_" + topology_n.first +
-								"_N_" + std::to_string(topology_n.second) +
-								"_unl" +
-								"_x_" + std::to_string(x + 0.0001).substr(0, 3) +
-								".dateff.dat";
+						if (par.stop_thread)
+							break;
 
-							if (!CUtility::read_eff_B_data_from_file(eff_filename, vBEdata))
-							{
-								std::string errormessage = "Could not open file " + eff_filename;
-								emit ErrorMessage(errormessage.c_str());
-							}
+						sim_par.normalized_request_rate = x;
+
+						QString newText = "Simulating " + QString(sim_par.topology.c_str()) +
+							", N=" + QString(std::to_string(sim_par.number_of_nodes).c_str()) +
+							", x=" + QString(std::to_string(sim_par.normalized_request_rate).c_str()) +
+							", cap=" + QString(std::to_string(sim_par.capacity).c_str()) +
+							", B=" + QString(std::to_string(sim_par.number_of_buses).c_str());
+						emit ProcessTextChanged(newText);
+
+						double Eff = single_simulation(sim_par, out, outplot);
+
+						if (Eff < 0.0)
+							break;
+						else
+						{
+							vx.push_back(x);
+							vE.push_back(Eff);
 						}
 
-						simulate_B_list(sim_par, out, outplot, vBEdata);
-					}
-					else
-					{
-						if (par.sim_mode == EVERYTHING)
-						{
-							// We have to evaluate the efficiencies with unlimited capacities first
-							sim_par.capacity = -1;
-							sim_par.calc_p_full = false;
-
-							std::ofstream out_eff;
-							std::ofstream out_eff_plot;
-							// We are simulating for multiple x. Therefore, we need to get a new filename for each x
-							std::string eff_filename =
-								par.foldername +
-								"eff_" + topology_n.first +
-								"_N_" + std::to_string(topology_n.second) +
-								"_unl" +
-								"_x_" + std::to_string(x + 0.0001).substr(0, 3) +
-								".dat";
-
-							std::string eff_plotfilename = eff_filename + "eff.dat";
-
-							// if this file doesn't already exist, we have to calculate it
-							if (!CUtility::file_exists(eff_plotfilename))
-							{
-								out_eff.open(eff_filename.c_str());
-								out_eff_plot.open(eff_plotfilename.c_str());
-
-								simulate_B_list(sim_par, out_eff, out_eff_plot);
-
-								out_eff.close();
-								out_eff_plot.close();
-							}
-
-							// read pre-calculated data for efficiency as a function of B for the present x in this simulation
-							if (!CUtility::read_eff_B_data_from_file(eff_plotfilename, vBEdata))
-							{
-								std::string errormessage = "Could not open file " + eff_filename;
-								emit ErrorMessage(errormessage.c_str());
-							}
-						}
-						else if (par.calc_p_full)
-						{
-							// we already have pre-calculated data for efficiency. Read it.
-							std::string vBEdata_filename =
-								par.foldername +
-								"eff_" + topology_n.first +
-								"_N_" + std::to_string(topology_n.second) +
-								"_unl" +
-								"_x_" + std::to_string(x + 0.0001).substr(0, 3) +
-								".dateff.dat";
-
-							if (!CUtility::read_eff_B_data_from_file(vBEdata_filename, vBEdata))
-							{
-								std::string errormessage = "Could not open file " + vBEdata_filename;
-								emit ErrorMessage(errormessage.c_str());
-							}
-						}
-
-						// now the actual calculation with limited capacity. Here, also we need to calculate the p_full(2)
-						sim_par.capacity = cap;
-						sim_par.calc_p_full = par.calc_p_full;
-
-						simulate_B_list(sim_par, out, outplot, vBEdata);
-
+						emit GraphChanged(vx, vE);
 					}
 
 					out.close();
@@ -511,15 +618,15 @@ void simulation_thread::simulate_B_list(
 		current_index++;
 	}
 
-	// if none of the scans was successful: try 5th last element with longer sim time
-	if (!b_prev_successful && par.B_list.size() >= 5)
+	// if none of the scans was successful: try 8th last element with longer sim time
+	if (!b_prev_successful && par.B_list.size() >= 8)
 	{
 		sim_par.max_sim_time = par.max_point_sim_time;
 
 		if (par.stop_thread)
 			return;
 
-		sim_par.number_of_buses = par.B_list[par.B_list.size() - 5];
+		sim_par.number_of_buses = par.B_list[par.B_list.size() - 8];
 
 		QString newText = "Simulating " + QString(sim_par.topology.c_str()) +
 			", N=" + QString(std::to_string(sim_par.number_of_nodes).c_str()) +
@@ -606,7 +713,7 @@ double simulation_thread::single_simulation(
 	ridesharing_sim sim(&sim_par);
 	sim.init_network();
 
-	if (!sim.init_new_sim(sim_par.number_of_buses, sim_par.normalized_request_rate, std::max((ULL)50000, par.num_requests_per_bus_init * sim_par.number_of_buses)))
+	if (!sim.init_new_sim(sim_par.number_of_buses, sim_par.normalized_request_rate, std::max((ULL)100000, par.num_requests_per_bus_init * sim_par.number_of_buses)))
 		return -1.0;
 
 	//turn on measurements with a given step size, measure every (number of buses) requests for a total of ~ 100 measurements
@@ -623,11 +730,12 @@ double simulation_thread::single_simulation(
 			//sim.measurements.scheduled_customers.reset();
 
 			//simulate (and measure) for 1000 requests per bus (at least 50000 requests)
-			if (!sim.run_sim_requests(std::max((ULL)50000, par.num_requests_per_bus_sim * sim_par.number_of_buses)))
+			if (!sim.run_sim_requests(std::max((ULL)100000, par.num_requests_per_bus_sim * sim_par.number_of_buses)))
 				return -1.0;
 
 			double total_C_av = sim.measurements.scheduled_customers.get_average();
 			double last_partial_C_av = sim.measurements.scheduled_customers.get_partial_averages().back();
+
 			if (abs(last_partial_C_av - total_C_av) < 0.1 * total_C_av)
 				exact_result = true;
 			else
@@ -639,8 +747,8 @@ double simulation_thread::single_simulation(
 	}
 	else
 	{
-		//simulate (and measure) for 100 requests per bus (at least 10000 requests)
-		if (!sim.run_sim_requests(std::max((ULL)20000, par.num_requests_per_bus_sim * sim_par.number_of_buses)))
+		//simulate (and measure) for 100 requests per bus (at least 50000 requests)
+		if (!sim.run_sim_requests(std::max((ULL)50000, par.num_requests_per_bus_sim * sim_par.number_of_buses)))
 			return -1.0;
 	}
 
@@ -657,7 +765,13 @@ double simulation_thread::single_simulation(
 
 	if (outplot.is_open())
 	{
-		outplot << sim_par.number_of_buses << '\t' << Eff;
+		if (par.B_list.size() > 1)
+			outplot << sim_par.number_of_buses << '\t' << Eff;
+		else
+		{
+			//double th = CUtility::two_node_av_scheduled_customers(sim_par.capacity, sim_par.normalized_request_rate, sim_par.number_of_buses);
+			outplot << sim_par.normalized_request_rate << '\t' << Eff << '\t' << total_C_av;
+		}
 
 		double last_partial_C_av = sim.measurements.scheduled_customers.get_partial_averages().back();
 		outplot << '\t' << "x" << '\t' << sim_par.normalized_request_rate / last_partial_C_av;
@@ -688,23 +802,6 @@ double simulation_thread::single_simulation(
 		double real_eff;
 		double real_p_full;
 		double real_p_full2;
-
-		/*
-		if (abs(last_partial_C_av - total_C_av) < 0.06 * total_C_av)
-			real_eff = par.normalized_request_rate / total_C_av;
-		else
-			real_eff = par.normalized_request_rate / last_partial_C_av;
-
-		if (abs(last_partial_p_full_av - total_p_full_av) < 0.06 * total_p_full_av)
-			real_p_full = total_p_full_av;
-		else
-			real_p_full = last_partial_p_full_av;
-
-		if (abs(last_partial_p_full2_av - total_p_full2_av) < 0.06 * total_p_full2_av)
-			real_p_full2 = total_p_full2_av;
-		else
-			real_p_full2 = last_partial_p_full2_av;
-			*/
 
 		real_eff = sim_par.normalized_request_rate / total_C_av;
 		real_p_full = total_p_full_av;
