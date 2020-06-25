@@ -113,5 +113,19 @@
     <ClInclude Include="network.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="kernel.cuh">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="transporter.cuh">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <CudaCompile Include="kernel.cu">
+      <Filter>Source Files</Filter>
+    </CudaCompile>
+    <CudaCompile Include="transporter.cu">
+      <Filter>Source Files</Filter>
+    </CudaCompile>
   </ItemGroup>
 </Project>

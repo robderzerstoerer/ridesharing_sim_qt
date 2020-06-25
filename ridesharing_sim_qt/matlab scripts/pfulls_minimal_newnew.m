@@ -1,3 +1,4 @@
+poissonbuses = true;
 pfulls = zeros(1,65);
 pfullsnew = zeros(1,65);
 curi = 1;
@@ -9,12 +10,12 @@ for cap = 1:8
         
         zk = zeros(1,cap);
 
-        for k = 1:cap
-            zk(k) = - cap / x * lambertw(- x / cap * exp(-x / cap) * exp(- 1i * 2*pi * k / cap));
+        if ~poissonbuses
+            for k = 1:cap
+                zk(k) = - cap / x * lambertw(- x / cap * exp(-x / cap) * exp(- 1i * 2*pi * k / cap));
+            end
         end
-
-        zk;
-
+        
 
         syms pgf
         syms z
@@ -22,19 +23,33 @@ for cap = 1:8
 
         temparr = sym(zeros(1, cap));
 
-        for l = 1:(cap-1)
-            temparr(l) = (z - zk(l)) / (1-zk(l));
+        if ~poissonbuses
+            for l = 1:(cap-1)
+                temparr(l) = (z - zk(l)) / (1-zk(l));
+            end
+            
+            pgf = sym(1);
+            for j = 1:(cap-1)
+                pgf = pgf * temparr(j);
+            end
+
+            pgf = pgf * (cap - x) * (z - 1) / (z^cap * exp(x * (1-z)) - 1);
+        
+        else
+            coeffs = zeros(1,cap+2);
+            coeffs(1) = 1;
+            coeffs(2) = -(1+x)/x;
+            coeffs(cap+2) = 1/x;
+
+            slns = roots(coeffs);
+
+            slnsabs = abs(slns);
+
+            assert(slnsabs(1) > 1);
+            zs = slns(1);
+            
+            pgf = (zs - 1) / (zs - z);
         end
-
-        temparr;
-
-        pgf = sym(1);
-
-        for j = 1:(cap-1)
-            pgf = pgf * temparr(j);
-        end
-
-        pgf = pgf * (cap - x) * (z - 1) / (z^cap * exp(x * (1-z)) - 1);
 
         syms lastderiv
 
@@ -106,13 +121,25 @@ for cap = 1:8
             for qp = 0:cap
                 sumqp = sumqp + pj(qp+1);
             end
-            sumtotal = sumtotal + poisspdf(z,x) * (z-cap) * sumqp;
+            kz = 0;
+            if ~poissonbuses
+                kz = poisspdf(z,x);
+            else
+                kz = x^z * gamma(z+1) / (factorial(z) * (1+x)^(z+1));
+            end
+            sumtotal = sumtotal + kz * (z-cap) * sumqp;
         end
         
         %sum 2
         for qp = (cap+1):(2*cap-1)
             for z = (2*cap-qp):numcalc_dzq
-                sumtotal = sumtotal + poisspdf(z,x)*(qp+z-2*cap)*pj(qp+1); 
+                kz = 0;
+                if ~poissonbuses
+                    kz = poisspdf(z,x);
+                else
+                    kz = x^z * gamma(z+1) / (factorial(z) * (1+x)^(z+1));
+                end
+                sumtotal = sumtotal + kz * (qp+z-2*cap) * pj(qp+1); 
             end
         end
         
@@ -122,7 +149,13 @@ for cap = 1:8
             for qp = 0:(2*cap-1)
                 sumqp = sumqp + pj(qp+1);
             end
-            sumtotal = sumtotal + z*poisspdf(z,x)*(1-sumqp);
+            kz = 0;
+            if ~poissonbuses
+                kz = poisspdf(z,x);
+            else
+                kz = x^z * gamma(z+1) / (factorial(z) * (1+x)^(z+1));
+            end
+            sumtotal = sumtotal + z*kz*(1-sumqp);
         end
         
         pfullsnew(curi) = sumtotal / x;

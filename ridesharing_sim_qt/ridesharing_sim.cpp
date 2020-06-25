@@ -437,64 +437,75 @@ double ridesharing_sim::execute_next_event()
 		++total_requests;
 		std::tie(request_origin, request_destination) = network.generate_request();
 
-		current_best_offer = offer();
-		current_best_unlimited_offer = offer();
-		//find the best offer for the request
-		for (transporter& t : transporter_list)
+		if (par->parent->use_gpu_accel)
 		{
-			current_offer = t.best_offer(request_origin, request_destination, event_time, network, current_best_offer, true);
+			const int THREADS_PER_BLOCK = 1024;
+			const int BLOCK_NUM = par->number_of_buses;
 
-			if (current_offer.is_better_offer)
-			{
-				assert(current_offer.dropoff_time <= current_best_offer.dropoff_time);
-				current_best_offer = current_offer;
-			}
-
-			if (par->calc_p_full)
-			{
-				// now see what is happening if we do not restrict the capacity of the transporter
-				ULL cap = t.get_capacity();
-				t.set_capacity(-1);
-				current_unlimited_offer = t.best_offer(request_origin, request_destination, event_time, network, current_best_unlimited_offer, true);
-				t.set_capacity(cap);  // return to restricted capacity
-
-				if (current_unlimited_offer.is_better_offer)
-				{
-					current_best_unlimited_offer = current_unlimited_offer;
-				}
-
-
-				if (current_unlimited_offer.pickup_insertion == current_offer.pickup_insertion &&
-					current_unlimited_offer.dropoff_insertion == current_offer.dropoff_insertion)
-					measurements.p_full.new_measurement(0, event_time);
-				else
-					measurements.p_full.new_measurement(1, event_time);
-			}
-
-		}
-
-		if (current_best_unlimited_offer.best_transporter == current_best_offer.best_transporter)
-		{
-			if (abs(current_best_unlimited_offer.pickup_time - current_best_offer.pickup_time) <= 0.00001 &&
-				abs(current_best_unlimited_offer.dropoff_time - current_best_offer.dropoff_time) <= 0.00001)
-				measurements.p_full2.new_measurement(0, event_time);
-			else
-				measurements.p_full2.new_measurement(1, event_time);
 
 		}
 		else
-			measurements.p_full2.new_measurement(1, event_time);
+		{
+			current_best_offer = offer();
+			current_best_unlimited_offer = offer();
+			//find the best offer for the request
+			for (transporter& t : transporter_list)
+			{
+				current_offer = t.best_offer(request_origin, request_destination, event_time, network, current_best_offer, true);
 
-		//assign the request to the best transporter and update the events
-		event_transporter_index = current_best_offer.transporter_index;
-		next_transporter_event = transporter_list[event_transporter_index].assign_customer(
-			event_time,
-			customer(request_origin, request_destination, event_time, network, transporter_list[event_transporter_index], current_best_offer),
-			current_best_offer,
-			network
-		);
-		if (next_transporter_event >= event_time)
-			transporter_event_queue.push(std::make_pair(next_transporter_event, event_transporter_index));
+				if (current_offer.is_better_offer)
+				{
+					assert(current_offer.dropoff_time <= current_best_offer.dropoff_time);
+					current_best_offer = current_offer;
+				}
+
+				if (par->calc_p_full)
+				{
+					// now see what is happening if we do not restrict the capacity of the transporter
+					ULL cap = t.get_capacity();
+					t.set_capacity(-1);
+					current_unlimited_offer = t.best_offer(request_origin, request_destination, event_time, network, current_best_unlimited_offer, true);
+					t.set_capacity(cap);  // return to restricted capacity
+
+					if (current_unlimited_offer.is_better_offer)
+					{
+						current_best_unlimited_offer = current_unlimited_offer;
+					}
+
+
+					if (current_unlimited_offer.pickup_insertion == current_offer.pickup_insertion &&
+						current_unlimited_offer.dropoff_insertion == current_offer.dropoff_insertion)
+						measurements.p_full.new_measurement(0, event_time);
+					else
+						measurements.p_full.new_measurement(1, event_time);
+				}
+
+			}
+
+			if (current_best_unlimited_offer.best_transporter == current_best_offer.best_transporter)
+			{
+				if (abs(current_best_unlimited_offer.pickup_time - current_best_offer.pickup_time) <= 0.00001 &&
+					abs(current_best_unlimited_offer.dropoff_time - current_best_offer.dropoff_time) <= 0.00001)
+					measurements.p_full2.new_measurement(0, event_time);
+				else
+					measurements.p_full2.new_measurement(1, event_time);
+
+			}
+			else
+				measurements.p_full2.new_measurement(1, event_time);
+
+			//assign the request to the best transporter and update the events
+			event_transporter_index = current_best_offer.transporter_index;
+			next_transporter_event = transporter_list[event_transporter_index].assign_customer(
+				event_time,
+				customer(request_origin, request_destination, event_time, network, transporter_list[event_transporter_index], current_best_offer),
+				current_best_offer,
+				network
+			);
+			if (next_transporter_event >= event_time)
+				transporter_event_queue.push(std::make_pair(next_transporter_event, event_transporter_index));
+
+		}
 
 		//update event queue with the next request (exponential distribution with mean 1/request rate)
 		next_request_time = event_time + exp_dist(random_generator) / request_rate;

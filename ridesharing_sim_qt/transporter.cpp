@@ -250,7 +250,7 @@ offer transporter::best_offer(ULL param_origin,
 		}
 
 		// decide if best offer of this bus is better than the current best offer and
-	// return the better of these two
+		// return the better of these two
 		if (best_offer.dropoff_time < current_best_offer.dropoff_time ||
 			(abs(best_offer.dropoff_time - current_best_offer.dropoff_time) <= MACRO_EPSILON && best_offer.pickup_time > current_best_offer.pickup_time + MACRO_EPSILON)
 			)

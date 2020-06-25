@@ -25,6 +25,7 @@
 
 #include "ridesharing_sim.h"
 #include "utility.h"
+#include "kernel.cuh"
 
 
 
@@ -48,6 +49,8 @@ ridesharing_sim_qt::ridesharing_sim_qt(QWidget *parent)
 {
 	mThread[0] = new simulation_thread;
 	mThread[1] = new simulation_thread;
+	mThread[2] = new simulation_thread;
+	mThread[3] = new simulation_thread;
 	ui.setupUi(this);
 	connect(ui.pushButton, SIGNAL(clicked()), this, SLOT(onButtonSimulateClicked()));
 	connect(ui.pushButton_2, SIGNAL(clicked()), this, SLOT(onButtonStopClicked()));
@@ -136,8 +139,8 @@ ridesharing_sim_qt::ridesharing_sim_qt(QWidget *parent)
 	std::string message;
 
 	traffic_network n;
-	std::string testnetwork = "complete_graph";
-	int test_node_number = 5;
+	std::string testnetwork = "torus";
+	int test_node_number = 100;
 	n.init(testnetwork.c_str(), test_node_number);
 
 	std::ofstream edgefile;
@@ -179,6 +182,10 @@ ridesharing_sim_qt::ridesharing_sim_qt(QWidget *parent)
 	
 	QMessageBox Msgbox(QMessageBox::Icon::Information, "Output", message.c_str());
 	Msgbox.exec();
+
+	QMessageBox MsgboxKernel(QMessageBox::Icon::Information, "Output", cuda_main().c_str());
+	MsgboxKernel.exec();
+
 }
 
 void ridesharing_sim_qt::onButtonSimulateClicked()
@@ -194,8 +201,9 @@ void ridesharing_sim_qt::onButtonSimulateClicked()
 	ui.customPlot->replot();
 
 	// global simulation variables
+	mThread[0]->par.use_gpu_accel = true;
 	mThread[0]->par.simulate_until_exact = true;
-	mThread[0]->par.foldername = "allsim_pfull_correct\\";
+	mThread[0]->par.foldername = "allsim_pfull_correct_inf\\";
 	mThread[0]->par.num_requests_per_bus_init = 2000;
 	mThread[0]->par.num_requests_per_bus_sim = 2000;
 	mThread[0]->par.calc_cap_delay = false;
@@ -209,10 +217,10 @@ void ridesharing_sim_qt::onButtonSimulateClicked()
 
 	if (mThread[0]->par.sim_mode == EVERYTHING)
 	{
-		mThread[0]->par.capacity_list = {1, 2, 3, 4, 5, 6, 7, 8};
+		mThread[0]->par.capacity_list = {3, 4, 5, 6, 7, 8};
 
-		mThread[0]->par.scan_point_sim_time = 60; // 1min
-		mThread[0]->par.max_point_sim_time = 6*60; // 6min
+		mThread[0]->par.scan_point_sim_time = 90 * 60; // 90min
+		mThread[0]->par.max_point_sim_time = 90 * 60; // 90min
 	}
 	else if (mThread[0]->par.sim_mode == SIMPLE_SIM)
 	{
@@ -222,7 +230,7 @@ void ridesharing_sim_qt::onButtonSimulateClicked()
 		mThread[0]->par.topology_list = { std::make_pair(ui.listWidget->selectedItems().front()->text().toStdString(), std::stoi(ui.textEdit->toPlainText().toStdString())) };
 
 		mThread[0]->par.scan_point_sim_time = 60 * 60; // 1h
-		mThread[0]->par.max_point_sim_time = 4 * 60 * 60; // 4h
+		mThread[0]->par.max_point_sim_time = 60; // 4h
 	}
 	else if (mThread[0]->par.sim_mode == B_AIM)
 	{
@@ -299,15 +307,17 @@ void ridesharing_sim_qt::onButtonSimulateClicked()
 	mThread[0]->par.filename = ui.textEdit_5->toPlainText().toStdString();
 
 	mThread[1]->par = mThread[0]->par;
+	mThread[2]->par = mThread[0]->par;
+	mThread[3]->par = mThread[0]->par;
 
 	if (mThread[0]->par.sim_mode == EVERYTHING)
 	{
 		mThread[0]->par.topology_list = {
-			std::make_pair("two_nodes", 2),
-			std::make_pair("simplified_city", 16),
-			std::make_pair("ring", 25),
-			std::make_pair("ring", 100),
-			std::make_pair("torus", 25),
+			// std::make_pair("two_nodes", 2),
+			// std::make_pair("simplified_city", 16),
+			// std::make_pair("ring", 25),
+			// std::make_pair("ring", 100),
+			// std::make_pair("torus", 25),
 			std::make_pair("torus", 100),
 			// std::make_pair("grid", 100)
 			// std::make_pair("complete_graph", 5),
@@ -324,9 +334,37 @@ void ridesharing_sim_qt::onButtonSimulateClicked()
 			// std::make_pair("torus", 25),
 			// std::make_pair("torus", 100),
 			std::make_pair("grid", 100),
-			std::make_pair("complete_graph", 5),
+			// std::make_pair("complete_graph", 5),
+			// std::make_pair("3cayley_tree", 46),
+			// std::make_pair("delaunay_random_torus", 25),
+			// std::make_pair("delaunay_random_torus", 100)
+			// std::make_pair("bornholm", 100),
+		};
+		mThread[2]->par.topology_list = {
+			// std::make_pair("two_nodes", 2),
+			// std::make_pair("simplified_city", 16),
+			// std::make_pair("ring", 25),
+			// std::make_pair("ring", 100),
+			// std::make_pair("torus", 25),
+			// std::make_pair("torus", 100),
+			// std::make_pair("grid", 100),
+			// std::make_pair("complete_graph", 5),
 			std::make_pair("3cayley_tree", 46),
-			std::make_pair("delaunay_random_torus", 25),
+			// std::make_pair("delaunay_random_torus", 25),
+			// std::make_pair("delaunay_random_torus", 100)
+			// std::make_pair("bornholm", 100),
+		};
+		mThread[3]->par.topology_list = {
+			// std::make_pair("two_nodes", 2),
+			// std::make_pair("simplified_city", 16),
+			// std::make_pair("ring", 25),
+			// std::make_pair("ring", 100),
+			// std::make_pair("torus", 25),
+			// std::make_pair("torus", 100),
+			// std::make_pair("grid", 100),
+			// std::make_pair("complete_graph", 5),
+			// std::make_pair("3cayley_tree", 46),
+			// std::make_pair("delaunay_random_torus", 25),
 			std::make_pair("delaunay_random_torus", 100)
 			// std::make_pair("bornholm", 100),
 		};
@@ -384,7 +422,11 @@ void ridesharing_sim_qt::onButtonSimulateClicked()
 	mThread[0]->start();
 	// multithreading only if parallel computing makes sense
 	if (mThread[0]->par.sim_mode == EVERYTHING || mThread[0]->par.sim_mode == B_AIM || mThread[0]->par.sim_mode == SIMPLE_SIM)
+	{
 		mThread[1]->start();
+		mThread[2]->start();
+		mThread[3]->start();
+	}
 	
 }
 

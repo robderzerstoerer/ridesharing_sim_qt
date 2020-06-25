@@ -309,7 +309,7 @@ void simulation_thread::run()
 					x_list = par.x_list;
 				else
 				{
-					for (double x = 0.5; x + 0.001 < cap; x += 0.5)
+					for (double x = 2.0; x + 0.001 < cap; x += 0.5)
 					{
 						x_list.push_back(x);
 					}
@@ -526,7 +526,7 @@ void simulation_thread::run()
 
 					QVector<double> vx, vE;
 
-					for (double x : par.x_list)
+					for (double x : x_list)
 					{
 						if (par.stop_thread)
 							break;
@@ -713,7 +713,7 @@ double simulation_thread::single_simulation(
 	ridesharing_sim sim(&sim_par);
 	sim.init_network();
 
-	if (!sim.init_new_sim(sim_par.number_of_buses, sim_par.normalized_request_rate, std::max((ULL)100000, par.num_requests_per_bus_init * sim_par.number_of_buses)))
+	if (!sim.init_new_sim(sim_par.number_of_buses, sim_par.normalized_request_rate, std::max((ULL)3000000, par.num_requests_per_bus_init * sim_par.number_of_buses)))
 		return -1.0;
 
 	//turn on measurements with a given step size, measure every (number of buses) requests for a total of ~ 100 measurements
@@ -730,7 +730,7 @@ double simulation_thread::single_simulation(
 			//sim.measurements.scheduled_customers.reset();
 
 			//simulate (and measure) for 1000 requests per bus (at least 50000 requests)
-			if (!sim.run_sim_requests(std::max((ULL)100000, par.num_requests_per_bus_sim * sim_par.number_of_buses)))
+			if (!sim.run_sim_requests(std::max((ULL)3000000, par.num_requests_per_bus_sim * sim_par.number_of_buses)))
 				return -1.0;
 
 			double total_C_av = sim.measurements.scheduled_customers.get_average();
@@ -748,7 +748,7 @@ double simulation_thread::single_simulation(
 	else
 	{
 		//simulate (and measure) for 100 requests per bus (at least 50000 requests)
-		if (!sim.run_sim_requests(std::max((ULL)50000, par.num_requests_per_bus_sim * sim_par.number_of_buses)))
+		if (!sim.run_sim_requests(std::max((ULL)3000000, par.num_requests_per_bus_sim * sim_par.number_of_buses)))
 			return -1.0;
 	}
 

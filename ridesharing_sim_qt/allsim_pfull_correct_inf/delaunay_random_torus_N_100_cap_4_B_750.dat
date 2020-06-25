@@ -1,0 +1,112 @@
+PARAMS
+
+time - start_of_measured_time
+815.038
+total_requests - start_of_measured_total_requests
+3000000
+total_serviced_requests - start_of_measured_serviced_requests
+2999992
+transporter_list.size()
+750
+request_rate
+3680.64
+normalized_request_rate
+2
+network.get_mean_pickup_distance()
+0.407538
+network.get_mean_dropoff_distance()
+0.407538
+network.get_request_asymmetry()
+0
+total_velocity
+750
+
+MEASUREMENTS
+
+wait_time
+2999992	0.0829047	0.0619345	
+drive_time
+2999992	0.432499	0.162648	
+delay_time
+2999992	0.0249067	0.0395661	
+fraction_of_delayed_trips
+2999992	0.468672	0.499018	
+drive_time_between_stops
+5999997	0.101878	0.110365	
+drive_distance_between_stops
+5999997	0.101878	0.110365	
+occupancy
+1278750	2.12208	0.957162	
+scheduled_customers
+1278750	2.52884	1.04501	
+number_of_planned_stops
+1278750	2.93559	1.45783	
+planned_time_horizon
+1278750	0.429104	0.143673	
+number_of_idle_transporters
+1705	0.0123167	0.120462	
+p_full
+2250000000	0.00106912	0.0326798	
+p_full2
+3000000	0.054983	0.227947	
+p_full_snap
+1278750	0.0970291	0.295997	
+
+
+
+PARAMS
+
+time - start_of_measured_time
+652.03
+total_requests - start_of_measured_total_requests
+3000000
+total_serviced_requests - start_of_measured_serviced_requests
+3000121
+transporter_list.size()
+750
+request_rate
+4600.8
+normalized_request_rate
+2.5
+network.get_mean_pickup_distance()
+0.407538
+network.get_mean_dropoff_distance()
+0.407538
+network.get_request_asymmetry()
+0
+total_velocity
+750
+
+MEASUREMENTS
+
+wait_time
+3000121	0.108239	0.0783028	
+drive_time
+3000121	0.445638	0.17082	
+delay_time
+3000121	0.0381694	0.0529752	
+fraction_of_delayed_trips
+3000121	0.559586	0.496437	
+drive_time_between_stops
+6000203	0.0815011	0.0954378	
+drive_distance_between_stops
+6000203	0.0815011	0.0954378	
+occupancy
+1278750	2.73428	0.988707	
+scheduled_customers
+1278750	3.39778	1.14797	
+number_of_planned_stops
+1278750	4.06127	1.74437	
+planned_time_horizon
+1278750	0.504554	0.1326	
+number_of_idle_transporters
+1705	0	0	
+p_full
+2250000000	0.0038099	0.0616067	
+p_full2
+3000000	0.191885	0.393783	
+p_full_snap
+1278750	0.267666	0.442743	
+
+
+

@@ -68,6 +68,8 @@ struct program_parameters
 	std::string foldername;
 	std::string filename;
 
+	bool use_gpu_accel;
+
 	bool stop_thread;
 };
 
