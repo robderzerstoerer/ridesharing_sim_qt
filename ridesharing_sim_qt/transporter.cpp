@@ -164,6 +164,195 @@ double transporter::new_route(std::deque< std::pair<ULL, double> > param_new_rou
 	return(current_route.front().second);
 }
 
+
+void best_offer_st_alone(
+	int param_origin,
+	int param_destination,
+	double param_request_time,
+	float delay_delta,
+	int capacity,
+	float current_time,
+	int current_pos,
+	int* stops_nodeindices,
+	float* stops_times,
+	int* occupancies_before_stops,
+	int stops_length,
+	float** netdistances, 
+	float best_dropoff_time,
+	float* out_dropoff_time,
+	int* out_pickup_insertion,
+	int* out_dropoff_insertion)
+{
+
+	// if bus is idle
+	if (stops_length == 0)
+	{
+		*out_pickup_insertion = 0;
+		*out_dropoff_insertion = 0;
+		float time_until_dropoff = netdistances[current_pos][param_origin] + netdistances[param_origin][param_destination];
+		*out_dropoff_time = param_request_time + time_until_dropoff;
+
+		return;
+	}
+
+	bool found_better_offer = false;
+
+	// if bus is not idle
+	for (int ipickup_insertion = 0; ipickup_insertion < stops_length; ipickup_insertion++)
+	{
+		// insertion is such that it happens just BEFORE ipickup_insertion
+
+		assert(occupancies_before_stops[ipickup_insertion] <= capacity);
+
+		// first, check whether capacity is already exceeded
+		if (occupancies_before_stops[ipickup_insertion] >= capacity)
+			continue;
+		
+		float quickest_possible_dropoff_time;
+		if (ipickup_insertion == 0)
+		{
+			// pickup RIGHT NOW
+			quickest_possible_dropoff_time =
+				current_time
+				+ netdistances[current_pos][param_origin]
+				+ netdistances[param_origin][param_destination];
+		}
+		else
+		{
+			// pickup later along the route
+			quickest_possible_dropoff_time = 
+				stops_times[ipickup_insertion-1]
+				+ netdistances[stops_nodeindices[ipickup_insertion-1]][param_origin]
+				+ netdistances[param_origin][param_destination];
+		}
+
+		if (quickest_possible_dropoff_time > best_dropoff_time)
+			// the following pickup insertions would only be even slower
+			break; 
+
+		float pickup_delay = 0.0;
+		if (ipickup_insertion == 0) 
+			// pickup RIGHT NOW
+			pickup_delay = netdistances[current_pos][param_origin]
+						   + netdistances[param_origin][stops_nodeindices[ipickup_insertion]]
+						   - netdistances[current_pos][stops_nodeindices[ipickup_insertion]];
+		else
+			// pickup later along the route
+			pickup_delay = netdistances[stops_nodeindices[ipickup_insertion-1]][param_origin]
+						   + netdistances[param_origin][stops_nodeindices[ipickup_insertion]]
+						   - netdistances[stops_nodeindices[ipickup_insertion - 1]][stops_nodeindices[ipickup_insertion]];
+
+		if (delay_delta < 0.00001)
+		{
+			if (pickup_delay > 0.00001)
+				// no delay allowed
+				continue;
+		}
+		else
+		{
+			// we have to check for every stop after ipickup_insertion
+			// whether delay constraint is already violated
+			bool pickup_possible = true;
+			for (int istop_check = ipickup_insertion; istop_check < stops_length; istop_check++)
+			{
+				// CAUTION: originial code used current_time instead of param_request_time in condition below
+				if (pickup_delay > delay_delta * (stops_times[istop_check] - param_request_time) + 0.0001)
+				{
+					pickup_possible = false;
+					break;
+				}
+			}
+
+			if (!pickup_possible)
+				continue;
+
+			// now that we know that this is a viable pickup insertion:
+			// check all possible dropoff insertions
+			for (int idropoff_insertion = ipickup_insertion; idropoff_insertion < stops_length; idropoff_insertion++)
+			{
+				// first, check whether capacity constraint is exceeded
+				if (occupancies_before_stops[idropoff_insertion] + 1 > capacity)
+					break;
+
+				float dropoff_time;
+				if (idropoff_insertion == 0)
+				{
+					// dropoff right after pickup at the beginning of the stop list
+					dropoff_time = 
+						current_time
+						+ netdistances[current_pos][param_origin]
+						+ netdistances[param_origin][param_destination];
+				}
+				else if (idropoff_insertion == ipickup_insertion)
+				{
+					// dropoff right after pickup but not at the beginning of the stop list
+					dropoff_time =
+						stops_times[idropoff_insertion - 1]
+						+ netdistances[stops_nodeindices[idropoff_insertion - 1]][param_origin]
+						+ netdistances[param_origin][param_destination];
+				}
+				else
+				{
+					// dropoff later along the route
+					dropoff_time =
+						stops_times[idropoff_insertion - 1]
+						+ pickup_delay
+						+ netdistances[stops_nodeindices[idropoff_insertion - 1]][param_destination];
+				}
+
+				if (dropoff_time > best_dropoff_time)
+					// the following pickup insertions would only be even slower
+					break;
+
+				float total_delay =
+					dropoff_time
+					+ netdistances[param_destination][stops_nodeindices[idropoff_insertion]]
+					- stops_times[stops_nodeindices[idropoff_insertion]];
+
+				if (delay_delta < 0.00001)
+				{
+					if (total_delay > 0.00001)
+						// no delay allowed
+						continue;
+				}
+				else
+				{
+					// we have to check for every stop after idropoff_insertion
+					// whether delay constraint is violated
+					bool dropoff_possible = true;
+					for (int istop_check = idropoff_insertion; istop_check < stops_length; istop_check++)
+					{
+						// CAUTION: originial code used current_time instead of param_request_time in condition below
+						if (total_delay > delay_delta * (stops_times[istop_check] - param_request_time) + 0.0001)
+						{
+							dropoff_possible = false;
+							break;
+						}
+					}
+
+					if (!dropoff_possible)
+						continue;
+				}
+
+				// we found a new, better and possible pickup/dropoff insertion!
+				found_better_offer = true;
+				*out_pickup_insertion = ipickup_insertion;
+				*out_dropoff_insertion = idropoff_insertion;
+				*out_dropoff_time = dropoff_time;
+				best_dropoff_time = dropoff_time;
+			}
+		}
+	}
+
+	if (!found_better_offer)
+	{
+		*out_pickup_insertion = -1;
+		*out_dropoff_insertion = -1;
+		*out_dropoff_time = -1.0;
+	}
+}
+
+
 //return best offer for the customer given the request and the currently best offer from all other buses
 
 // this defines the dispatcher algorithm

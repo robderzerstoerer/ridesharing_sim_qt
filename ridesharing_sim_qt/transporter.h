@@ -25,6 +25,25 @@ class measurement_collector;
 class customer;
 class transporter;
 
+void best_offer_st_alone(
+	int param_origin,
+	int param_destination,
+	double param_request_time,
+	float delay_delta,
+	int capacity,
+	float current_time,
+	int current_pos,	// actually only needed if bus idle (stops_length == 0), otherwise pass anything to this parameter
+	int* stops_nodeindices,
+	float* stops_times,
+	int* occupancies_before_stops,
+	int stops_length,
+	float** netdistances,
+	float best_dropoff_time,
+	float* out_dropoff_time,
+	int* out_pickup_insertion,
+	int* out_dropoff_insertion);
+
+
 struct stop
 {
 	ULL node_index;
@@ -111,7 +130,9 @@ public:
 	double handle_event_by_type(double time, traffic_network& n, stop& current_stop);
 	double new_route(std::deque< std::pair<ULL, double> > param_new_route);
 
+	
 	offer best_offer(ULL param_origin, ULL param_destination, double param_request_time, traffic_network& n, offer& current_best_offer, bool calc_p_full);
+
 	double assign_customer(double assignment_time, customer c, offer& o, traffic_network& n);
 
 protected:
